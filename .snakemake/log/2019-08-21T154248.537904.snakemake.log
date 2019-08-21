@@ -1,0 +1,2 @@
+SyntaxError in line 41 of /home/ben/PycharmProjects/placetest_pipeline/tools/placement_epa-ng.smk:
+EOF in multi-line string (placement_epa-ng.smk, line 41)

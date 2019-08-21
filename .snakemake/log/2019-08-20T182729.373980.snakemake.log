@@ -1,0 +1,22 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	hmmalign
+	1
+
+[Tue Aug 20 18:27:29 2019]
+rule hmmalign:
+    input: HMM/1.hmm, A/1.align, R/1_r150.fasta
+    output: HMM/1_r150.psiblast
+    log: logs/hmmbuild/1_r150.log
+    jobid: 0
+    wildcards: pruning=1, length=150
+
+hmmalign --dna --outformat PSIBLAST -o HMM/1_r150.psiblast --mapali A/1.align HMM/1.hmm R/1_r150.fasta &> logs/hmmbuild/1_r150.log
+[Tue Aug 20 18:27:29 2019]
+Finished job 0.
+1 of 1 steps (100%) done
+Complete log: /home/ben/PycharmProjects/placetest_pipeline/.snakemake/log/2019-08-20T182729.373980.snakemake.log

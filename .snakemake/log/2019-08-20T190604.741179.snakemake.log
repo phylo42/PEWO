@@ -1,0 +1,216 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	all
+	6	hmmalign
+	3	hmmbuild
+	6	psiblast_to_fasta
+	16
+
+[Tue Aug 20 19:06:04 2019]
+rule hmmbuild:
+    input: A/2.align
+    output: HMM/2.hmm
+    log: logs/hmmbuild/2.log
+    jobid: 14
+    wildcards: pruning=2
+
+hmmbuild --cpu 1 --dna HMM/2.hmm A/2.align &> logs/hmmbuild/2.log
+[Tue Aug 20 19:06:05 2019]
+Finished job 14.
+1 of 16 steps (6%) done
+
+[Tue Aug 20 19:06:05 2019]
+rule hmmalign:
+    input: HMM/2.hmm, A/2.align, R/2_r150.fasta
+    output: HMM/2_r150.psiblast
+    log: logs/hmmbuild/2_r150.log
+    jobid: 9
+    wildcards: pruning=2, length=150
+
+hmmalign --dna --outformat PSIBLAST -o HMM/2_r150.psiblast --mapali A/2.align HMM/2.hmm R/2_r150.fasta &> logs/hmmbuild/2_r150.log
+[Tue Aug 20 19:06:05 2019]
+Finished job 9.
+2 of 16 steps (12%) done
+
+[Tue Aug 20 19:06:05 2019]
+rule hmmalign:
+    input: HMM/2.hmm, A/2.align, R/2_r300.fasta
+    output: HMM/2_r300.psiblast
+    log: logs/hmmbuild/2_r300.log
+    jobid: 10
+    wildcards: pruning=2, length=300
+
+hmmalign --dna --outformat PSIBLAST -o HMM/2_r300.psiblast --mapali A/2.align HMM/2.hmm R/2_r300.fasta &> logs/hmmbuild/2_r300.log
+[Tue Aug 20 19:06:05 2019]
+Finished job 10.
+3 of 16 steps (19%) done
+
+[Tue Aug 20 19:06:05 2019]
+rule psiblast_to_fasta:
+    input: HMM/2_r150.psiblast
+    output: HMM/2_r150.fasta
+    log: logs/psiblast2fasta/2_r150.log
+    jobid: 3
+    wildcards: pruning=2, length=150
+
+scripts/psiblast2fasta.py HMM/2_r150.psiblast HMM/2_r150.fasta &> logs/psiblast2fasta/2_r150.log
+[Tue Aug 20 19:06:05 2019]
+Finished job 3.
+4 of 16 steps (25%) done
+
+[Tue Aug 20 19:06:05 2019]
+rule psiblast_to_fasta:
+    input: HMM/2_r300.psiblast
+    output: HMM/2_r300.fasta
+    log: logs/psiblast2fasta/2_r300.log
+    jobid: 4
+    wildcards: pruning=2, length=300
+
+scripts/psiblast2fasta.py HMM/2_r300.psiblast HMM/2_r300.fasta &> logs/psiblast2fasta/2_r300.log
+[Tue Aug 20 19:06:05 2019]
+Finished job 4.
+5 of 16 steps (31%) done
+
+[Tue Aug 20 19:06:05 2019]
+rule hmmbuild:
+    input: A/3.align
+    output: HMM/3.hmm
+    log: logs/hmmbuild/3.log
+    jobid: 15
+    wildcards: pruning=3
+
+hmmbuild --cpu 1 --dna HMM/3.hmm A/3.align &> logs/hmmbuild/3.log
+[Tue Aug 20 19:06:05 2019]
+Finished job 15.
+6 of 16 steps (38%) done
+
+[Tue Aug 20 19:06:05 2019]
+rule hmmalign:
+    input: HMM/3.hmm, A/3.align, R/3_r150.fasta
+    output: HMM/3_r150.psiblast
+    log: logs/hmmbuild/3_r150.log
+    jobid: 11
+    wildcards: pruning=3, length=150
+
+hmmalign --dna --outformat PSIBLAST -o HMM/3_r150.psiblast --mapali A/3.align HMM/3.hmm R/3_r150.fasta &> logs/hmmbuild/3_r150.log
+[Tue Aug 20 19:06:05 2019]
+Finished job 11.
+7 of 16 steps (44%) done
+
+[Tue Aug 20 19:06:05 2019]
+rule hmmalign:
+    input: HMM/3.hmm, A/3.align, R/3_r300.fasta
+    output: HMM/3_r300.psiblast
+    log: logs/hmmbuild/3_r300.log
+    jobid: 12
+    wildcards: pruning=3, length=300
+
+hmmalign --dna --outformat PSIBLAST -o HMM/3_r300.psiblast --mapali A/3.align HMM/3.hmm R/3_r300.fasta &> logs/hmmbuild/3_r300.log
+[Tue Aug 20 19:06:06 2019]
+Finished job 12.
+8 of 16 steps (50%) done
+
+[Tue Aug 20 19:06:06 2019]
+rule psiblast_to_fasta:
+    input: HMM/3_r150.psiblast
+    output: HMM/3_r150.fasta
+    log: logs/psiblast2fasta/3_r150.log
+    jobid: 5
+    wildcards: pruning=3, length=150
+
+scripts/psiblast2fasta.py HMM/3_r150.psiblast HMM/3_r150.fasta &> logs/psiblast2fasta/3_r150.log
+[Tue Aug 20 19:06:06 2019]
+Finished job 5.
+9 of 16 steps (56%) done
+
+[Tue Aug 20 19:06:06 2019]
+rule psiblast_to_fasta:
+    input: HMM/3_r300.psiblast
+    output: HMM/3_r300.fasta
+    log: logs/psiblast2fasta/3_r300.log
+    jobid: 6
+    wildcards: pruning=3, length=300
+
+scripts/psiblast2fasta.py HMM/3_r300.psiblast HMM/3_r300.fasta &> logs/psiblast2fasta/3_r300.log
+[Tue Aug 20 19:06:06 2019]
+Finished job 6.
+10 of 16 steps (62%) done
+
+[Tue Aug 20 19:06:06 2019]
+rule hmmbuild:
+    input: A/1.align
+    output: HMM/1.hmm
+    log: logs/hmmbuild/1.log
+    jobid: 13
+    wildcards: pruning=1
+
+hmmbuild --cpu 1 --dna HMM/1.hmm A/1.align &> logs/hmmbuild/1.log
+[Tue Aug 20 19:06:06 2019]
+Finished job 13.
+11 of 16 steps (69%) done
+
+[Tue Aug 20 19:06:06 2019]
+rule hmmalign:
+    input: HMM/1.hmm, A/1.align, R/1_r150.fasta
+    output: HMM/1_r150.psiblast
+    log: logs/hmmbuild/1_r150.log
+    jobid: 7
+    wildcards: pruning=1, length=150
+
+hmmalign --dna --outformat PSIBLAST -o HMM/1_r150.psiblast --mapali A/1.align HMM/1.hmm R/1_r150.fasta &> logs/hmmbuild/1_r150.log
+[Tue Aug 20 19:06:06 2019]
+Finished job 7.
+12 of 16 steps (75%) done
+
+[Tue Aug 20 19:06:06 2019]
+rule hmmalign:
+    input: HMM/1.hmm, A/1.align, R/1_r300.fasta
+    output: HMM/1_r300.psiblast
+    log: logs/hmmbuild/1_r300.log
+    jobid: 8
+    wildcards: pruning=1, length=300
+
+hmmalign --dna --outformat PSIBLAST -o HMM/1_r300.psiblast --mapali A/1.align HMM/1.hmm R/1_r300.fasta &> logs/hmmbuild/1_r300.log
+[Tue Aug 20 19:06:07 2019]
+Finished job 8.
+13 of 16 steps (81%) done
+
+[Tue Aug 20 19:06:07 2019]
+rule psiblast_to_fasta:
+    input: HMM/1_r150.psiblast
+    output: HMM/1_r150.fasta
+    log: logs/psiblast2fasta/1_r150.log
+    jobid: 1
+    wildcards: pruning=1, length=150
+
+scripts/psiblast2fasta.py HMM/1_r150.psiblast HMM/1_r150.fasta &> logs/psiblast2fasta/1_r150.log
+[Tue Aug 20 19:06:07 2019]
+Finished job 1.
+14 of 16 steps (88%) done
+
+[Tue Aug 20 19:06:07 2019]
+rule psiblast_to_fasta:
+    input: HMM/1_r300.psiblast
+    output: HMM/1_r300.fasta
+    log: logs/psiblast2fasta/1_r300.log
+    jobid: 2
+    wildcards: pruning=1, length=300
+
+scripts/psiblast2fasta.py HMM/1_r300.psiblast HMM/1_r300.fasta &> logs/psiblast2fasta/1_r300.log
+[Tue Aug 20 19:06:07 2019]
+Finished job 2.
+15 of 16 steps (94%) done
+
+[Tue Aug 20 19:06:07 2019]
+localrule all:
+    input: HMM/1_r150.fasta, HMM/1_r300.fasta, HMM/2_r150.fasta, HMM/2_r300.fasta, HMM/3_r150.fasta, HMM/3_r300.fasta
+    jobid: 0
+
+[Tue Aug 20 19:06:07 2019]
+Finished job 0.
+16 of 16 steps (100%) done
+Complete log: /home/ben/PycharmProjects/placetest_pipeline/.snakemake/log/2019-08-20T190604.741179.snakemake.log

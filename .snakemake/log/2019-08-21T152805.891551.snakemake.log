@@ -1,0 +1,3 @@
+SyntaxError:
+Not all output, log and benchmark files of rule placement_epa contain the same wildcards. This is crucial though, in order to avoid that two or more jobs write to the same file.
+  File "/home/ben/PycharmProjects/placetest_pipeline/tools/placement_epa-ng.smk", line 44, in <module>

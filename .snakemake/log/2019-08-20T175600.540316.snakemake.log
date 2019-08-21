@@ -1,0 +1,4 @@
+Building DAG of jobs...
+MissingInputException in line 11 of /home/ben/PycharmProjects/placetest_pipeline/tools/hmmer_alignment.smk:
+Missing input files for rule hmmbuild:
+A/*.align

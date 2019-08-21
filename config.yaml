@@ -1,0 +1,34 @@
+###############################
+# MAIN PARAMETERS
+###############################
+
+#dataset files
+dataset_align: dataset.aln.fasta  #tree in newick format
+dataset_tree:  dataset.tree.nwk   #alignment in fasta format
+
+#states used in analysis, either 'dna' or 'amino'
+states: dna
+#number of random prunings to compute
+pruning_count: 3
+#read lengths to test
+read_length: [150,300]
+
+###############################
+# PER SOFTWARE CONFIGURATIONS
+###############################
+
+### EPA
+config_epa:
+  m: GTRGAMMA     # model (option -m of raxml)
+  c: 4            # categories (option -c of raxml)
+  G: 0.1          # % top branch optimized (option -G of raxml)
+
+### PPLACER
+config_pplacer: none
+
+### EPA-ng
+config_epang: none
+
+### RAPPAS
+config_rappas: none
+

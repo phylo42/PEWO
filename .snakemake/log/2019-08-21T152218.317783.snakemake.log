@@ -1,0 +1,43 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	placement_epa
+	1	split_alignment
+	2
+
+[Wed Aug 21 15:22:18 2019]
+rule split_alignment:
+    input: HMM/2_r150.fasta, R/2_r150.fasta
+    output: HMM/2_r150.fasta_queries, HMM/2_r150.fasta_refs
+    jobid: 1
+    wildcards: pruning=2, length=150
+
+scripts/split_hmm_alignment.py R/2_r150.fasta HMM/2_r150.fasta
+[Wed Aug 21 15:22:18 2019]
+Finished job 1.
+1 of 2 steps (50%) done
+
+[Wed Aug 21 15:22:18 2019]
+rule placement_epa:
+    input: HMM/2_r150.fasta_queries, HMM/2_r150.fasta_refs, T/2.tree
+    output: EPANG/2_r150.fasta_epa_info.log, EPANG/2_r150.fasta_epa_result.jplace
+    log: logs/placement_epang/2_r150.log
+    jobid: 0
+    wildcards: pruning=2, length=150
+
+epa-ng --verbose --outdir EPANG --query HMM/2_r150.fasta_refs --tree T/2.tree --ref-msa HMM/2_r150.fasta_queries -T 1 &> logs/placement_epang/2_r150.log 
+[Wed Aug 21 15:22:18 2019]
+Error in rule placement_epa:
+    jobid: 0
+    output: EPANG/2_r150.fasta_epa_info.log, EPANG/2_r150.fasta_epa_result.jplace
+    log: logs/placement_epang/2_r150.log (check log file(s) for error message)
+    shell:
+        epa-ng --verbose --outdir EPANG --query HMM/2_r150.fasta_refs --tree T/2.tree --ref-msa HMM/2_r150.fasta_queries -T 1 &> logs/placement_epang/2_r150.log 
+        (exited with non-zero exit code)
+
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: /home/ben/PycharmProjects/placetest_pipeline/.snakemake/log/2019-08-21T152218.317783.snakemake.log

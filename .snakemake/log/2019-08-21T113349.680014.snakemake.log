@@ -1,0 +1,16 @@
+Building DAG of jobs...
+Job counts:
+	count	jobs
+	1	placement_epa
+	1
+
+[Wed Aug 21 11:33:49 2019]
+rule placement_epa:
+    input: HMM/2_r150.fasta, T/2.tree
+    output: EPA/RAxML_classificationLikelihoodWeights.2_r150, EPA/RAxML_classification.2_r150, EPA/RAxML_entropy.2_r150, EPA/RAxML_info.2_r150, EPA/RAxML_labelledTree.2_r150, EPA/RAxML_originalLabelledTree.2_r150, EPA/RAxML_portableTree.2_r150.jplace
+    log: logs/placement_epa/2_r150.log
+    jobid: 0
+    wildcards: pruning=2, length=150
+
+RuleException in line 13 of /home/ben/PycharmProjects/placetest_pipeline/tools/placement_epa.smk:
+NameError: The name 'pruning' is unknown in this context. Please make sure that you defined that variable. Also note that braces not used for variable access have to be escaped by repeating them, i.e. {{print $1}}

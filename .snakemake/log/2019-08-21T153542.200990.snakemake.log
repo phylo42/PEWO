@@ -1,0 +1,4 @@
+Building DAG of jobs...
+MissingInputException in line 31 of /home/ben/PycharmProjects/placetest_pipeline/tools/placement_epa-ng.smk:
+Missing input files for rule placement_epa:
+T/RAxML_info.optim_2

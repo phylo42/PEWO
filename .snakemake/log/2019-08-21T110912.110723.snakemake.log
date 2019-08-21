@@ -1,0 +1,18 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	placement_epa
+	1
+
+[Wed Aug 21 11:09:12 2019]
+rule placement_epa:
+    input: HMM/1_r150.fasta
+    output: EPA/RAxML_portableTree.1_r150.jplace, RAxML_classificationLikelihoodWeights.1_r150, RAxML_classification.1_r150, RAxML_entropy.1_r150, RAxML_info.1_r150, RAxML_labelledTree.1_r150, RAxML_originalLabelledTree.1_r150, RAxML_portableTree.1_r150.jplace
+    jobid: 0
+    wildcards: pruning=1, length=150
+
+RuleException in line 13 of /home/ben/PycharmProjects/placetest_pipeline/tools/placement_epa.smk:
+'Params' object has no attribute 'm'

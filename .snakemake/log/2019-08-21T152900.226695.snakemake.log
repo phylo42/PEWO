@@ -1,0 +1,36 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	placement_epa
+	1
+
+[Wed Aug 21 15:29:00 2019]
+rule placement_epa:
+    input: HMM/2_r150.fasta_queries, HMM/2_r150.fasta_refs, T/2.tree
+    output: EPANG/2_r150.fasta_epa_result.jplace
+    log: logs/placement_epang/2_r150.log
+    jobid: 0
+    wildcards: pruning=2, length=150
+
+
+        epa-ng --verbose --outdir EPANG --query HMM/2_r150.fasta_refs --tree T/2.tree --ref-msa HMM/2_r150.fasta_queries -T 1 --model GTR+G &> logs/placement_epang/2_r150.log
+        rm EPANG/epa_info.log
+        
+[Wed Aug 21 15:29:00 2019]
+Error in rule placement_epa:
+    jobid: 0
+    output: EPANG/2_r150.fasta_epa_result.jplace
+    log: logs/placement_epang/2_r150.log (check log file(s) for error message)
+    shell:
+        
+        epa-ng --verbose --outdir EPANG --query HMM/2_r150.fasta_refs --tree T/2.tree --ref-msa HMM/2_r150.fasta_queries -T 1 --model GTR+G &> logs/placement_epang/2_r150.log
+        rm EPANG/epa_info.log
+        
+        (exited with non-zero exit code)
+
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: /home/ben/PycharmProjects/placetest_pipeline/.snakemake/log/2019-08-21T152900.226695.snakemake.log

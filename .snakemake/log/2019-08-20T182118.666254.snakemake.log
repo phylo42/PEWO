@@ -1,0 +1,26 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	hmmalign
+	1
+
+[Tue Aug 20 18:21:18 2019]
+rule hmmalign:
+    input: HMM/1.hmm, A/1.align, R/1_r300.fasta
+    output: HMM/1_r300.psiblast
+    log: logs/hmmbuild/1_r300.log
+    jobid: 0
+    wildcards: pruning=1, length=300
+
+hmmalign --dna --outformat PSIBLAST --mapali A/1.align HMM/1.hmm R/1_r300.fasta &> logs/hmmbuild/1_r300.log
+Waiting at most 5 seconds for missing files.
+MissingOutputException in line 29 of /home/ben/PycharmProjects/placetest_pipeline/tools/hmmer_alignment.smk:
+Missing files after 5 seconds:
+HMM/1_r300.psiblast
+This might be due to filesystem latency. If that is the case, consider to increase the wait time with --latency-wait.
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: /home/ben/PycharmProjects/placetest_pipeline/.snakemake/log/2019-08-20T182118.666254.snakemake.log

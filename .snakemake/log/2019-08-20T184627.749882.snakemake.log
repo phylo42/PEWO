@@ -1,0 +1,29 @@
+Building DAG of jobs...
+Using shell: /bin/bash
+Provided cores: 1
+Rules claiming more threads will be scaled down.
+Job counts:
+	count	jobs
+	1	psiblast_to_fasta
+	1
+
+[Tue Aug 20 18:46:27 2019]
+rule psiblast_to_fasta:
+    input: HMM/1_r150.psiblast
+    output: HMM/1_r150.fasta
+    jobid: 0
+    wildcards: pruning=1, length=150
+
+[Tue Aug 20 18:46:27 2019]
+Error in rule psiblast_to_fasta:
+    jobid: 0
+    output: HMM/1_r150.fasta
+
+RuleException:
+NameError in line 52 of /home/ben/PycharmProjects/placetest_pipeline/tools/hmmer_alignment.smk:
+The name 'input' is unknown in this context. Please make sure that you defined that variable. Also note that braces not used for variable access have to be escaped by repeating them, i.e. {{print $1}}
+  File "/home/ben/PycharmProjects/placetest_pipeline/tools/hmmer_alignment.smk", line 52, in __rule_psiblast_to_fasta
+  File "/media/ben/STOCK/VIRTUAL_ENV/miniconda3/envs/placetest_pipeline/lib/python3.7/concurrent/futures/thread.py", line 57, in run
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: /home/ben/PycharmProjects/placetest_pipeline/.snakemake/log/2019-08-20T184627.749882.snakemake.log
