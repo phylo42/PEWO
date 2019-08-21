@@ -2,9 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="47d029be-3794-48fe-9e3d-6b7ffc1d18fe" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tools/placement_pplacer.smk" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.snakemake/metadata/RVBBTkcvMl9yMTUwX2VwYV9yZXN1bHQuanBsYWNl" beforeDir="false" afterPath="$PROJECT_DIR$/.snakemake/metadata/RVBBTkcvMl9yMTUwX2VwYV9yZXN1bHQuanBsYWNl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.snakemake/metadata/SE1NLzJfcjE1MC5mYXN0YV9xdWVyaWVz" beforeDir="false" afterPath="$PROJECT_DIR$/.snakemake/metadata/SE1NLzJfcjE1MC5mYXN0YV9xdWVyaWVz" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.snakemake/metadata/SE1NLzJfcjE1MC5mYXN0YV9yZWZz" beforeDir="false" afterPath="$PROJECT_DIR$/.snakemake/metadata/SE1NLzJfcjE1MC5mYXN0YV9yZWZz" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Snakefile" beforeDir="false" afterPath="$PROJECT_DIR$/Snakefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tools/placement_epa-ng.smk" beforeDir="false" afterPath="$PROJECT_DIR$/tools/placement_epa-ng.smk" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -18,12 +22,14 @@
   <component name="ProjectId" id="1Pgid2Pe3iuYlmoDSTKf7CUymqa" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="/media/ben/STOCK/VIRTUAL_ENV/miniconda3/bin/conda" />
     <property name="settings.editor.selected.configurable" value="com.maddyhome.idea.vim.ui.VimEmulationConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/test" />
       <recent name="$PROJECT_DIR$/tools" />
       <recent name="$PROJECT_DIR$/../tools" />
     </key>

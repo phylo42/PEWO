@@ -8,7 +8,7 @@ module to operate placements with EPA-ng
 configfile: "config.yaml"
 
 rule all:
-    input: expand("EPA/RAxML_portableTree.{pruning}_r{length}.jplace", pruning=range(1,config["pruning_count"]+1,1), length=config["read_length"])
+    input: expand("EPANG/{pruning}_r{length}_epa_result.jplace", pruning=range(1,config["pruning_count"]+1,1), length=config["read_length"])
 
 '''
 split hmm alignment results in "query only" and "reference alignment only" su-alignments

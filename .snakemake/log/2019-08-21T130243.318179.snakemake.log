@@ -1,2 +1,0 @@
-SyntaxError in line 26 of /home/ben/PycharmProjects/placetest_pipeline/tools/placement_epa.smk:
-Unexpected keyword workdir in rule definition (placement_epa.smk, line 26)

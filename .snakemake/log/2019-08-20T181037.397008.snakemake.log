@@ -1,3 +1,0 @@
-WildcardError in line 33 of /home/ben/PycharmProjects/placetest_pipeline/tools/hmmer_alignment.smk:
-No values given for wildcard 'pruning'.
-  File "/home/ben/PycharmProjects/placetest_pipeline/tools/hmmer_alignment.smk", line 33, in <module>

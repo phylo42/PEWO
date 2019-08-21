@@ -1,3 +1,0 @@
-NameError in line 43 of /home/ben/PycharmProjects/placetest_pipeline/tools/placement_epa-ng.smk:
-name 'wildcard' is not defined
-  File "/home/ben/PycharmProjects/placetest_pipeline/tools/placement_epa-ng.smk", line 43, in <module>

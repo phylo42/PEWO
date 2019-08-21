@@ -1,3 +1,0 @@
-IndentationError in line 25 of <tokenize>:
-unindent does not match any outer indentation level (<tokenize>, line 25)
-  File "/media/ben/STOCK/VIRTUAL_ENV/miniconda3/envs/placetest_pipeline/lib/python3.7/tokenize.py", line 572, in _tokenize
