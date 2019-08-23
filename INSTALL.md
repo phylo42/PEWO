@@ -18,6 +18,10 @@ conda env create -n placetest_workflow --file environment.yaml
 
 # activate environment
 source activate placetest_workflow
+#install last taxtastic dependencies not managed correctly by conda
+pip install psycopg-binary
+pip install fastalite
+pip install DendroPy-4.4.0
 
 # edit config as needed
 vim config.yaml

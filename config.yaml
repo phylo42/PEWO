@@ -1,17 +1,30 @@
 ###############################
-# MAIN PARAMETERS
+# MAIN CONFIGURATION
 ###############################
 
 #dataset files
-dataset_align: dataset.aln.fasta  #tree in newick format
-dataset_tree:  dataset.tree.nwk   #alignment in fasta format
+dataset_align: test/mod_150.phy.fasta             #tree in newick format
+dataset_tree: test/RAxML_result.optimization150   #alignment in fasta format
 
-#states used in analysis, either 'dna' or 'amino'
-states: dna
+#working directory
+workdir: /home/ben/PycharmProjects/placetest_pipeline/run
+
+#states used in analysis, either '0' for nucleotides or '1' for amino acids
+states: 0
+
 #number of random prunings to compute
-pruning_count: 3
+pruning_count: 1
+
 #read lengths to test
 read_length: [150,300]
+
+# todo: model management needs more thinking
+#phylogentic model, using classic raxml model spelling (ex: "GRTGAMMA", "PROTGAMMAWAG"... )
+#parameters will be computed at an initial optimisation step for all pruned tree
+#and will consequently be transferred to all subworkflows
+phylo_params:
+  model: GTRGAMMA
+  categories: 4
 
 ###############################
 # PER SOFTWARE CONFIGURATIONS
@@ -19,8 +32,6 @@ read_length: [150,300]
 
 ### EPA
 config_epa:
-  m: GTRGAMMA     # model (option -m of raxml)
-  c: 4            # categories (option -c of raxml)
   G: 0.1          # % top branch optimized (option -G of raxml)
 
 ### PPLACER
@@ -30,5 +41,20 @@ config_pplacer: none
 config_epang: none
 
 ### RAPPAS
-config_rappas: none
+config_rappas:
+  #panel of k that are tested
+  #ex: kmin=6, kmax=8, kstep=1 will test k=[6,7,8]
+  kmin: 6
+  kmax: 8
+  kstep: 1
+  #panel of omega that is tested in RAPPAS
+  omin: 1.0
+  omax: 1.5
+  ostep: 0.25
 
+###############################
+# WORKFLOW SETUP
+###############################
+
+#if 1, prints debug information
+debug: 0

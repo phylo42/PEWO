@@ -1,11 +1,16 @@
+#data directories built by the workflow
 A
 T
 R
 HMM
-logs
 EPA
 EPANG
 PPLACER
 RAPPAS
-
-.snakemake/
+AR
+logs
+run
+#snakemake temporary files
+.snakemake
+#RAPPAS temporary files (used until RAPPAS becomes a conda package)
+viroplacetests_LITE.jar
