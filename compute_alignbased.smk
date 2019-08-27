@@ -1,7 +1,7 @@
 '''
 WORKFLOW FOR EPA PLACEMENTS COMPUTATION
 This file describes the pipeline itself.
-It calls many other SnakeFiles (*.smk) which are modules detdicated to the different operations.
+It calls many other SnakeFiles (*.smk) which are modules dedicated to the different operations.
 @author Benjamin Linard
 '''
 

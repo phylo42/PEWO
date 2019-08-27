@@ -26,7 +26,7 @@ rule operate_pruning:
         g=expand(config["workdir"]+"/G/{pruning}.fasta", pruning=range(0,config["pruning_count"],1)),
         r=expand(config["workdir"]+"/R/{pruning}_r{length}.fasta", pruning=range(0,config["pruning_count"],1), length=config["read_length"])
     log:
-        "logs/operate_pruning.log"
+        config["workdir"]+"/logs/operate_pruning.log"
     version:"1.00"
     params:
         wd=config["workdir"],

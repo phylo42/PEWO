@@ -14,3 +14,4 @@ run
 .snakemake
 #RAPPAS temporary files (used until RAPPAS becomes a conda package)
 viroplacetests_LITE.jar
+RAPPAS.jar

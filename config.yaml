@@ -13,7 +13,7 @@ workdir: /home/ben/PycharmProjects/placetest_pipeline/run
 states: 0
 
 #number of random prunings to compute
-pruning_count: 1
+pruning_count: 3
 
 #read lengths to test
 read_length: [150,300]
@@ -51,6 +51,8 @@ config_rappas:
   omin: 1.0
   omax: 1.5
   ostep: 0.25
+  #reduction
+  reduction: 0.99
 
 ###############################
 # WORKFLOW SETUP

@@ -1,57 +1,94 @@
 '''
-computes ancestral reconstructions using phyml
+computes extended trees + AR files, which are inputs to RAPPAS db_build
+this first is generally managed by RAPPAS, but separated here to facilitate analysis of very large datasets
+which may generate ressource-consuming ARs (e.g., phyml requiring lots of RAM)
 
 @author Benjamin Linard
 '''
 
-# todo: set correct string for model depending on  config["phylo_params"]["model"]
+# TODO: manage phylo models parameters in phyml for AR
 
-configfile: "config.yaml"
+#configfile: "config.yaml"
 
 import os
 
 #debug
 if (config["debug"]==1):
-    print("ar: "+os.getcwd())
+    print("exttree: "+os.getcwd())
 #debug
 
 #rule all:
-#    input: expand(config["workdir"]+"/T/{pruning}_optimised.tree", pruning=range(0,config["pruning_count"],1))
+#    input: expand(config["workdir"]+"/RAPPAS/{pruning}/AR/extended_align.phylip_phyml_ancestral_seq.txt", pruning=range(0,config["pruning_count"],1))
+
+'''
+prepare ar outputs using RAPPAS
+'''
+rule compute_inputs:
+    input:
+        a=config["workdir"]+"/A/{pruning}.align",
+        t=config["workdir"]+"/T/{pruning}_optimised.tree"
+    output:
+        config["workdir"]+"/RAPPAS/{pruning}/extended_trees/extended_align.fasta",
+        config["workdir"]+"/RAPPAS/{pruning}/extended_trees/extended_align.phylip",
+        config["workdir"]+"/RAPPAS/{pruning}/extended_trees/extended_tree_withBL.tree",
+        config["workdir"]+"/RAPPAS/{pruning}/extended_trees/extended_tree_withBL_withoutInterLabels.tree"
+    log:
+        config["workdir"]+"/logs/arinputs/{pruning}.log"
+    params:
+        states=["nucl"] if config["states"]==0 else ["amino"],
+        reduc=config["config_rappas"]["reduction"],
+        workdir=config["workdir"]+"/RAPPAS/{pruning}"
+    version: "1.00"
+    shell:
+         "java -jar RAPPAS.jar -p b -b $(which phyml) "
+         "-t {input.t} -r {input.a} "
+         "-w {params.workdir} -s {params.states} --ratio-reduction {params.reduc} "
+         "--use_unrooted --arinputonly &> {log}"
+
 
 '''
 extract phylo parameters from info file to transfer them to phyml
 '''
 def extract_params(file):
+    print(file)
     res={}
     with open(file,'r') as infofile:
-        line = infofile.readline()
-        while line:
-            if line.startswith("Substitution Matrix:") :
-                res["model"]=line.split(" ")[1]
-            if line.startswith("alpha:") :
-                res["alpha"]=line.split(" ")[1]
+        lines = infofile.readlines()
+        for l in lines:
+            if l.startswith("Substitution Matrix:") :
+                res["model"]=l.split(":")[1].strip()
+            if l.startswith("alpha:") :
+                res["alpha"]=l.split(":")[1].strip()
     infofile.close()
     return res
 
-'''
-compute ancestral probabilites
-'''
-rule compute:
+
+rule ar:
     input:
-        a=config["workdir"]+"/A/{pruning}.align",
-        t=config["workdir"]+"/T/{pruning}_optimised.tree"
+        a=config["workdir"]+"/RAPPAS/{pruning}/extended_trees/extended_align.phylip",
+        t=config["workdir"]+"/RAPPAS/{pruning}/extended_trees/extended_tree_withBL_withoutInterLabels.tree",
+        s=config["workdir"]+"/T/{pruning}_optimised.info"
     output:
-        directory(config["workdir"]+"/AR/{pruning}/AR")
+        config["workdir"]+"/RAPPAS/{pruning}/AR/extended_align.phylip_phyml_ancestral_seq.txt",
+        config["workdir"]+"/RAPPAS/{pruning}/AR/extended_align.phylip_phyml_ancestral_tree.txt",
+        config["workdir"]+"/RAPPAS/{pruning}/AR/extended_align.phylip_phyml_stats.txt",
+        config["workdir"]+"/RAPPAS/{pruning}/AR/extended_align.phylip_phyml_tree.txt"
     log:
-        config["workdir"]+"/logs/AR/{pruning}.log"
+        config["workdir"]+"/logs/ar_phyml/{pruning}.log"
     params:
-        phylo_params=extract_params(config["workdir"]+"/T/{pruning}_optimised.info"),  #launch 1 extract per pruning
-        c=config["phylo_params"]["categories"]
-    shell:
-        """
-        phyml --ancestral --no_memory_check -b 0 -v 0.0 -o r -f e -a {phylo_params['alpha']} -m phylo_params['model'] -c {params.c} -i {input.a} -u {input.t} &> {log}
-        mv extended_align.phylip_phyml_stats.txt extended_align.phylip_phyml_stats.txt
-        mv extended_trees/extended_align.phylip_phyml_ancestral_tree.txt extended_align.phylip_phyml_ancestral_tree.txt
-        mv extended_trees/extended_align.phylip_phyml_ancestral_seq.txt extended_align.phylip_phyml_ancestral_seq.txt
-        mv extended_trees/extended_align.phylip_phyml_tree.txt extended_align.phylip_phyml_tree.txt
-        """
+        outname=config["workdir"]+"/RAPPAS/{pruning}",
+        c=config["phylo_params"]["categories"],
+        states=["nt"] if config["states"]==0 else ["aa"],
+    run:
+        phylo_params=extract_params(input.s)  #launch 1 extract per pruning
+        shell(
+            "phyml --ancestral --no_memory_check --leave_duplicates -d {params.states} -f e -o r -b 0 -v 0.0 "
+            "-i {input.a} -u {input.t} -c {params.c} "
+            "-m "+phylo_params['model']+" -a "+phylo_params['alpha']+" &> {log} ;"
+            """
+            mv {params.outname}/extended_trees/extended_align.phylip_phyml_ancestral_seq.txt {params.outname}/AR/extended_align.phylip_phyml_ancestral_seq.txt
+            mv {params.outname}/extended_trees/extended_align.phylip_phyml_ancestral_tree.txt {params.outname}/AR/extended_align.phylip_phyml_ancestral_tree.txt
+            mv {params.outname}/extended_trees/extended_align.phylip_phyml_stats.txt {params.outname}/AR/extended_align.phylip_phyml_stats.txt
+            mv {params.outname}/extended_trees/extended_align.phylip_phyml_tree.txt {params.outname}/AR/extended_align.phylip_phyml_tree.txt
+            """
+        )

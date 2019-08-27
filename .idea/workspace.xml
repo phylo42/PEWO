@@ -2,16 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="47d029be-3794-48fe-9e3d-6b7ffc1d18fe" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/compute_alignfree.smk" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/modules/placement/placement_rappas.smk" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/INSTALL.md" beforeDir="false" afterPath="$PROJECT_DIR$/INSTALL.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Snakefile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/compute_alignbased.smk" beforeDir="false" afterPath="$PROJECT_DIR$/compute_alignbased.smk" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/alignment_hmm.smk" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/alignment_hmm_split.smk" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/placement_epa-ng.smk" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/placement_epa.smk" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/placement_pplacer.smk" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/op/operate_ar.smk" beforeDir="false" afterPath="$PROJECT_DIR$/modules/op/operate_ar.smk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/op/operate_extended_tree.smk" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/op/operate_prunings.smk" beforeDir="false" afterPath="$PROJECT_DIR$/modules/op/operate_prunings.smk" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -36,15 +35,15 @@
     <property name="settings.editor.selected.configurable" value="preferences.fileTypes" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/smk/subworkflows/test_epa" />
       <recent name="$PROJECT_DIR$/smk/pruning" />
       <recent name="$PROJECT_DIR$/smk" />
       <recent name="$PROJECT_DIR$/alignment/" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="RunDashboard">
