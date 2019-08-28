@@ -23,7 +23,7 @@ if (config["debug"]==1):
 '''
 prepare ar outputs using RAPPAS
 '''
-rule compute_inputs:
+rule compute_ar_inputs:
     input:
         a=config["workdir"]+"/A/{pruning}.align",
         t=config["workdir"]+"/T/{pruning}_optimised.tree"
@@ -50,7 +50,6 @@ rule compute_inputs:
 extract phylo parameters from info file to transfer them to phyml
 '''
 def extract_params(file):
-    print(file)
     res={}
     with open(file,'r') as infofile:
         lines = infofile.readlines()
