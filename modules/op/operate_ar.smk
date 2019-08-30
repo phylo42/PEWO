@@ -26,7 +26,7 @@ prepare ar outputs using RAPPAS
 rule compute_ar_inputs:
     input:
         a=config["workdir"]+"/A/{pruning}.align",
-        t=config["workdir"]+"/T/{pruning}_optimised.tree"
+        t=config["workdir"]+"/T/{pruning}.tree"
     output:
         config["workdir"]+"/RAPPAS/{pruning}/extended_trees/extended_align.fasta",
         config["workdir"]+"/RAPPAS/{pruning}/extended_trees/extended_align.phylip",

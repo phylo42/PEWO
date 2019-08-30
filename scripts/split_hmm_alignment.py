@@ -24,4 +24,4 @@ with open(sys.argv[2]+"_queries", "w") as output_queries:
                 output_refs.write('>%s\n' % record.id)
                 output_refs.write('%s\n' % record.seq)
 
-print("DONE")
+#print("DONE")

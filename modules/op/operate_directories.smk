@@ -24,7 +24,7 @@ list of tested ks
 '''
 def k_list():
     l=[]
-    for k in range(config["config_rappas"]["kmin"],config["config_rappas"]["kmax"],config["config_rappas"]["kstep"]):
+    for k in range(config["config_rappas"]["kmin"],config["config_rappas"]["kmax"]+1,config["config_rappas"]["kstep"]):
         l.append(str(k))
     return l
 
@@ -33,7 +33,7 @@ list of tested omegas
 '''
 def omega_list():
     l=[]
-    for o in numpy.arange(config["config_rappas"]["omin"], config["config_rappas"]["omax"], config["config_rappas"]["ostep"]):
+    for o in numpy.arange(config["config_rappas"]["omin"], config["config_rappas"]["omax"]+1, config["config_rappas"]["ostep"]):
         l.append(str(o))
     return l
 

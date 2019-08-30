@@ -13,10 +13,14 @@ workdir: /home/ben/PycharmProjects/placetest_pipeline/run
 states: 0
 
 #number of random prunings to compute
-pruning_count: 3
+pruning_count: 10
 
 #read lengths to test
 read_length: [150,300]
+
+#which software to test, at least one of : epa, epang, pplacer, rappas
+test_soft: ["epa","epang","pplacer","rappas"]
+
 
 # todo: model management needs more thinking
 #phylogentic model, using classic raxml model spelling (ex: "GRTGAMMA", "PROTGAMMAWAG"... )
@@ -48,14 +52,14 @@ config_rappas:
   kmax: 8
   kstep: 1
   #panel of omega that is tested in RAPPAS
-  omin: 1.0
-  omax: 1.5
+  omin: 1.5
+  omax: 2.0
   ostep: 0.25
   #reduction
   reduction: 0.99
 
 ###############################
-# WORKFLOW SETUP
+# DEBUG OPTIONS
 ###############################
 
 #if 1, prints debug information

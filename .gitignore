@@ -1,7 +1,7 @@
 #data directories built by the workflow
 A
 T
-R
+scripts/R
 HMM
 EPA
 EPANG
@@ -15,3 +15,7 @@ run
 #RAPPAS temporary files (used until RAPPAS becomes a conda package)
 viroplacetests_LITE.jar
 RAPPAS.jar
+#images/data
+*.svg
+*.pdf
+*.csv

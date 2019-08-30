@@ -23,7 +23,7 @@ build pplacer pkgs using taxtastic
 rule build_package:
     input:
         a=config["workdir"]+"/A/{pruning}.align",
-        t=config["workdir"]+"/T/{pruning}_optimised.tree",
+        t=config["workdir"]+"/T/{pruning}.tree",
         s=config["workdir"]+"/T/{pruning}_optimised.info"
     output:
         directory(config["workdir"]+"/PPLACER/{pruning}_refpkg")

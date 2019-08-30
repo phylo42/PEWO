@@ -49,7 +49,7 @@ rule placement_epang:
     input:
         r=config["workdir"]+"/HMM/{pruning}_r{length}.fasta_refs",
         q=config["workdir"]+"/HMM/{pruning}_r{length}.fasta_queries",
-        t=config["workdir"]+"/T/{pruning}_optimised.tree",
+        t=config["workdir"]+"/T/{pruning}.tree",
         m=config["workdir"]+"/T/{pruning}_optimised.info"
     output:
         os.path.join(config["workdir"],"EPANG")+"/{pruning}_r{length}_epang.jplace"
@@ -62,8 +62,8 @@ rule placement_epang:
     shell:
         """
         mkdir -p {params.dir}/{params.tmpdir}
-        epa-ng --verbose -w {params.dir}/{params.tmpdir} -q {input.q} -t {input.t} --ref-msa {input.r} -T 1 -m {input.m} &> {log}
-        cp {params.dir}/{params.tmpdir}/epa_info.log {params.dir}/{wildcards.pruning}_r{wildcards.length}_epa_info.log
+        epa-ng --preserve-rooting on --verbose -w {params.dir}/{params.tmpdir} -q {input.q} -t {input.t} --ref-msa {input.r} -T 1 -m {input.m} &> {log}
+        cp {params.dir}/{params.tmpdir}/epa_info.log {params.dir}/{wildcards.pruning}_r{wildcards.length}_epang_info.log
         cp {params.dir}/{params.tmpdir}/epa_result.jplace {params.dir}/{wildcards.pruning}_r{wildcards.length}_epang.jplace
         rm -r {params.dir}/{params.tmpdir}
         """

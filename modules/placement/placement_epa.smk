@@ -24,7 +24,7 @@ if (config["debug"]==1):
 rule placement_epa:
     input:
         hmm=config["workdir"]+"/HMM/{pruning}_r{length}.fasta",
-        t=config["workdir"]+"/T/{pruning}_optimised.tree"
+        t=config["workdir"]+"/T/{pruning}.tree"
     output:
         temp(config["workdir"]+"/EPA/RAxML_classificationLikelihoodWeights.{pruning}_r{length}"),
         temp(config["workdir"]+"/EPA/RAxML_classification.{pruning}_r{length}"),

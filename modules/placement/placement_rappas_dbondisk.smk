@@ -24,7 +24,7 @@ if (config["debug"]==1):
 rule dbbuild_rappas:
     input:
         a=config["workdir"]+"/A/{pruning}.align",
-        t=config["workdir"]+"/T/{pruning}_optimised.tree",
+        t=config["workdir"]+"/T/{pruning}.tree",
         arseq=config["workdir"]+"/RAPPAS/{pruning}/AR/extended_align.phylip_phyml_ancestral_seq.txt",
         artree=config["workdir"]+"/RAPPAS/{pruning}/AR/extended_align.phylip_phyml_ancestral_tree.txt",
     output:
