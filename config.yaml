@@ -3,8 +3,10 @@
 ###############################
 
 #dataset files
-dataset_align: test/mod_150.phy.fasta             #tree in newick format
-dataset_tree: test/RAxML_result.optimization150   #alignment in fasta format
+#dataset_align: test/mod_150.phy.fasta             #tree in newick format
+#dataset_tree: test/RAxML_result.optimization150   #alignment in fasta format
+dataset_align: test/compendium-norec-align-abbrev.fasta             #tree in newick format
+dataset_tree: test/compendium-norec-tree-b.newick   #alignment in fasta format
 
 #working directory
 workdir: /home/ben/PycharmProjects/placetest_pipeline/run
@@ -13,7 +15,7 @@ workdir: /home/ben/PycharmProjects/placetest_pipeline/run
 states: 0
 
 #number of random prunings to compute
-pruning_count: 10
+pruning_count: 50
 
 #read lengths to test
 read_length: [150,300]
@@ -49,7 +51,7 @@ config_rappas:
   #panel of k that are tested
   #ex: kmin=6, kmax=8, kstep=1 will test k=[6,7,8]
   kmin: 6
-  kmax: 8
+  kmax: 9
   kstep: 1
   #panel of omega that is tested in RAPPAS
   omin: 1.5

@@ -17,7 +17,8 @@ include:
 include:
     "modules/op/operate_ar.smk"
 include:
-    "modules/placement/placement_rappas_dbondisk.smk"
+    #"modules/placement/placement_rappas_dbondisk.smk"
+    "modules/placement/placement_rappas_dbinram.smk"
 #alignments
 include:
     "modules/alignment/alignment_hmm.smk"
@@ -51,7 +52,7 @@ list of tested omegas
 '''
 def omega_list():
     l=[]
-    for o in numpy.arange(config["config_rappas"]["omin"], config["config_rappas"]["omax"]+1, config["config_rappas"]["ostep"]):
+    for o in numpy.arange(config["config_rappas"]["omin"], config["config_rappas"]["omax"]+config["config_rappas"]["ostep"], config["config_rappas"]["ostep"]):
         l.append(str(o))
     return l
 

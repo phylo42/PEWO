@@ -1,5 +1,5 @@
 '''
-WORKFLOW FOR EPA PLACEMENTS COMPUTATION
+WORKFLOW FOR EPA/EPANG/PPLACER PLACEMENTS COMPUTATION
 This file describes the pipeline itself.
 It calls many other SnakeFiles (*.smk) which are modules dedicated to the different operations.
 @author Benjamin Linard

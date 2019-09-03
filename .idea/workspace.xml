@@ -2,23 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="47d029be-3794-48fe-9e3d-6b7ffc1d18fe" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/dictionaries/ben.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/R_User_Library.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/modules/op/operate_nodedistance.smk" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/modules/op/operate_plots.smk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/placetest_pipeline.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/placetest_pipeline.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compute_alignbased.smk" beforeDir="false" afterPath="$PROJECT_DIR$/compute_alignbased.smk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compute_alignfree.smk" beforeDir="false" afterPath="$PROJECT_DIR$/compute_alignfree.smk" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/compute_both.smk" beforeDir="false" afterPath="$PROJECT_DIR$/compute_both.smk" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/op/operate_ar.smk" beforeDir="false" afterPath="$PROJECT_DIR$/modules/op/operate_ar.smk" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/op/operate_directories.smk" beforeDir="false" afterPath="$PROJECT_DIR$/modules/op/operate_directories.smk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/placement/placement_epa.smk" beforeDir="false" afterPath="$PROJECT_DIR$/modules/placement/placement_epa.smk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/placement/placement_epang.smk" beforeDir="false" afterPath="$PROJECT_DIR$/modules/placement/placement_epang.smk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/placement/placement_ppl.smk" beforeDir="false" afterPath="$PROJECT_DIR$/modules/placement/placement_ppl.smk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/op/operate_nodedistance.smk" beforeDir="false" afterPath="$PROJECT_DIR$/modules/op/operate_nodedistance.smk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/placement/placement_rappas_dbinram.smk" beforeDir="false" afterPath="$PROJECT_DIR$/modules/placement/placement_rappas_dbinram.smk" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/placement/placement_rappas_dbondisk.smk" beforeDir="false" afterPath="$PROJECT_DIR$/modules/placement/placement_rappas_dbondisk.smk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/psiblast2fasta.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/psiblast2fasta.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/split_hmm_alignment.py" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/split_hmm_alignment.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
