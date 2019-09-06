@@ -74,6 +74,8 @@ rule ar:
         config["workdir"]+"/RAPPAS/{pruning}/AR/extended_align.phylip_phyml_tree.txt"
     log:
         config["workdir"]+"/logs/ar_phyml/{pruning}.log"
+    benchmark:
+        repeat(config["workdir"]+"/benchmarks/{pruning}.ar.benchmark.tsv", config["repeats"])
     params:
         outname=config["workdir"]+"/RAPPAS/{pruning}",
         c=config["phylo_params"]["categories"],

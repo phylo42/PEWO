@@ -10,6 +10,8 @@ RAPPAS
 AR
 logs
 run
+run_eval_ressources
+run_eval_accuracy
 #snakemake temporary files
 .snakemake
 #RAPPAS temporary files (used until RAPPAS becomes a conda package)

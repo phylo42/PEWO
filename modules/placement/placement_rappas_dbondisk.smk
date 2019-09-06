@@ -8,7 +8,7 @@ note: this module expect AR to be already computed
 #TODO: add model parameters support
 
 
-configfile: "config.yaml"
+#configfile: "config.yaml"
 
 
 import os
@@ -28,9 +28,11 @@ rule dbbuild_rappas:
         arseq=config["workdir"]+"/RAPPAS/{pruning}/AR/extended_align.phylip_phyml_ancestral_seq.txt",
         artree=config["workdir"]+"/RAPPAS/{pruning}/AR/extended_align.phylip_phyml_ancestral_tree.txt",
     output:
-        q=config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_config/DB.bin",
+        q=config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_config/DB.bin"
     log:
         config["workdir"]+"/logs/dbbuild_rappas/{pruning}_k{k}_o{omega}.log"
+    benchmark:
+        repeat(config["workdir"]+"/benchmarks/{pruning}_k{k}_o{omega}.dbbuild_rappas.benchmark.tsv", config["repeats"])
     version: "1.00"
     params:
         states=["nucl"] if config["states"]==0 else ["amino"],
@@ -50,7 +52,9 @@ rule placement_rappas:
         db=config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_config/DB.bin",
         r=config["workdir"]+"/R/{pruning}_r{length}.fasta",
     output:
-        config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_config/{pruning}_r{length}_k{k}_o{omega}_rappas.jplace",
+        config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_config/{pruning}_r{length}_k{k}_o{omega}_rappas.jplace"
+    benchmark:
+        repeat(config["workdir"]+"/benchmarks/{pruning}_r{length}_k{k}_o{omega}.placement_rappas.benchmark.tsv", config["repeats"])
     log:
         config["workdir"]+"/logs/placement_rappas/{pruning}/k{k}_o{omega}_config/r{length}.log"
     version: "1.00"

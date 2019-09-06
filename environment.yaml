@@ -104,7 +104,7 @@ dependencies:
   - pango=1.42.4=ha030887_1
   - paramiko=2.6.0=py37_0
   - pcre=8.41=hf484d3e_1003
-  - phyml=3.3.20180621=h470a237_0
+  - phyml=3.3.20190321=h14c3975_1
   - pip=19.2.2=py37_0
   - pixman=0.38.0=h516909a_1003
   - pplacer=1.1.alpha19=1

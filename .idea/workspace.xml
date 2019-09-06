@@ -3,14 +3,17 @@
   <component name="ChangeListManager">
     <list default="true" id="47d029be-3794-48fe-9e3d-6b7ffc1d18fe" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compute_alignbased.smk" beforeDir="false" afterPath="$PROJECT_DIR$/compute_alignbased.smk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compute_alignfree.smk" beforeDir="false" afterPath="$PROJECT_DIR$/compute_alignfree.smk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compute_both.smk" beforeDir="false" afterPath="$PROJECT_DIR$/compute_both.smk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/op/operate_directories.smk" beforeDir="false" afterPath="$PROJECT_DIR$/modules/op/operate_directories.smk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/op/operate_nodedistance.smk" beforeDir="false" afterPath="$PROJECT_DIR$/modules/op/operate_nodedistance.smk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compute_alignbased.smk" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/compute_alignfree.smk" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/compute_both.smk" beforeDir="false" afterPath="$PROJECT_DIR$/eval_accuracy.smk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compute_epa.smk" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/eval_accuracy_config.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/environment.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/environment.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/op/operate_ar.smk" beforeDir="false" afterPath="$PROJECT_DIR$/modules/op/operate_ar.smk" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/placement/placement_rappas_dbinram.smk" beforeDir="false" afterPath="$PROJECT_DIR$/modules/placement/placement_rappas_dbinram.smk" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/placement/placement_rappas_dbondisk.smk" beforeDir="false" afterPath="$PROJECT_DIR$/modules/placement/placement_rappas_dbondisk.smk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/RAxML_log.optimization150" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/RAxML_result.optimization150" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />

@@ -5,6 +5,7 @@ note: this module expect AR to be already computed
 @author Benjamin Linard
 '''
 
+# TODO: manage model parameters
 
 configfile: "config.yaml"
 
@@ -56,7 +57,7 @@ rule dbbuild_rappas:
         querystring=lambda wildcards, input : ",".join(input.r)
     run:
          shell(
-            "java -Xms8G -jar RAPPAS.jar -p b -b $(which phyml) "
+            "java -Xms8G -jar RAPPAS.jar -p b -b $(which phyml) -m GTR -c 4 "
             "-k {wildcards.k} --omega {wildcards.omega} -t {input.t} -r {input.a} -q {params.querystring} "
             "-w {params.workdir} --ardir {params.ardir} -s {params.states} --ratio-reduction {params.reduc} "
             "--use_unrooted --dbinram --dbfilename {params.dbfilename} &> {log} "
