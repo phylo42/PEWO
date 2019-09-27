@@ -2,7 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="47d029be-3794-48fe-9e3d-6b7ffc1d18fe" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/dictionaries/ben.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dictionaries/ben.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/environment.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/environment.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eval_accuracy.smk" beforeDir="false" afterPath="$PROJECT_DIR$/eval_accuracy.smk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eval_accuracy_config.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/eval_ressources_config.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/alignment/alignment_hmm.smk" beforeDir="false" afterPath="$PROJECT_DIR$/modules/alignment/alignment_hmm.smk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/op/operate_ar.smk" beforeDir="false" afterPath="$PROJECT_DIR$/modules/op/operate_ar.smk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/placement/placement_epa.smk" beforeDir="false" afterPath="$PROJECT_DIR$/modules/placement/placement_epa.smk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/placement/placement_epang.smk" beforeDir="false" afterPath="$PROJECT_DIR$/modules/placement/placement_epang_h1.smk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/placement/placement_ppl.smk" beforeDir="false" afterPath="$PROJECT_DIR$/modules/placement/placement_ppl.smk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/placement/placement_rappas_dbinram.smk" beforeDir="false" afterPath="$PROJECT_DIR$/modules/placement/placement_rappas_dbinram.smk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/placement/placement_rappas_dbondisk.smk" beforeDir="false" afterPath="$PROJECT_DIR$/modules/placement/placement_rappas_dbondisk.smk" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -23,21 +35,21 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="Snakemake" />
     <property name="full.screen.before.presentation.mode" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/scripts/R" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/modules/placement" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/scripts/R" />
-      <recent name="$PROJECT_DIR$/modules/placement" />
-      <recent name="$PROJECT_DIR$" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/scripts" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/smk/subworkflows/test_epa" />
       <recent name="$PROJECT_DIR$/smk/pruning" />
       <recent name="$PROJECT_DIR$/smk" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/modules/placement" />
+      <recent name="$PROJECT_DIR$/scripts/R" />
+      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="RunDashboard">

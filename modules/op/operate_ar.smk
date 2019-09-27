@@ -40,7 +40,7 @@ rule compute_ar_inputs:
         workdir=config["workdir"]+"/RAPPAS/{pruning}"
     version: "1.00"
     shell:
-         "java -jar RAPPAS.jar -p b -b $(which phyml) "
+         "java -Xms2G -jar $(which RAPPAS.jar) -p b -b $(which phyml) "
          "-t {input.t} -r {input.a} "
          "-w {params.workdir} -s {params.states} --ratio-reduction {params.reduc} "
          "--use_unrooted --arinputonly &> {log}"

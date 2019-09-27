@@ -1,0 +1,132 @@
+###############################
+# WORKFLOW CONFIGURATION
+###############################
+
+#dataset files
+dataset_align: test/mod_150.phy.fasta             #tree in newick format
+dataset_tree: test/RAxML_bipartitions.150.BEST.WITH   #alignment in fasta format
+#dataset_align: test/compendium-norec-align-abbrev.fasta             #tree in newick format
+#dataset_tree: test/compendium-norec-tree-b.newick   #alignment in fasta format
+
+#working directory
+workdir: /home/ben/PycharmProjects/placetest_pipeline/run
+
+#states used in analysis, either '0' for nucleotides or '1' for amino acids
+states: 0
+
+#which software to test, at least one of : epa, epang, pplacer, rappas
+#test_soft: ["epa","epang","pplacer","rappas"]
+test_soft: ["epa"]
+
+#read lengths to test
+read_length: [150,300]
+
+#############################
+## IF ACCURACY IS EVALUATED
+#############################
+
+## this section matters only when you run the "eval_accuracy.smk" workflow
+
+#number of random prunings to compute
+pruning_count: 1
+
+##############################
+## IF RESSOURCES ARE EVALUATED
+##############################
+
+## this section matters only when you run the "eval_ressources.smk" workflow
+
+# number of runs launched to compute RAM/CPU comsumption
+# results are reported as a means of runs
+repeats: 1
+
+###############################
+# PER SOFTWARE CONFIGURATIONS
+###############################
+
+# The following section allow you to set with combinations of algorithm parameters
+# will be evaluated by the workflow.
+# For each parameter, modify the corresponding list of values.
+
+### EPA
+config_epa:
+  # only one heuristic: % top scoring branch that are optimized
+  G: [0.01,0.05,0.1]
+
+### PPLACER
+config_pplacer:
+
+  #only one heuristic, the baseball heuristic
+  max-strikes: [6,8]
+  strike-box: [3,4]
+  max-pitches: [40,60]
+
+  #pre-masking, 1=yes, 0=no
+  premask: 1
+
+### EPA-ng
+config_epang:
+
+  #heuristics that can be tested
+  # h1: program default, heuristic developed for EPA-ng, fastest heuristic
+  # h2: heuristic equivalent to old EPA, slow
+  # h3: heuristic equivalent to pplacer defaults, fast
+  # h4: no heuristic, very very slow but should produce the best accuracy
+  heuristics: ["h1","h2","h3","h4"]
+
+  #heuristic-specific parameters can be setup in following lines
+  h1:
+    g: [0.99999, 0.99]
+  h2:
+    G: [0.05,0.1]
+  h3:
+    options: none    #reserved if any option appear in future versions
+  h4:
+    options: none    #reserved if any option appear in future versions
+
+  #pre-masking, 1=yes, 0=no
+  premask: 1
+
+### RAPPAS
+config_rappas:
+
+  # RAPPAS uses an alignment-free approach which is completely different from the alignment-based apporaches
+  # of EPA, EPA-ng and PPlacer. It does not use a "heuristic" per see to accelerate placements,
+  # but a 2-step approach (DB build, then placements) based on the phylo-kmer idea.
+
+  #panel of k that are tested
+  #ex: kmin=6, kmax=8, kstep=1 will test k=[6,7,8]
+  kmin: 5
+  kmax: 6
+  kstep: 1
+  #panel of omega that is tested in RAPPAS
+  omin: 1.75
+  omax: 2.0
+  ostep: 0.25
+  #reduction setup, e.g. gap/non-gap ratio
+  #above which a site of the input alignment
+  #is ignored during phylo-kmer computations
+  reduction: [0.95,0.99]
+  #maximum amount of memory allowed per rappas process
+  #this has no influence on placement results, but testing very large trees may require more memory
+  #set an integer value, which represents the maximum amount of Gb assign to the JVM (memory: 8 => 8 Gb of RAM)
+  memory: 16
+
+###############################
+# EVOLUTIONARY MODEL
+
+# todo: model management needs more thinking
+# currently GTR+G, JTT|WAG|LG should be supported
+#phylogentic model, using classic raxml model spelling (ex: "GRTGAMMA", "PROTGAMMAWAG"... )
+#parameters will be computed at an initial optimisation step for all pruned tree
+#and will consequently be transferred to all subworkflows
+phylo_params:
+  model: GTRGAMMA
+  categories: 4
+
+###############################
+# DEBUG OPTIONS
+###############################
+
+#if 1, prints debug information
+debug: 0

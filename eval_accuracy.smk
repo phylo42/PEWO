@@ -6,18 +6,18 @@ This top snakefile loads all modules necessary to the evaluation itself.
 '''
 
 #this config file is set globally for all subworkflows
-configfile: "eval_accuracy_config.yaml"
+configfile: "config.yaml"
 
 #prunings
 include:
     "modules/op/operate_prunings.smk"
+#tree optimisation
 include:
     "modules/op/operate_optimisation.smk"
 #alignment-free placements, e.g. : rappas
 include:
     "modules/op/operate_ar.smk"
 include:
-    #"modules/placement/placement_rappas_dbondisk.smk"
     "modules/placement/placement_rappas_dbinram.smk"
 #alignments
 include:
@@ -28,11 +28,16 @@ include:
 include:
     "modules/placement/placement_ppl.smk"
 include:
-    "modules/placement/placement_epang.smk"
-#node distances
+    "modules/placement/placement_epang_h1.smk"
+include:
+    "modules/placement/placement_epang_h2.smk"
+include:
+    "modules/placement/placement_epang_h3.smk"
+include:
+    "modules/placement/placement_epang_h4.smk"
+#results evaluation and plots
 include:
     "modules/op/operate_nodedistance.smk"
-#R plots
 include:
     "modules/op/operate_plots.smk"
 
@@ -56,12 +61,91 @@ def omega_list():
         l.append(str(o))
     return l
 
+'''
+accessory function to correctly set which epa-ng heuristics are tested and with which parameters
+'''
+def select_epang_heuristics():
+    l=[]
+    if "h1" in config["config_epang"]["heuristics"]:
+        l.append(
+            expand(     config["workdir"]+"/EPANG/{pruning}/h1/{pruning}_r{length}_h1_g{gepang}_epang.jplace",
+                        pruning=range(0,config["pruning_count"]),
+                        length=config["read_length"],
+                        gepang=config["config_epang"]["h1"]["g"]
+                   )
+        )
+    if "h2" in config["config_epang"]["heuristics"]:
+        l.append(
+             expand(    config["workdir"]+"/EPANG/{pruning}/h2/{pruning}_r{length}_h2_bigg{biggepang}_epang.jplace",
+                        pruning=range(0,config["pruning_count"]),
+                        length=config["read_length"],
+                        biggepang=config["config_epang"]["h2"]["G"]
+                        )
+        )
+    if "h3" in config["config_epang"]["heuristics"]:
+        l.append(
+             expand(    config["workdir"]+"/EPANG/{pruning}/h3/{pruning}_r{length}_h3_epang.jplace",
+                        pruning=range(0,config["pruning_count"]),
+                        length=config["read_length"]
+                        )
+        )
+    if "h4" in config["config_epang"]["heuristics"]:
+        l.append(
+            expand(
+                config["workdir"]+"/EPANG/{pruning}/h4/{pruning}_r{length}_h4_epang.jplace",
+                pruning=range(0,config["pruning_count"]),
+                length=config["read_length"]
+                )
+            )
+    return l
 
+
+'''
+top rule defining the workflow
+'''
 rule all:
      input:
-         expand(config["workdir"]+"/PPLACER/{pruning}_r{length}_ppl.jplace", pruning=range(0,config["pruning_count"]), length=config["read_length"]),
-         expand(config["workdir"]+"/EPA/{pruning}_r{length}_epa.jplace", pruning=range(0,config["pruning_count"]), length=config["read_length"]),
-         expand(config["workdir"]+"/EPANG/{pruning}_r{length}_epang.jplace", pruning=range(0,config["pruning_count"]), length=config["read_length"]),
-         expand(config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_config/{pruning}_r{length}_k{k}_o{omega}_rappas.jplace", pruning=range(0,config["pruning_count"]), k=k_list(),omega=omega_list(),length=config["read_length"]),
-         config["workdir"]+"/experience_complitude.pdf"
+         #tree optimization
+         expand(    config["workdir"]+"/T/{pruning}_optimised.tree",
+                    pruning=range(0,config["pruning_count"],1)
+                    ),
+
+         #hmm alignments for alignment-based methods
+         expand(    config["workdir"]+"/HMM/{pruning}_r{length}.fasta",
+                    pruning=range(0,config["pruning_count"],1),
+                    length=config["read_length"]
+                    ),
+
+         #pplacer placements
+         expand(    config["workdir"]+"/PPLACER/{pruning}/ms{msppl}_sb{sbppl}_mp{mpppl}/{pruning}_r{length}_ms{msppl}_sb{sbppl}_mp{mpppl}_ppl.jplace",
+                    pruning=range(0,config["pruning_count"]),
+                    length=config["read_length"],
+                    msppl=config["config_pplacer"]["max-strikes"],
+                    sbppl=config["config_pplacer"]["strike-box"],
+                    mpppl=config["config_pplacer"]["max-pitches"]
+                    ),
+
+         #epa placements
+         expand(    config["workdir"]+"/EPA/{pruning}/g{gepa}/{pruning}_r{length}_g{gepa}_epa.jplace",
+                    pruning=range(0,config["pruning_count"]),
+                    length=config["read_length"],
+                    gepa=config["config_epa"]["G"]
+                    ),
+
+         #epa-ng placements
+         #different heuristics can be called, leading to different results and completely different runtimes
+         select_epang_heuristics(),
+
+         #RAPPAS placements
+         #for accuracy evalution, the dbinram mode is used to avoid redundant database constructions
+         expand(    config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_red{reduction}/{pruning}_r{length}_k{k}_o{omega}_red{reduction}_rappas.jplace",
+                     pruning=range(0,config["pruning_count"]),
+                     k=k_list(),
+                     omega=omega_list(),
+                     length=config["read_length"],
+                     reduction=config["config_rappas"]["reduction"]
+                     ),
+
+         #collection of results and generation of summary plots
+         #config["workdir"]+"/experience_complitude.pdf"
 

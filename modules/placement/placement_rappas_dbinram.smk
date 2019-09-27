@@ -7,7 +7,7 @@ note: this module expect AR to be already computed
 
 # TODO: manage model parameters
 
-configfile: "config.yaml"
+#configfile: "config.yaml"
 
 
 import os
@@ -30,7 +30,7 @@ def setinputsreads(pruning):
 def setoutputs():
     l=list()
     for length in config["read_length"]:
-        l.append(config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_config/{pruning}_r"+str(length)+"_k{k}_o{omega}_rappas.jplace")
+        l.append(config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_red{reduction}/{pruning}_r"+str(length)+"_k{k}_o{omega}_red{reduction}_rappas.jplace")
     return l
 
 #rule all:
@@ -46,24 +46,23 @@ rule dbbuild_rappas:
     output:
         setoutputs()
     log:
-        config["workdir"]+"/logs/placement_rappas/{pruning}_k{k}_o{omega}.log"
+        config["workdir"]+"/logs/placement_rappas/{pruning}_k{k}_o{omega}_red{reduction}.log"
     version: "1.00"
     params:
         states=["nucl"] if config["states"]==0 else ["amino"],
-        reduc=config["config_rappas"]["reduction"],
         ardir=config["workdir"]+"/RAPPAS/{pruning}/AR",
-        workdir=config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_config",
+        workdir=config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_red{reduction}",
         dbfilename="DB.bin",
         querystring=lambda wildcards, input : ",".join(input.r)
     run:
          shell(
-            "java -Xms8G -jar RAPPAS.jar -p b -b $(which phyml) -m GTR -c 4 "
+            "java -Xms2G -Xmx"+str(config["config_rappas"]["memory"])+"G -jar $(which RAPPAS.jar) -p b -b $(which phyml) -m GTR -c 4 "
             "-k {wildcards.k} --omega {wildcards.omega} -t {input.t} -r {input.a} -q {params.querystring} "
-            "-w {params.workdir} --ardir {params.ardir} -s {params.states} --ratio-reduction {params.reduc} "
+            "-w {params.workdir} --ardir {params.ardir} -s {params.states} --ratio-reduction {wildcards.reduction} "
             "--use_unrooted --dbinram --dbfilename {params.dbfilename} &> {log} "
          )
          for length in config["read_length"]:
             shell(
                 "mv {params.workdir}/placements_{wildcards.pruning}_r"+str(length)+".fasta.jplace "
-                "{params.workdir}/{wildcards.pruning}_r"+str(length)+"_k{wildcards.k}_o{wildcards.omega}_rappas.jplace "
+                "{params.workdir}/{wildcards.pruning}_r"+str(length)+"_k{wildcards.k}_o{wildcards.omega}_red{wildcards.reduction}_rappas.jplace "
             )

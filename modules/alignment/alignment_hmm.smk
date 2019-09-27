@@ -69,3 +69,18 @@ rule psiblast_to_fasta:
         config["workdir"]+"/logs/psiblast2fasta/{pruning}_r{length}.log"
     shell:
         "scripts/psiblast2fasta.py {input} {output} &> {log}"
+
+'''
+split hmm alignment results in "query only" and "reference alignment only" sub-alignments
+contrary to other placement software, such input is required by epa-ng
+'''
+rule split_alignment:
+    input:
+        align=config["workdir"]+"/HMM/{pruning}_r{length}.fasta",
+        reads=config["workdir"]+"/R/{pruning}_r{length}.fasta"
+    output:
+        config["workdir"]+"/HMM/{pruning}_r{length}.fasta_queries",
+        config["workdir"]+"/HMM/{pruning}_r{length}.fasta_refs"
+    version: "1.0"
+    shell:
+        "scripts/split_hmm_alignment.py {input.reads} {input.align}"

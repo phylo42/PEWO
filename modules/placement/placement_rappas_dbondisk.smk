@@ -40,11 +40,13 @@ rule dbbuild_rappas:
         ardir=config["workdir"]+"/RAPPAS/{pruning}/AR",
         workdir=config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_config",
         dbfilename="DB.bin"
-    shell:
-         "java -jar RAPPAS.jar -v 1 -p b -b $(which phyml) "
-         "-k {wildcards.k} --omega {wildcards.omega} -t {input.t} -r {input.a} "
-         "-w {params.workdir} --ardir {params.ardir} -s {params.states} --ratio-reduction {params.reduc} "
-         "--use_unrooted --dbfilename {params.dbfilename} &> {log} "
+    run:
+         shell(
+            "java -Xms2G -Xmx"+str(config["config_rappas"]["memory"])+"G -jar $(which RAPPAS.jar) -v 1 -p b -b $(which phyml) "
+            "-k {wildcards.k} --omega {wildcards.omega} -t {input.t} -r {input.a} "
+            "-w {params.workdir} --ardir {params.ardir} -s {params.states} --ratio-reduction {params.reduc} "
+            "--use_unrooted --dbfilename {params.dbfilename} &> {log} "
+         )
 
 
 rule placement_rappas:
@@ -60,8 +62,8 @@ rule placement_rappas:
     version: "1.00"
     params:
         workdir=config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_config"
-    shell:
-         """
-         java -jar RAPPAS.jar -v 1 -p p -d {input.db} -q {input.r} -w {params.workdir}  &> {log}
-         mv {params.workdir}/placements_{wildcards.pruning}_r{wildcards.length}.fasta.jplace {params.workdir}/{wildcards.pruning}_r{wildcards.length}_k{wildcards.k}_o{wildcards.omega}_rappas.jplace
-         """
+    run:
+         shell(
+            "java -Xms2G -Xmx"+str(config["config_rappas"]["memory"])+"G -jar $(which RAPPAS.jar) -v 1 -p p -d {input.db} -q {input.r} -w {params.workdir}  &> {log} ; "
+            "mv {params.workdir}/placements_{wildcards.pruning}_r{wildcards.length}.fasta.jplace {params.workdir}/{wildcards.pruning}_r{wildcards.length}_k{wildcards.k}_o{wildcards.omega}_rappas.jplace"
+         )

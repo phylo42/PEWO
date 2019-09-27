@@ -10,21 +10,20 @@ These are very common software, just browse the web to learn how to install them
 ###############################
 
 # clone workflow into working directory
-git clone https://bitbucket.org/user/myworkflow.git path/to/workdir
-cd path/to/workdir
+git clone https://address/pewo.git
+cd pewo
 
 # install dependencies into an isolated conda environment
-conda env create -n placetest_workflow --file environment.yaml
+conda env create --file environment.yaml
 
 # activate environment
-source activate placetest_workflow
-#install last taxtastic dependencies not managed correctly by conda
-pip install psycopg-binary
-pip install fastalite
-pip install DendroPy-4.4.0
+source activate pewo
 
 # edit config as needed
 vim config.yaml
 
-# execute workflow
-snakemake -n
+# execute workflow to test accuracy
+snakemake --snakefile eval_accuray.smk
+#OR
+# execute workflow to evaluate necessary ressources
+snakemake --snakefile eval_ressources.smk
