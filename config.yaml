@@ -52,7 +52,7 @@ repeats: 1
 
 config_epa:
   # only one heuristic: % top scoring branch that are optimized
-  G: [0.01,0.05]
+  G: [0.05,0.1]
 
 ### PPLACER
 
@@ -136,7 +136,7 @@ config_apples:
   # MLSE: Least Squares Phylogenetic Placement
   # ME : Minimum Evolution
   # HYBRID : MLSE then ME
-  criteria: ["MLSE", "ME"]    # HYBRID IS CURRENTLY BUGGY
+  criteria: ["MLSE", "ME"]    # "HYBRID" IS CURRENTLY BUGGY and should be avoided
 
 
 
@@ -152,7 +152,7 @@ config_apples:
 # --keep-at-most (PPLACER)
 # --filter-max (EPANG)
 # --keep-at-most (RAPPAS)
-maxplacements: 20
+maxplacements: 7
 
 #minimum likelihood weight ratio below which placement are not output
 #equivalent to options :
@@ -160,7 +160,7 @@ maxplacements: 20
 # --keep-factor (PPLACER)
 # --filter-min-lwr (EPANG)
 # --keep-factor (RAPPAS)
-minlwr: 0.000001
+minlwr: 0.01
 
 ###############################
 # EVOLUTIONARY MODEL

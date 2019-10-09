@@ -141,7 +141,7 @@ rule all:
          select_epang_heuristics(),
 
          #apples placements
-         expand(    config["workdir"]+"/APPLES/{pruning}/m-{meth}_c-{crit}/{pruning}_r{length}_m-{meth}_c-{crit}_apples.jplace",
+         expand(    config["workdir"]+"/APPLES/{pruning}/m{meth}_c{crit}/{pruning}_r{length}_m{meth}_c{crit}_apples.jplace",
                     pruning=range(0,config["pruning_count"]),
                     length=config["read_length"],
                     meth=config["config_apples"]["methods"],

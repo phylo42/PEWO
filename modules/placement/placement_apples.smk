@@ -22,12 +22,12 @@ rule placement_apples:
         q=config["workdir"]+"/HMM/{pruning}_r{length}.fasta_queries",
         t=config["workdir"]+"/T/{pruning}.tree",
     output:
-        out=config["workdir"]+"/APPLES/{pruning}/m-{meth}_c-{crit}/{pruning}_r{length}_m-{meth}_c-{crit}_apples.jplace"
+        out=config["workdir"]+"/APPLES/{pruning}/m{meth}_c{crit}/{pruning}_r{length}_m{meth}_c{crit}_apples.jplace"
     log:
-        config["workdir"]+"/logs/placement_apples/{pruning}_r{length}_m-{meth}_c-{crit}_apples.log"
+        config["workdir"]+"/logs/placement_apples/{pruning}_r{length}_m{meth}_c{crit}_apples.log"
     version: "1.0"
     params:
-        outname=config["workdir"]+"/APPLES/{pruning}/m-{meth}_c-{crit}/{pruning}_r{length}_m-{meth}_c-{crit}_apples.jplace"
+        outname=config["workdir"]+"/APPLES/{pruning}/m{meth}_c{crit}/{pruning}_r{length}_m{meth}_c{crit}_apples.jplace"
     shell:
         """
         run_apples.py -s {input.r} -q {input.q} -t {input.t} -T 1 -m {wildcards.meth} -c {wildcards.crit} -o {params.outname}
