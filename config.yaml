@@ -15,8 +15,8 @@ workdir: /home/ben/PycharmProjects/placetest_pipeline/run
 states: 0
 
 #which software to test, at least one of : epa, epang, pplacer, rappas
-#test_soft: ["epa","epang","pplacer","rappas"]
-test_soft: ["epa"]
+test_soft: ["epa","epang","pplacer","rappas"]
+#test_soft: ["epa"]
 
 #read lengths to test
 read_length: [150,300]
@@ -25,16 +25,16 @@ read_length: [150,300]
 ## IF ACCURACY IS EVALUATED
 #############################
 
-## this section matters only when you run the "eval_accuracy.smk" workflow
+### this section matters only when you run the "eval_accuracy.smk" workflow
 
 #number of random prunings to compute
-pruning_count: 1
+pruning_count: 2
 
 ##############################
 ## IF RESSOURCES ARE EVALUATED
 ##############################
 
-## this section matters only when you run the "eval_ressources.smk" workflow
+### this section matters only when you run the "eval_ressources.smk" workflow
 
 # number of runs launched to compute RAM/CPU comsumption
 # results are reported as a means of runs
@@ -49,11 +49,13 @@ repeats: 1
 # For each parameter, modify the corresponding list of values.
 
 ### EPA
+
 config_epa:
   # only one heuristic: % top scoring branch that are optimized
-  G: [0.01,0.05,0.1]
+  G: [0.01,0.05]
 
 ### PPLACER
+
 config_pplacer:
 
   #only one heuristic, the baseball heuristic
@@ -65,6 +67,7 @@ config_pplacer:
   premask: 1
 
 ### EPA-ng
+
 config_epang:
 
   #heuristics that can be tested
@@ -76,18 +79,19 @@ config_epang:
 
   #heuristic-specific parameters can be setup in following lines
   h1:
-    g: [0.99999, 0.99]
+    g: [0.99999, 0.999]
   h2:
     G: [0.05,0.1]
   h3:
-    options: none    #reserved if any option appear in future versions
+    options: none    #reserved if any option appears in future versions
   h4:
-    options: none    #reserved if any option appear in future versions
+    options: none    #reserved if any option appears in future versions
 
   #pre-masking, 1=yes, 0=no
   premask: 1
 
 ### RAPPAS
+
 config_rappas:
 
   # RAPPAS uses an alignment-free approach which is completely different from the alignment-based apporaches
@@ -107,21 +111,70 @@ config_rappas:
   #above which a site of the input alignment
   #is ignored during phylo-kmer computations
   reduction: [0.95,0.99]
-  #maximum amount of memory allowed per rappas process
-  #this has no influence on placement results, but testing very large trees may require more memory
+  #maximum amount of memory available to rappas process
+  #this has no influence on placement accuracy but may impact ressource evaluation
+  #in particular, testing very large trees will be faster with more memory
   #set an integer value, which represents the maximum amount of Gb assign to the JVM (memory: 8 => 8 Gb of RAM)
   memory: 16
+
+### APPLES
+
+config_apples:
+
+  #apples placements are based on distance computations between the query and the reference tree
+  #it allows different "methods" to compute these distance and different "criteria" to selection the best placement
+
+  #List of weighted least squares method to test.
+  #Possible values are:
+  # OLS: k=0 ordinary least square (Cavalli-Sforza and Edwards 1967)
+  # FM : k=2 (Fitch and Margoliash, 1967)
+  # BE : k=1 (Beyer et al., 1974)
+  methods: ["OLS","FM","BE"]
+
+  #List of placement criterion to test.
+  #Possible values are:
+  # MLSE: Least Squares Phylogenetic Placement
+  # ME : Minimum Evolution
+  # HYBRID : MLSE then ME
+  criteria: ["MLSE", "ME"]    # HYBRID IS CURRENTLY BUGGY
+
+
+
+################################
+# OPTIONS COMMON TO ALL SOFTWARE
+################################
+
+### jplace output formatting
+
+#maximum number placements kept per query (minimum is 1)
+#equivalent to options :
+# --epa-keep-placements (EPA)
+# --keep-at-most (PPLACER)
+# --filter-max (EPANG)
+# --keep-at-most (RAPPAS)
+maxplacements: 20
+
+#minimum likelihood weight ratio below which placement are not output
+#equivalent to options :
+# --epa-prob-thresholds (EPA)
+# --keep-factor (PPLACER)
+# --filter-min-lwr (EPANG)
+# --keep-factor (RAPPAS)
+minlwr: 0.000001
 
 ###############################
 # EVOLUTIONARY MODEL
 
-# todo: model management needs more thinking
-# currently GTR+G, JTT|WAG|LG should be supported
-#phylogentic model, using classic raxml model spelling (ex: "GRTGAMMA", "PROTGAMMAWAG"... )
-#parameters will be computed at an initial optimisation step for all pruned tree
-#and will consequently be transferred to all subworkflows
+# By default, the workflow re-optimise all pruned tree using the model defined below.
+# Model parameters are then loaded after re-optimisation and transferred to the different placement software.
+# Currently you can choose one of the following models, because they are supported by all placement software :
+#   - GTR+G (nucleotides)
+#   - JTT+G (amino acids)
+#   - WAG+G (amino acids)
+#   - LG+G  (amino acids)are supported because supported by all placement software
+# Warning: in the present configuration file, be sure you set the "states:" value accordingly.
 phylo_params:
-  model: GTRGAMMA
+  model: "GTR+G"
   categories: 4
 
 ###############################

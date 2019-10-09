@@ -33,6 +33,16 @@ def setoutputs():
         l.append(config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_red{reduction}/{pruning}_r"+str(length)+"_k{k}_o{omega}_red{reduction}_rappas.jplace")
     return l
 
+def select_model_for_rappasdbinram():
+    if config["phylo_params"]=="GTR+G":
+        return "GTR"
+    if config["phylo_params"]=="JTT+G":
+        return "JTT"
+    if config["phylo_params"]=="WAG+G":
+        return "WAG"
+    if config["phylo_params"]=="LG+G":
+        return "LG"
+
 #rule all:
 #    input: expand(config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_config/{pruning}_r{length}_k{k}_o{omega}_rappas.jplace", pruning=1, length=config["read_length"],k=6, omega=1.0)
 
@@ -53,12 +63,15 @@ rule dbbuild_rappas:
         ardir=config["workdir"]+"/RAPPAS/{pruning}/AR",
         workdir=config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_red{reduction}",
         dbfilename="DB.bin",
-        querystring=lambda wildcards, input : ",".join(input.r)
+        querystring=lambda wildcards, input : ",".join(input.r),
+        maxp=config["maxplacements"],
+        minlwr=config["minlwr"]
     run:
          shell(
-            "java -Xms2G -Xmx"+str(config["config_rappas"]["memory"])+"G -jar $(which RAPPAS.jar) -p b -b $(which phyml) -m GTR -c 4 "
+            "java -Xms2G -Xmx"+str(config["config_rappas"]["memory"])+"G -jar $(which RAPPAS.jar) -p b -b $(which phyml) "
             "-k {wildcards.k} --omega {wildcards.omega} -t {input.t} -r {input.a} -q {params.querystring} "
             "-w {params.workdir} --ardir {params.ardir} -s {params.states} --ratio-reduction {wildcards.reduction} "
+            "--keep-at-most {params.maxp} --keep-factor {params.minlwr} "
             "--use_unrooted --dbinram --dbfilename {params.dbfilename} &> {log} "
          )
          for length in config["read_length"]:

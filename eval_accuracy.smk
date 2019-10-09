@@ -35,6 +35,10 @@ include:
     "modules/placement/placement_epang_h3.smk"
 include:
     "modules/placement/placement_epang_h4.smk"
+#distance-based placements:
+include:
+    "modules/placement/placement_apples.smk"
+
 #results evaluation and plots
 include:
     "modules/op/operate_nodedistance.smk"
@@ -135,6 +139,14 @@ rule all:
          #epa-ng placements
          #different heuristics can be called, leading to different results and completely different runtimes
          select_epang_heuristics(),
+
+         #apples placements
+         expand(    config["workdir"]+"/APPLES/{pruning}/m-{meth}_c-{crit}/{pruning}_r{length}_m-{meth}_c-{crit}_apples.jplace",
+                    pruning=range(0,config["pruning_count"]),
+                    length=config["read_length"],
+                    meth=config["config_apples"]["methods"],
+                    crit=config["config_apples"]["criteria"]
+                    ),
 
          #RAPPAS placements
          #for accuracy evalution, the dbinram mode is used to avoid redundant database constructions

@@ -15,6 +15,16 @@ if (config["debug"]==1):
     print("prunings: "+os.getcwd())
 #debug
 
+def select_model_for_optimisation():
+    if config["phylo_params"]["model"]=="GTR+G":
+        return "GTRGAMMA"
+    if config["phylo_params"]["model"]=="JTT+G":
+        return "PROTGAMMAJTT"
+    if config["phylo_params"]["model"]=="WAG+G":
+        return "PROTGAMMAWAG"
+    if config["phylo_params"]["model"]=="LG+G":
+        return "PROTGAMMALG"
+
 #rule all:
 #    input: expand(config["workdir"]+"/T/{pruning}_optimised.tree", pruning=range(0,config["pruning_count"],1))
 
@@ -31,7 +41,7 @@ rule optimise:
         config["workdir"]+"/logs/optimisation/{pruning}.log"
     version: "1.00"
     params:
-        m=config["phylo_params"]["model"],
+        m=select_model_for_optimisation(),
         c=config["phylo_params"]["categories"],
         name="{pruning}",
         raxmlname=config["workdir"]+"/T/RAxML_result.{pruning}",

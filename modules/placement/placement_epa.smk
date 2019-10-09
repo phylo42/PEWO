@@ -8,8 +8,7 @@ managed by using a temp() for the corresponding output, this output may or may n
 @author Benjamin Linard
 '''
 
-# TODO: SSE3 version is currently used, there should be a way to test SSE3/AVX availability and launch correct version accordingly
-# TODO: use optimised tree version
+# TODO: SSE3 version is used as default, there should be a way to test SSE3/AVX availability from python and launch correct version accordingly
 
 import os
 
@@ -21,6 +20,18 @@ if (config["debug"]==1):
 
 #rule all:
 #    input: expand(config["workdir"]+"/EPA/{pruning}/g{gepa}/{pruning}_r{length}_g{gepa}_epa.jplace", pruning=range(0,config["pruning_count"],1), length=config["read_length"], gepa=config["config_epa"]["G"])
+
+
+def select_model_for_epa():
+    if config["phylo_params"]["model"]=="GTR+G":
+        return "GTRGAMMA"
+    if config["phylo_params"]["model"]=="JTT+G":
+        return "PROTGAMMAJTT"
+    if config["phylo_params"]["model"]=="WAG+G":
+        return "PROTGAMMAWAG"
+    if config["phylo_params"]["model"]=="LG+G":
+        return "PROTGAMMALG"
+    return "NA"
 
 rule placement_epa:
     input:
@@ -38,17 +49,19 @@ rule placement_epa:
         config["workdir"]+"/logs/placement_epa/{pruning}_r{length}_g{gepa}.log"
     version: "1.0"
     params:
-        m=config["phylo_params"]["model"],
+        m=select_model_for_epa(),
         c=config["phylo_params"]["categories"],
         #G=config["config_epa"]["G"],
         name="{pruning}_r{length}",
         raxmlname=config["workdir"]+"/EPA/{pruning}/g{gepa}/RAxML_portableTree.{pruning}_r{length}.jplace",
         outname=config["workdir"]+"/EPA/{pruning}/g{gepa}/{pruning}_r{length}_g{gepa}_epa.jplace",
         reduction=config["workdir"]+"/HMM/{pruning}_r{length}.fasta.reduced",
-        outdir= os.path.join(config["workdir"],"EPA/{pruning}/g{gepa}")
+        outdir= os.path.join(config["workdir"],"EPA/{pruning}/g{gepa}"),
+        maxp=config["maxplacements"],
+        minlwr=config["minlwr"]
     shell:
         """
-        raxmlHPC-SSE3 -f v -w {params.outdir} -G {wildcards.gepa} -m {params.m} -c {params.c} -n {params.name} -s {input.hmm} -t {input.t} &> {log}
+        raxmlHPC-SSE3 -f v --epa-keep-placements={params.maxp} --epa-prob-threshold={params.minlwr} -w {params.outdir} -G {wildcards.gepa} -m {params.m} -c {params.c} -n {params.name} -s {input.hmm} -t {input.t} &> {log}
         mv {params.raxmlname} {params.outname}
         rm -f {params.reduction}
         """

@@ -20,3 +20,4 @@ dependencies:
   - snakemake
   - pip:
      - psycopg2-binary
+     - apples

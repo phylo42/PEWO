@@ -61,9 +61,13 @@ rule placement_rappas:
         config["workdir"]+"/logs/placement_rappas/{pruning}/k{k}_o{omega}_config/r{length}.log"
     version: "1.00"
     params:
-        workdir=config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_config"
+        workdir=config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_config",
+        maxp=config["maxplacements"],
+        minlwr=config["minlwr"]
     run:
          shell(
-            "java -Xms2G -Xmx"+str(config["config_rappas"]["memory"])+"G -jar $(which RAPPAS.jar) -v 1 -p p -d {input.db} -q {input.r} -w {params.workdir}  &> {log} ; "
+            "java -Xms2G -Xmx"+str(config["config_rappas"]["memory"])+"G -jar $(which RAPPAS.jar) "
+            "--keep-at-most {params.maxp} --keep-factor {params.minlwr} "
+            "-v 1 -p p -d {input.db} -q {input.r} -w {params.workdir}  &> {log} ; "
             "mv {params.workdir}/placements_{wildcards.pruning}_r{wildcards.length}.fasta.jplace {params.workdir}/{wildcards.pruning}_r{wildcards.length}_k{wildcards.k}_o{wildcards.omega}_rappas.jplace"
          )

@@ -43,12 +43,27 @@ rule placement_epang_h2:
     version: "1.0"
     params:
         tmpdir=os.path.join(config["workdir"],"EPANG","{pruning}/h2/{pruning}_r{length}_bigg{biggepang}"),
-        dir=config["workdir"]+"/EPANG/{pruning}/h2"
-    shell:
-        """
-        mkdir -p {params.tmpdir}
-        epa-ng --preserve-rooting on -G {wildcards.biggepang} --verbose -w {params.tmpdir} -q {input.q} -t {input.t} --ref-msa {input.r} -T 1 -m {input.m} &> {log}
-        cp {params.tmpdir}/epa_info.log {params.dir}/{wildcards.pruning}_r{wildcards.length}_h2_bigg{wildcards.biggepang}_epang_info.log
-        cp {params.tmpdir}/epa_result.jplace {params.dir}/{wildcards.pruning}_r{wildcards.length}_h2_bigg{wildcards.biggepang}_epang.jplace
-        rm -r {params.tmpdir}
-        """
+        dir=config["workdir"]+"/EPANG/{pruning}/h2",
+        maxp=config["maxplacements"],
+        minlwr=config["minlwr"]
+    run:
+        if config["config_epang"]["premask"]==1:
+            shell(
+                """
+                mkdir -p {params.tmpdir}
+                epa-ng --preserve-rooting on --filter-max {params.maxp} --filter-min-lwr {params.minlwr} -G {wildcards.biggepang} --verbose -w {params.tmpdir} -q {input.q} -t {input.t} --ref-msa {input.r} -T 1 -m {input.m} &> {log}
+                cp {params.tmpdir}/epa_info.log {params.dir}/{wildcards.pruning}_r{wildcards.length}_h2_bigg{wildcards.biggepang}_epang_info.log
+                cp {params.tmpdir}/epa_result.jplace {params.dir}/{wildcards.pruning}_r{wildcards.length}_h2_bigg{wildcards.biggepang}_epang.jplace
+                rm -r {params.tmpdir}
+                """
+            )
+        else:
+            shell(
+                """
+                mkdir -p {params.tmpdir}
+                epa-ng --no-pre-mask --preserve-rooting on --filter-max {params.maxp} --filter-min-lwr {params.minlwr} -G {wildcards.biggepang} --verbose -w {params.tmpdir} -q {input.q} -t {input.t} --ref-msa {input.r} -T 1 -m {input.m} &> {log}
+                cp {params.tmpdir}/epa_info.log {params.dir}/{wildcards.pruning}_r{wildcards.length}_h2_bigg{wildcards.biggepang}_epang_info.log
+                cp {params.tmpdir}/epa_result.jplace {params.dir}/{wildcards.pruning}_r{wildcards.length}_h2_bigg{wildcards.biggepang}_epang.jplace
+                rm -r {params.tmpdir}
+                """
+            )

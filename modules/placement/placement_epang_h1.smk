@@ -43,13 +43,15 @@ rule placement_epang_h1:
     version: "1.0"
     params:
         tmpdir=os.path.join(config["workdir"],"EPANG","{pruning}/h1/{pruning}_r{length}_g{gepang}"),
-        dir=config["workdir"]+"/EPANG/{pruning}/h1"
+        dir=config["workdir"]+"/EPANG/{pruning}/h1",
+        maxp=config["maxplacements"],
+        minlwr=config["minlwr"]
     run:
         if config["config_epang"]["premask"]==1:
             shell(
                 """
                 mkdir -p {params.tmpdir}
-                epa-ng --preserve-rooting on -g {wildcards.gepang} --verbose -w {params.tmpdir} -q {input.q} -t {input.t} --ref-msa {input.r} -T 1 -m {input.m} &> {log}
+                epa-ng --preserve-rooting on --filter-max {params.maxp} --filter-min-lwr {params.minlwr} -g {wildcards.gepang} --verbose -w {params.tmpdir} -q {input.q} -t {input.t} --ref-msa {input.r} -T 1 -m {input.m} &> {log}
                 cp {params.tmpdir}/epa_info.log {params.dir}/{wildcards.pruning}_r{wildcards.length}_h1_g{wildcards.gepang}_epang_info.log
                 cp {params.tmpdir}/epa_result.jplace {params.dir}/{wildcards.pruning}_r{wildcards.length}_h1_g{wildcards.gepang}_epang.jplace
                 rm -r {params.tmpdir}
@@ -59,7 +61,7 @@ rule placement_epang_h1:
             shell(
                 """
                 mkdir -p {params.tmpdir}
-                epa-ng --no-pre-mask --preserve-rooting on -g {wildcards.gepang} --verbose -w {params.tmpdir} -q {input.q} -t {input.t} --ref-msa {input.r} -T 1 -m {input.m} &> {log}
+                epa-ng --no-pre-mask --preserve-rooting on --filter-max {params.maxp} --filter-min-lwr {params.minlwr} -g {wildcards.gepang} --verbose -w {params.tmpdir} -q {input.q} -t {input.t} --ref-msa {input.r} -T 1 -m {input.m} &> {log}
                 cp {params.tmpdir}/epa_info.log {params.dir}/{wildcards.pruning}_r{wildcards.length}_h1_g{wildcards.gepang}_epang_info.log
                 cp {params.tmpdir}/epa_result.jplace {params.dir}/{wildcards.pruning}_r{wildcards.length}_h1_g{wildcards.gepang}_epang.jplace
                 rm -r {params.tmpdir}

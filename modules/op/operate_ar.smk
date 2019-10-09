@@ -6,8 +6,6 @@ which may generate ressource-consuming ARs (e.g., phyml requiring lots of RAM)
 @author Benjamin Linard
 '''
 
-# TODO: manage phylo models parameters in phyml for AR
-
 #configfile: "config.yaml"
 
 import os
@@ -61,6 +59,15 @@ def extract_params(file):
     infofile.close()
     return res
 
+def select_model_for_phyml():
+    if config["phylo_params"]["model"]=="GTR+G":
+        return "GTR"
+    if config["phylo_params"]["model"]=="JTT+G":
+        return "JTT"
+    if config["phylo_params"]["model"]=="WAG+G":
+        return "WAG"
+    if config["phylo_params"]["model"]=="LG+G":
+        return "LG"
 
 rule ar:
     input:
@@ -85,7 +92,7 @@ rule ar:
         shell(
             "phyml --ancestral --no_memory_check --leave_duplicates -d {params.states} -f e -o r -b 0 -v 0.0 "
             "-i {input.a} -u {input.t} -c {params.c} "
-            "-m "+phylo_params['model']+" -a "+phylo_params['alpha']+" &> {log} ;"
+            "-m "+select_model_for_phyml()+" -a "+phylo_params['alpha']+" &> {log} ;"
             """
             mv {params.outname}/extended_trees/extended_align.phylip_phyml_ancestral_seq.txt {params.outname}/AR/extended_align.phylip_phyml_ancestral_seq.txt
             mv {params.outname}/extended_trees/extended_align.phylip_phyml_ancestral_tree.txt {params.outname}/AR/extended_align.phylip_phyml_ancestral_tree.txt
