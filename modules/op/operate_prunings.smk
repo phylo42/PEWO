@@ -35,18 +35,11 @@ rule operate_pruning:
         length=str(config["read_length"]).replace("[","").replace("]","").replace(" ",""),
         #length_sd=config["read_length_sd"],
         #bpe=config["bpe"],
-        kmin=config["config_rappas"]["kmin"],
-        kmax=config["config_rappas"]["kmax"],
-        kstep=config["config_rappas"]["kstep"],
-        omin=config["config_rappas"]["omin"],
-        omax=config["config_rappas"]["omax"],
-        ostep=config["config_rappas"]["ostep"]
+        k=','.join(str(e) for e in config["config_rappas"]["k"]),
+        omega=','.join(str(e) for e in config["config_rappas"]["omega"])
     shell:
-        "java -cp viroplacetests_LITE.jar PrunedTreeGenerator_LITE "
+        "java -cp PEWO.jar PrunedTreeGenerator_LITE "
         "{params.wd} {input.a} {input.t} "
-        "{params.count} {params.length} 0 1 "
-        "{params.kmin} {params.kmax} {params.kstep} "
-        "{params.omin} {params.omax} {params.ostep} "
-        "{params.states} -1 "
+        "{params.count} {params.length} 0 1 {params.states} "
         "&> {log}"
 

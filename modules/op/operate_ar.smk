@@ -82,7 +82,7 @@ rule ar:
     log:
         config["workdir"]+"/logs/ar_phyml/{pruning}.log"
     benchmark:
-        repeat(config["workdir"]+"/benchmarks/{pruning}.ar.benchmark.tsv", config["repeats"])
+        repeat(config["workdir"]+"/benchmarks/{pruning}.ar.benchmark.tsv", config["run_count"])
     params:
         outname=config["workdir"]+"/RAPPAS/{pruning}",
         c=config["phylo_params"]["categories"],

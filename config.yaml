@@ -1,12 +1,14 @@
-###############################
+########################################################################################################################
 # WORKFLOW CONFIGURATION
-###############################
+########################################################################################################################
 
-#dataset files
-dataset_align: test/mod_150.phy.fasta             #tree in newick format
-dataset_tree: test/RAxML_bipartitions.150.BEST.WITH   #alignment in fasta format
-#dataset_align: test/compendium-norec-align-abbrev.fasta             #tree in newick format
-#dataset_tree: test/compendium-norec-tree-b.newick   #alignment in fasta format
+# INPUT DATASET
+##############################
+#alignment in fasta format and tree in newick format
+dataset_align: test/mod_150.phy.fasta
+dataset_tree: test/RAxML_bipartitions.150.BEST.WITH
+#dataset_align: test/compendium-norec-align-abbrev.fasta
+#dataset_tree: test/compendium-norec-tree-b.newick
 
 #working directory
 workdir: /home/ben/PycharmProjects/placetest_pipeline/run
@@ -14,51 +16,63 @@ workdir: /home/ben/PycharmProjects/placetest_pipeline/run
 #states used in analysis, either '0' for nucleotides or '1' for amino acids
 states: 0
 
-#which software to test, at least one of : epa, epang, pplacer, rappas
-test_soft: ["epa","epang","pplacer","rappas"]
-#test_soft: ["epa"]
+#which software to test, at least one of : epa, epang, pplacer, rappas, apples
+test_soft: ["epa","epang","pplacer","rappas","apples"]
 
 #read lengths to test
 read_length: [150,300]
 
-#############################
-## IF ACCURACY IS EVALUATED
+
+## IF "ACCURACY" IS EVALUATED
 #############################
 
 ### this section matters only when you run the "eval_accuracy.smk" workflow
 
 #number of random prunings to compute
-pruning_count: 2
+pruning_count: 5
 
-##############################
-## IF RESSOURCES ARE EVALUATED
+
+## IF "RESOURCES" ARE EVALUATED
 ##############################
 
 ### this section matters only when you run the "eval_ressources.smk" workflow
 
-# number of runs launched to compute RAM/CPU comsumption
-# results are reported as a means of runs
-repeats: 1
+# number of identical runs to launch when evaluating RAM/CPU consumption
+# final measurements are reported as mean of the the runs.
+run_count: 1
 
-###############################
-# PER SOFTWARE CONFIGURATIONS
-###############################
 
-# The following section allow you to set with combinations of algorithm parameters
-# will be evaluated by the workflow.
-# For each parameter, modify the corresponding list of values.
+########################################################################################################################
+# PER SOFTWARE CONFIGURATION
+########################################################################################################################
+
+# The following section allow you to set parameters combinations that will be tested by the workflow
+# For each software/parameter, set a list of values.
 
 ### EPA
+###############################
 
 config_epa:
-  # only one heuristic: % top scoring branch that are optimized
+
+  #EPA is alignment-based and uses a ML evaluation of the placement.
+  #it uses a 2-step heuristic:
+  # 1) rapid ML evaluation after insertion in the midpoint of each branch
+  # 2) full optimization for top scoring branch selected at step 1.
+  #(Berger et al, 2011 ; doi: 10.1093/sysbio/syr010)
+
+  #proportion of top scoring branch for which full optimization is computed
+  #float in ]0,1]
   G: [0.05,0.1]
 
 ### PPLACER
+###############################
 
 config_pplacer:
 
-  #only one heuristic, the baseball heuristic
+  #PPLACER is alignment-based and uses a ML evaluation of the placement.
+  #it uses a 2-step heuristic similar to EPA but called the "baseball" heuristic
+  #(Matsen et al, 2012 ; doi: 10.1186/1471-2105-11-538)
+
   max-strikes: [6,8]
   strike-box: [3,4]
   max-pitches: [40,60]
@@ -67,14 +81,17 @@ config_pplacer:
   premask: 1
 
 ### EPA-ng
+###############################
 
 config_epang:
 
-  #heuristics that can be tested
+  #EPA-NG is alignment-based and uses a ML evaluation of the placement.
+  #different heuristics that can be tested:
   # h1: program default, heuristic developed for EPA-ng, fastest heuristic
   # h2: heuristic equivalent to old EPA, slow
   # h3: heuristic equivalent to pplacer defaults, fast
   # h4: no heuristic, very very slow but should produce the best accuracy
+  #(Barbera et al, 2019 ; doi: 10.1093/sysbio/syy054)
   heuristics: ["h1","h2","h3","h4"]
 
   #heuristic-specific parameters can be setup in following lines
@@ -91,38 +108,44 @@ config_epang:
   premask: 1
 
 ### RAPPAS
+###############################
 
 config_rappas:
 
   # RAPPAS uses an alignment-free approach which is completely different from the alignment-based apporaches
   # of EPA, EPA-ng and PPlacer. It does not use a "heuristic" per see to accelerate placements,
   # but a 2-step approach (DB build, then placements) based on the phylo-kmer idea.
+  #(Linard et al, 2019 ; doi: 10.1093/bioinformatics/btz068)
 
-  #panel of k that are tested
-  #ex: kmin=6, kmax=8, kstep=1 will test k=[6,7,8]
-  kmin: 5
-  kmax: 6
-  kstep: 1
-  #panel of omega that is tested in RAPPAS
-  omin: 1.75
-  omax: 2.0
-  ostep: 0.25
+  #panel of k that is tested
+  #integer in [2,16] (8~10 recommended, >12 often produces too long computations)
+  k: [5,6]
+
+  #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
+  #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids
+  #For DNA, values in [1,2] recommended. For amino acids, values in [5,15] recommended.
+  omega: [1.75,2.00]
+
   #reduction setup, e.g. gap/non-gap ratio
   #above which a site of the input alignment
   #is ignored during phylo-kmer computations
-  reduction: [0.95,0.99]
+  #integer in ]0,1], a value close to 1.00 is recommended (with 1.00, only gap-only columns are filtered).
+  reduction: [0.9,0.99]
+
   #maximum amount of memory available to rappas process
-  #this has no influence on placement accuracy but may impact ressource evaluation
-  #in particular, testing very large trees will be faster with more memory
-  #set an integer value, which represents the maximum amount of Gb assign to the JVM (memory: 8 => 8 Gb of RAM)
+  #this has no influence on placement accuracy but will impact "resource" evaluation
+  #in particular, testing very large trees will be faster with more memory (due to JVM garbage collector behaviour)
+  #set as an integer value, which represents the maximum amount of Gb assigned to the JVM (memory: 8 => 8 Gb of RAM)
   memory: 16
 
 ### APPLES
+###############################
 
 config_apples:
 
   #apples placements are based on distance computations between the query and the reference tree
-  #it allows different "methods" to compute these distance and different "criteria" to selection the best placement
+  #it allows different "methods" to compute these distance and different "criteria" to selection the best placement.
+  #(Balaban et al, 2019 ; doi: 10.1093/sysbio/syz063)
 
   #List of weighted least squares method to test.
   #Possible values are:
@@ -136,13 +159,12 @@ config_apples:
   # MLSE: Least Squares Phylogenetic Placement
   # ME : Minimum Evolution
   # HYBRID : MLSE then ME
-  criteria: ["MLSE", "ME"]    # "HYBRID" IS CURRENTLY BUGGY and should be avoided
+  criteria: ["MLSE", "ME", "HYBRID"]
 
 
-
-################################
+########################################################################################################################
 # OPTIONS COMMON TO ALL SOFTWARE
-################################
+########################################################################################################################
 
 ### jplace output formatting
 
@@ -162,24 +184,27 @@ maxplacements: 7
 # --keep-factor (RAPPAS)
 minlwr: 0.01
 
-###############################
-# EVOLUTIONARY MODEL
 
-# By default, the workflow re-optimise all pruned tree using the model defined below.
-# Model parameters are then loaded after re-optimisation and transferred to the different placement software.
-# Currently you can choose one of the following models, because they are supported by all placement software :
+########################################################################################################################
+# EVOLUTIONARY MODEL
+########################################################################################################################
+
+# By default, the workflow re-optimises all pruned tree using the model defined below.
+# Model parameters are then loaded after re-optimisation and transferred to the ML-based approaches.
+# Currently you can choose one of the following models (supported by all software) :
 #   - GTR+G (nucleotides)
 #   - JTT+G (amino acids)
 #   - WAG+G (amino acids)
-#   - LG+G  (amino acids)are supported because supported by all placement software
-# Warning: in the present configuration file, be sure you set the "states:" value accordingly.
+#   - LG+G  (amino acids)
+# Warning: in the present configuration file, be sure you set the "states:" field accordingly.
 phylo_params:
   model: "GTR+G"
   categories: 4
 
-###############################
-# DEBUG OPTIONS
-###############################
 
-#if 1, prints debug information
+########################################################################################################################
+# DEBUG OPTIONS
+########################################################################################################################
+
+#if 1, prints some debug lines
 debug: 0

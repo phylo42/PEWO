@@ -1,7 +1,7 @@
 '''
-WORKFLOW TO EVALUATE PLACEMENT ACCURACY, GIVEN PARAMATERS SET IN eval_accuracy_config.yaml
-This top snakefile loads all modules necessary to the evaluation itself.
-
+WORKFLOW TO EVALUATE PLACEMENT ACCURACY, GIVEN PARAMETERS SET IN "config.yaml"
+This snakefile loads all necessary modules and builds the evaluation workflow itself
+based on the setup defined in the config file.
 @author Benjamin Linard
 '''
 
@@ -14,15 +14,15 @@ include:
 #tree optimisation
 include:
     "modules/op/operate_optimisation.smk"
-#alignment-free placements, e.g. : rappas
+#phylo-kmer placement, e.g.: rappas
 include:
     "modules/op/operate_ar.smk"
 include:
     "modules/placement/placement_rappas_dbinram.smk"
-#alignments
+#alignment (for distance-based and ML approaches)
 include:
     "modules/alignment/alignment_hmm.smk"
-#alignment-based placements, e.g. : epa, epang, pplacer
+#ML-based placements, e.g.: epa, epang, pplacer
 include:
     "modules/placement/placement_epa.smk"
 include:
@@ -35,7 +35,7 @@ include:
     "modules/placement/placement_epang_h3.smk"
 include:
     "modules/placement/placement_epang_h4.smk"
-#distance-based placements:
+#distance-based placements, e.g.: apples
 include:
     "modules/placement/placement_apples.smk"
 
@@ -45,25 +45,6 @@ include:
 include:
     "modules/op/operate_plots.smk"
 
-import numpy as numpy
-
-'''
-list of tested ks
-'''
-def k_list():
-    l=[]
-    for k in range(config["config_rappas"]["kmin"],config["config_rappas"]["kmax"]+1,config["config_rappas"]["kstep"]):
-        l.append(str(k))
-    return l
-
-'''
-list of tested omegas
-'''
-def omega_list():
-    l=[]
-    for o in numpy.arange(config["config_rappas"]["omin"], config["config_rappas"]["omax"]+config["config_rappas"]["ostep"], config["config_rappas"]["ostep"]):
-        l.append(str(o))
-    return l
 
 '''
 accessory function to correctly set which epa-ng heuristics are tested and with which parameters
@@ -105,59 +86,93 @@ def select_epang_heuristics():
 
 
 '''
-top rule defining the workflow
+this function builds the list of expected workflow outputs, e.g., which placement software are tested.
+("test_soft" field in the config file)
+'''
+def build_workflow():
+    l=list()
+    #tree optimization
+    l.append(
+        expand(
+            config["workdir"]+"/T/{pruning}_optimised.tree",
+            pruning=range(0,config["pruning_count"],1)
+        )
+    )
+    #hmm alignments for alignment-based methods
+    if ("epa" in config["test_soft"]) or ("epang" in config["test_soft"]) or ("pplacer" in config["test_soft"]) or ("apples" in config["test_soft"]) :
+        l.append(
+            expand(
+                config["workdir"]+"/HMM/{pruning}_r{length}.fasta",
+                pruning=range(0,config["pruning_count"],1),
+                length=config["read_length"]
+            )
+        )
+    #pplacer placements
+    if "pplacer" in config["test_soft"] :
+        l.append(
+            expand(
+                config["workdir"]+"/PPLACER/{pruning}/ms{msppl}_sb{sbppl}_mp{mpppl}/{pruning}_r{length}_ms{msppl}_sb{sbppl}_mp{mpppl}_ppl.jplace",
+                pruning=range(0,config["pruning_count"]),
+                length=config["read_length"],
+                msppl=config["config_pplacer"]["max-strikes"],
+                sbppl=config["config_pplacer"]["strike-box"],
+                mpppl=config["config_pplacer"]["max-pitches"]
+            )
+        )
+    #epa placements
+    if "epa" in config["test_soft"] :
+        l.append(
+            expand(
+                config["workdir"]+"/EPA/{pruning}/g{gepa}/{pruning}_r{length}_g{gepa}_epa.jplace",
+                pruning=range(0,config["pruning_count"]),
+                length=config["read_length"],
+                gepa=config["config_epa"]["G"]
+            )
+        )
+    #epa-ng placements
+    if "epang" in config["test_soft"] :
+        l.append(
+            #different heuristics can be called, leading to different results and completely different runtimes
+            select_epang_heuristics()
+        )
+    #apples placements
+    if "apples" in config["test_soft"] :
+        l.append(
+            expand(
+                config["workdir"]+"/APPLES/{pruning}/m{meth}_c{crit}/{pruning}_r{length}_m{meth}_c{crit}_apples.jplace",
+                pruning=range(0,config["pruning_count"]),
+                length=config["read_length"],
+                meth=config["config_apples"]["methods"],
+                crit=config["config_apples"]["criteria"]
+            )
+        )
+    #rappas placements
+    #for accuracy evaluation, the dbinram mode is used to avoid redundant database constructions
+    #(basically bulding a DB once per pruning/parameters combination)
+    if "rappas" in config["test_soft"] :
+        l.append(
+            expand(
+                config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_red{reduction}/{pruning}_r{length}_k{k}_o{omega}_red{reduction}_rappas.jplace",
+                pruning=range(0,config["pruning_count"]),
+                k=config["config_rappas"]["k"],
+                omega=config["config_rappas"]["omega"],
+                length=config["read_length"],
+                reduction=config["config_rappas"]["reduction"]
+            )
+        )
+    #generate node distances
+    l.append(config["workdir"]+"/results.csv")
+    #collection of results and generation of summary plots
+    #l.append(config["workdir"]+"/experience_complitude.pdf");
+
+    return l
+
+
+
+'''
+top snakemake rule, necessary to launch the workflow
 '''
 rule all:
      input:
-         #tree optimization
-         expand(    config["workdir"]+"/T/{pruning}_optimised.tree",
-                    pruning=range(0,config["pruning_count"],1)
-                    ),
-
-         #hmm alignments for alignment-based methods
-         expand(    config["workdir"]+"/HMM/{pruning}_r{length}.fasta",
-                    pruning=range(0,config["pruning_count"],1),
-                    length=config["read_length"]
-                    ),
-
-         #pplacer placements
-         expand(    config["workdir"]+"/PPLACER/{pruning}/ms{msppl}_sb{sbppl}_mp{mpppl}/{pruning}_r{length}_ms{msppl}_sb{sbppl}_mp{mpppl}_ppl.jplace",
-                    pruning=range(0,config["pruning_count"]),
-                    length=config["read_length"],
-                    msppl=config["config_pplacer"]["max-strikes"],
-                    sbppl=config["config_pplacer"]["strike-box"],
-                    mpppl=config["config_pplacer"]["max-pitches"]
-                    ),
-
-         #epa placements
-         expand(    config["workdir"]+"/EPA/{pruning}/g{gepa}/{pruning}_r{length}_g{gepa}_epa.jplace",
-                    pruning=range(0,config["pruning_count"]),
-                    length=config["read_length"],
-                    gepa=config["config_epa"]["G"]
-                    ),
-
-         #epa-ng placements
-         #different heuristics can be called, leading to different results and completely different runtimes
-         select_epang_heuristics(),
-
-         #apples placements
-         expand(    config["workdir"]+"/APPLES/{pruning}/m{meth}_c{crit}/{pruning}_r{length}_m{meth}_c{crit}_apples.jplace",
-                    pruning=range(0,config["pruning_count"]),
-                    length=config["read_length"],
-                    meth=config["config_apples"]["methods"],
-                    crit=config["config_apples"]["criteria"]
-                    ),
-
-         #RAPPAS placements
-         #for accuracy evalution, the dbinram mode is used to avoid redundant database constructions
-         expand(    config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_red{reduction}/{pruning}_r{length}_k{k}_o{omega}_red{reduction}_rappas.jplace",
-                     pruning=range(0,config["pruning_count"]),
-                     k=k_list(),
-                     omega=omega_list(),
-                     length=config["read_length"],
-                     reduction=config["config_rappas"]["reduction"]
-                     ),
-
-         #collection of results and generation of summary plots
-         #config["workdir"]+"/experience_complitude.pdf"
+        build_workflow()
 

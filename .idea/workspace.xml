@@ -2,10 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="47d029be-3794-48fe-9e3d-6b7ffc1d18fe" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/eval_accuracy.smk" beforeDir="false" afterPath="$PROJECT_DIR$/eval_accuracy.smk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/placement/placement_apples.smk" beforeDir="false" afterPath="$PROJECT_DIR$/modules/placement/placement_apples.smk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/op/operate_ar.smk" beforeDir="false" afterPath="$PROJECT_DIR$/modules/op/operate_ar.smk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/op/operate_nodedistance.smk" beforeDir="false" afterPath="$PROJECT_DIR$/modules/op/operate_nodedistance.smk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/op/operate_prunings.smk" beforeDir="false" afterPath="$PROJECT_DIR$/modules/op/operate_prunings.smk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/R/summary_plots.R" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/R/eval_accuracy_plots.R" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -26,21 +30,21 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="com.intellij.ide.scratch.LRUPopupBuilder$1/New Scratch File" value="Snakemake" />
     <property name="full.screen.before.presentation.mode" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/scripts/R" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/scripts/R" />
+      <recent name="$PROJECT_DIR$/modules/placement" />
+      <recent name="$PROJECT_DIR$" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/scripts" />
       <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/smk/subworkflows/test_epa" />
       <recent name="$PROJECT_DIR$/smk/pruning" />
       <recent name="$PROJECT_DIR$/smk" />
-    </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/modules/placement" />
-      <recent name="$PROJECT_DIR$/scripts/R" />
-      <recent name="$PROJECT_DIR$" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -80,5 +84,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/test_apples/apples" />
+    </ignored-roots>
   </component>
 </project>

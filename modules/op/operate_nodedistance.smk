@@ -18,22 +18,43 @@ if (config["debug"]==1):
 #    input: config["workdir"]+"/results.csv"
 
 '''
-list of tested ks
+accessory function to correctly set which epa-ng heuristics are tested and with which parameters
 '''
-def k_list():
+def select_epang_heuristics():
     l=[]
-    for k in range(config["config_rappas"]["kmin"],config["config_rappas"]["kmax"]+config["config_rappas"]["kstep"],config["config_rappas"]["kstep"]):
-        l.append(str(k))
+    if "h1" in config["config_epang"]["heuristics"]:
+        l.append(
+            expand(     config["workdir"]+"/EPANG/{pruning}/h1/{pruning}_r{length}_h1_g{gepang}_epang.jplace",
+                        pruning=range(0,config["pruning_count"]),
+                        length=config["read_length"],
+                        gepang=config["config_epang"]["h1"]["g"]
+                   )
+        )
+    if "h2" in config["config_epang"]["heuristics"]:
+        l.append(
+             expand(    config["workdir"]+"/EPANG/{pruning}/h2/{pruning}_r{length}_h2_bigg{biggepang}_epang.jplace",
+                        pruning=range(0,config["pruning_count"]),
+                        length=config["read_length"],
+                        biggepang=config["config_epang"]["h2"]["G"]
+                        )
+        )
+    if "h3" in config["config_epang"]["heuristics"]:
+        l.append(
+             expand(    config["workdir"]+"/EPANG/{pruning}/h3/{pruning}_r{length}_h3_epang.jplace",
+                        pruning=range(0,config["pruning_count"]),
+                        length=config["read_length"]
+                        )
+        )
+    if "h4" in config["config_epang"]["heuristics"]:
+        l.append(
+            expand(
+                config["workdir"]+"/EPANG/{pruning}/h4/{pruning}_r{length}_h4_epang.jplace",
+                pruning=range(0,config["pruning_count"]),
+                length=config["read_length"]
+                )
+            )
     return l
 
-'''
-list of tested omegas
-'''
-def omega_list():
-    l=[]
-    for o in numpy.arange(config["config_rappas"]["omin"], config["config_rappas"]["omax"]+config["config_rappas"]["ostep"], config["config_rappas"]["ostep"]):
-        l.append(str(o))
-    return l
 
 
 '''
@@ -42,13 +63,50 @@ list all jplaces that should be present before computing node distances
 def define_inputs():
     inputs=list()
     if "epa" in config["test_soft"]:
-        inputs.append(expand(config["workdir"]+"/EPA/{pruning}_r{length}_epa.jplace",pruning=range(0,config["pruning_count"]),length=config["read_length"]))
+        inputs.append(
+            expand(
+                config["workdir"]+"/EPA/{pruning}/g{gepa}/{pruning}_r{length}_g{gepa}_epa.jplace",
+                pruning=range(0,config["pruning_count"]),
+                length=config["read_length"],
+                gepa=config["config_epa"]["G"]
+            )
+        )
     if "pplacer" in config["test_soft"]:
-        inputs.append(expand(config["workdir"]+"/PPLACER/{pruning}_r{length}_ppl.jplace",pruning=range(0,config["pruning_count"]),length=config["read_length"]))
+        inputs.append(
+            expand(
+                config["workdir"]+"/PPLACER/{pruning}/ms{msppl}_sb{sbppl}_mp{mpppl}/{pruning}_r{length}_ms{msppl}_sb{sbppl}_mp{mpppl}_ppl.jplace",
+                pruning=range(0,config["pruning_count"]),
+                length=config["read_length"],
+                msppl=config["config_pplacer"]["max-strikes"],
+                sbppl=config["config_pplacer"]["strike-box"],
+                mpppl=config["config_pplacer"]["max-pitches"]
+            )
+        )
     if "epang" in config["test_soft"]:
-        inputs.append(expand(config["workdir"]+"/EPANG/{pruning}_r{length}_epang.jplace",pruning=range(0,config["pruning_count"]),length=config["read_length"]))
+        inputs.append(
+            select_epang_heuristics()
+        )
     if "rappas" in config["test_soft"]:
-        inputs.append(expand(config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_config/{pruning}_r{length}_k{k}_o{omega}_rappas.jplace",pruning=range(0,config["pruning_count"]),length=config["read_length"],k=k_list(),omega=omega_list()))
+        inputs.append(
+            expand(
+                config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_red{reduction}/{pruning}_r{length}_k{k}_o{omega}_red{reduction}_rappas.jplace",
+                pruning=range(0,config["pruning_count"]),
+                k=config["config_rappas"]["k"],
+                omega=config["config_rappas"]["omega"],
+                length=config["read_length"],
+                reduction=config["config_rappas"]["reduction"]
+            )
+        )
+    if "apples" in config["test_soft"]:
+        inputs.append(
+            expand(
+                config["workdir"]+"/APPLES/{pruning}/m{meth}_c{crit}/{pruning}_r{length}_m{meth}_c{crit}_apples.jplace",
+                pruning=range(0,config["pruning_count"]),
+                length=config["read_length"],
+                meth=config["config_apples"]["methods"],
+                crit=config["config_apples"]["criteria"]
+            )
+        )
     #print(inputs)
     return inputs
 
@@ -65,7 +123,8 @@ rule compute_nodedistance:
         compute_epa= 1 if "epa" in config["test_soft"] else 0 ,
         compute_epang= 1 if "epang" in config["test_soft"] else 0,
         compute_pplacer= 1 if "pplacer" in config["test_soft"] else 0,
-        compute_rappas= 1 if "rappas" in config["test_soft"] else 0
+        compute_rappas= 1 if "rappas" in config["test_soft"] else 0,
+        compute_apples= 1 if "apples" in config["test_soft"] else 0
     shell:
-        "java -cp viroplacetests_LITE.jar DistanceGenerator_LITE {params.workdir} "
-        "{params.compute_epa} {params.compute_epang} {params.compute_pplacer} {params.compute_rappas} -1 &> {log}"
+        "java -cp PEWO.jar DistanceGenerator_LITE2 {params.workdir} "
+        "{params.compute_epa} {params.compute_epang} {params.compute_pplacer} {params.compute_rappas} {params.compute_apples} &> {log}"
