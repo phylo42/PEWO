@@ -68,18 +68,18 @@ summarySE <- function(data=NULL, measurevar, groupvars=NULL, na.rm=FALSE,
 # often, so this is manageable.
 #################################################
 
-soft_list<-list("epa", "epang_h1", "epang_h2", "epang_h3", "epang_h4", "ppl", "rappas", "apples")
+soft_list<-list("epa", "epang_heuristic1", "epang_heuristic2", "epang_heuristic3", "epang_heuristic4", "ppl", "rappas", "apples")
 
 epa<-c("g")
-epang_h1<-c("h","g")
-epang_h2<-c("h","bigg")
-epang_h3<-c("h")
-epang_h4<-c("h")
+epang_heuristic1<-c("h","g")
+epang_heuristic2<-c("h","bigg")
+epang_heuristic3<-c("h")
+epang_heuristic4<-c("h")
 ppl<-c("ms","sb","mp")
 rappas<-c("k","o","red")
 apples<-c("m","c")
 
-soft_params<-list(epa=epa,epang_h1=epang_h1,epang_h2=epang_h2,epang_h3=epang_h3,epang_h4=epang_h4,ppl=ppl,rappas=rappas,apples=apples)
+soft_params<-list(epa=epa,epang_heuristic1=epang_heuristic1,epang_heuristic2=epang_heuristic2,epang_heuristic3=epang_heuristic3,epang_heuristic4=epang_heuristic4,ppl=ppl,rappas=rappas,apples=apples)
 
 
 #load data
@@ -116,10 +116,12 @@ for ( i in 1:length(soft_list) ) {
 	#order from best to wort parameters combination
 	data_meanofmean<-data_meanofmean[order(data_meanofmean$nd),]
 	data_meanofmean["software"]<-softname
-	# TODO: ouput this as a CSV table
 	#register results
 	alltables[[i]]<-data_meanofmean
-	# TODO:
+	#ouputs results table per software
+	print(paste("CSV table for ",softname,sep=""))
+	write.table(data_meanofmean,file=paste(workdir,"/summary_table_",softname,".csv",sep=""),quote=TRUE,sep=";",dec=".",row.names=FALSE,col.names=TRUE)
+
 }
 
 #search for ND min/max
@@ -138,6 +140,10 @@ for ( i in 1:length(soft_list) ) {
 
 #build all plots
 
+global_labeller <- labeller(
+  .default = label_both
+)
+
 for ( i in 1:length(soft_list) ) {
 	softname<-soft_list[[i]]
 	softname_short<-strsplit(softname, "_")[[1]][1]
@@ -155,16 +161,21 @@ for ( i in 1:length(soft_list) ) {
 		}
 	}
 	#build aes string from 2 first params + nd as fill
-	dev.new()
 	g<-ggplot( alltables[[i]], aes_string(x = sprintf("factor(%s)",params[1]) , y = sprintf("factor(%s)",params[2])  ) )
 	g<-g + geom_tile(aes(fill = nd))
-	g<-g + facet_wrap(as.formula(wrap_string))
+	g<-g + facet_wrap(as.formula(wrap_string), labeller=global_labeller)
 	g<-g + geom_text(aes(label=sprintf("%0.2f", round(nd, digits = 2))))
 	g<-g + scale_fill_distiller(limits=c(min_nd,max_nd),palette = "RdYlGn")
+	g<-g + labs(title=paste("mean node distance for ",softname), x=paste("parameter: '",params[1],"'"), y=paste("parameter: '",params[2],"'"))
+	#1.25 per parameter value + 2 for legend on the right
+	svg_width<-2+(1.25*length(unique(alltables[[i]][[params[1]]])))
+	svg_height<-1+(1.25*length(unique(alltables[[i]][[params[2]]])))
+	CairoSVG(file =paste(workdir,"/summary_plot_",softname,".svg", sep=""),width=svg_width,height=svg_height)
 	print(g)
+	dev.off()
 }
 
-# TODO: output alltables as a CSV
+
 
 
 #analysis on rappas side
