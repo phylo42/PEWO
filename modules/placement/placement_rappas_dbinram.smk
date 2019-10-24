@@ -30,7 +30,7 @@ def setinputsreads(pruning):
 def setoutputs():
     l=list()
     for length in config["read_length"]:
-        l.append(config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_red{reduction}/{pruning}_r"+str(length)+"_k{k}_o{omega}_red{reduction}_rappas.jplace")
+        l.append(config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/k{k}_o{omega}/{pruning}_r"+str(length)+"_k{k}_o{omega}_red{reduction}_rappas.jplace")
     return l
 
 def select_model_for_rappasdbinram():
@@ -50,8 +50,8 @@ rule dbbuild_rappas:
     input:
         a=config["workdir"]+"/A/{pruning}.align",
         t=config["workdir"]+"/T/{pruning}.tree",
-        arseq=config["workdir"]+"/RAPPAS/{pruning}/AR/extended_align.phylip_phyml_ancestral_seq.txt",
-        artree=config["workdir"]+"/RAPPAS/{pruning}/AR/extended_align.phylip_phyml_ancestral_tree.txt",
+        arseq=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/AR/extended_align.phylip_phyml_ancestral_seq.txt",
+        artree=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/AR/extended_align.phylip_phyml_ancestral_tree.txt",
         r=lambda wildcards: setinputsreads(wildcards.pruning)
     output:
         setoutputs()
@@ -60,8 +60,8 @@ rule dbbuild_rappas:
     version: "1.00"
     params:
         states=["nucl"] if config["states"]==0 else ["amino"],
-        ardir=config["workdir"]+"/RAPPAS/{pruning}/AR",
-        workdir=config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_red{reduction}",
+        ardir=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/AR",
+        workdir=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/k{k}_o{omega}",
         dbfilename="DB.bin",
         querystring=lambda wildcards, input : ",".join(input.r),
         maxp=config["maxplacements"],

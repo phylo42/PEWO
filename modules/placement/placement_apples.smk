@@ -25,6 +25,8 @@ rule placement_apples:
         out=config["workdir"]+"/APPLES/{pruning}/m{meth}_c{crit}/{pruning}_r{length}_m{meth}_c{crit}_apples.jplace"
     log:
         config["workdir"]+"/logs/placement_apples/{pruning}_r{length}_m{meth}_c{crit}_apples.log"
+    benchmark:
+        repeat(config["workdir"]+"/benchmarks/{pruning}_r{length}_m{meth}_c{crit}.apples.benchmark.tsv", config["repeats"])
     version: "1.0"
     params:
         outname=config["workdir"]+"/APPLES/{pruning}/m{meth}_c{crit}/{pruning}_r{length}_m{meth}_c{crit}_apples.jplace"

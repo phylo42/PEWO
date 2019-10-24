@@ -25,43 +25,42 @@ rule dbbuild_rappas:
     input:
         a=config["workdir"]+"/A/{pruning}.align",
         t=config["workdir"]+"/T/{pruning}.tree",
-        arseq=config["workdir"]+"/RAPPAS/{pruning}/AR/extended_align.phylip_phyml_ancestral_seq.txt",
-        artree=config["workdir"]+"/RAPPAS/{pruning}/AR/extended_align.phylip_phyml_ancestral_tree.txt",
+        arseq=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/AR/extended_align.phylip_phyml_ancestral_seq.txt",
+        artree=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/AR/extended_align.phylip_phyml_ancestral_tree.txt",
     output:
-        q=config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_config/DB.bin"
+        q=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/k{k}_o{omega}_red{reduction}/DB.bin"
     log:
-        config["workdir"]+"/logs/dbbuild_rappas/{pruning}_k{k}_o{omega}.log"
+        config["workdir"]+"/logs/dbbuild_rappas/{pruning}_k{k}_o{omega}_red{reduction}.log"
     benchmark:
-        repeat(config["workdir"]+"/benchmarks/{pruning}_k{k}_o{omega}.dbbuild_rappas.benchmark.tsv", config["repeats"])
+        repeat(config["workdir"]+"/benchmarks/{pruning}_k{k}_o{omega}_red{reduction}.dbbuild_rappas.benchmark.tsv", config["repeats"])
     version: "1.00"
     params:
         states=["nucl"] if config["states"]==0 else ["amino"],
-        reduc=config["config_rappas"]["reduction"],
-        ardir=config["workdir"]+"/RAPPAS/{pruning}/AR",
-        workdir=config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_config",
+        ardir=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/AR",
+        workdir=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/k{k}_o{omega}",
         dbfilename="DB.bin"
     run:
          shell(
             "java -Xms2G -Xmx"+str(config["config_rappas"]["memory"])+"G -jar $(which RAPPAS.jar) -v 1 -p b -b $(which phyml) "
             "-k {wildcards.k} --omega {wildcards.omega} -t {input.t} -r {input.a} "
-            "-w {params.workdir} --ardir {params.ardir} -s {params.states} --ratio-reduction {params.reduc} "
+            "-w {params.workdir} --ardir {params.ardir} -s {params.states} --ratio-reduction {wildcards.reduction} "
             "--use_unrooted --dbfilename {params.dbfilename} &> {log} "
          )
 
 
 rule placement_rappas:
     input:
-        db=config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_config/DB.bin",
+        db=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/k{k}_o{omega}/DB.bin",
         r=config["workdir"]+"/R/{pruning}_r{length}.fasta",
     output:
-        config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_config/{pruning}_r{length}_k{k}_o{omega}_rappas.jplace"
-    benchmark:
-        repeat(config["workdir"]+"/benchmarks/{pruning}_r{length}_k{k}_o{omega}.placement_rappas.benchmark.tsv", config["repeats"])
+        config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/k{k}_o{omega}/{pruning}_r{length}_k{k}_o{omega}_red{reduction}_rappas.jplace"
     log:
-        config["workdir"]+"/logs/placement_rappas/{pruning}/k{k}_o{omega}_config/r{length}.log"
+        config["workdir"]+"/logs/placement_rappas/{pruning}/red{reduction}/k{k}_o{omega}/{pruning}_r{length}_k{k}_o{omega}_red{reduction}.log"
+    benchmark:
+        repeat(config["workdir"]+"/benchmarks/{pruning}_r{length}_k{k}_o{omega}_red{reduction}.placement_rappas.benchmark.tsv", config["repeats"])
     version: "1.00"
     params:
-        workdir=config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_config",
+        workdir=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/k{k}_o{omega}",
         maxp=config["maxplacements"],
         minlwr=config["minlwr"]
     run:

@@ -29,7 +29,7 @@ read_length: [150,300]
 ### this section matters only when you run the "eval_accuracy.smk" workflow
 
 #number of random prunings to compute
-pruning_count: 5
+pruning_count: 1
 
 
 ## IF "RESOURCES" ARE EVALUATED
@@ -39,7 +39,7 @@ pruning_count: 5
 
 # number of identical runs to launch when evaluating RAM/CPU consumption
 # final measurements are reported as mean of the the runs.
-run_count: 1
+repeats: 1
 
 
 ########################################################################################################################

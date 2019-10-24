@@ -26,21 +26,21 @@ rule compute_ar_inputs:
         a=config["workdir"]+"/A/{pruning}.align",
         t=config["workdir"]+"/T/{pruning}.tree"
     output:
-        config["workdir"]+"/RAPPAS/{pruning}/extended_trees/extended_align.fasta",
-        config["workdir"]+"/RAPPAS/{pruning}/extended_trees/extended_align.phylip",
-        config["workdir"]+"/RAPPAS/{pruning}/extended_trees/extended_tree_withBL.tree",
-        config["workdir"]+"/RAPPAS/{pruning}/extended_trees/extended_tree_withBL_withoutInterLabels.tree"
+        config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/extended_trees/extended_align.fasta",
+        config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/extended_trees/extended_align.phylip",
+        config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/extended_trees/extended_tree_withBL.tree",
+        config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/extended_trees/extended_tree_withBL_withoutInterLabels.tree"
     log:
-        config["workdir"]+"/logs/arinputs/{pruning}.log"
+        config["workdir"]+"/logs/ar_inputs/{pruning}_red{reduction}.log"
     params:
         states=["nucl"] if config["states"]==0 else ["amino"],
         reduc=config["config_rappas"]["reduction"],
-        workdir=config["workdir"]+"/RAPPAS/{pruning}"
+        workdir=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}"
     version: "1.00"
     shell:
          "java -Xms2G -jar $(which RAPPAS.jar) -p b -b $(which phyml) "
          "-t {input.t} -r {input.a} "
-         "-w {params.workdir} -s {params.states} --ratio-reduction {params.reduc} "
+         "-w {params.workdir} -s {params.states} --ratio-reduction {wildcards.reduction} "
          "--use_unrooted --arinputonly &> {log}"
 
 
@@ -71,20 +71,20 @@ def select_model_for_phyml():
 
 rule ar:
     input:
-        a=config["workdir"]+"/RAPPAS/{pruning}/extended_trees/extended_align.phylip",
-        t=config["workdir"]+"/RAPPAS/{pruning}/extended_trees/extended_tree_withBL_withoutInterLabels.tree",
+        a=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/extended_trees/extended_align.phylip",
+        t=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/extended_trees/extended_tree_withBL_withoutInterLabels.tree",
         s=config["workdir"]+"/T/{pruning}_optimised.info"
     output:
-        config["workdir"]+"/RAPPAS/{pruning}/AR/extended_align.phylip_phyml_ancestral_seq.txt",
-        config["workdir"]+"/RAPPAS/{pruning}/AR/extended_align.phylip_phyml_ancestral_tree.txt",
-        config["workdir"]+"/RAPPAS/{pruning}/AR/extended_align.phylip_phyml_stats.txt",
-        config["workdir"]+"/RAPPAS/{pruning}/AR/extended_align.phylip_phyml_tree.txt"
+        config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/AR/extended_align.phylip_phyml_ancestral_seq.txt",
+        config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/AR/extended_align.phylip_phyml_ancestral_tree.txt",
+        config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/AR/extended_align.phylip_phyml_stats.txt",
+        config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/AR/extended_align.phylip_phyml_tree.txt"
     log:
-        config["workdir"]+"/logs/ar_phyml/{pruning}.log"
+        config["workdir"]+"/logs/ar/{pruning}_red{reduction}_phyml.log"
     benchmark:
-        repeat(config["workdir"]+"/benchmarks/{pruning}.ar.benchmark.tsv", config["run_count"])
+        repeat(config["workdir"]+"/benchmarks/{pruning}_red{reduction}.ar_phyml.benchmark.tsv", config["repeats"])
     params:
-        outname=config["workdir"]+"/RAPPAS/{pruning}",
+        outname=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}",
         c=config["phylo_params"]["categories"],
         states=["nt"] if config["states"]==0 else ["aa"],
     run:

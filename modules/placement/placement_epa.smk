@@ -47,6 +47,8 @@ rule placement_epa:
         config["workdir"]+"/EPA/{pruning}/g{gepa}/{pruning}_r{length}_g{gepa}_epa.jplace"
     log:
         config["workdir"]+"/logs/placement_epa/{pruning}_r{length}_g{gepa}.log"
+    benchmark:
+        repeat(config["workdir"]+"/benchmarks/{pruning}_r{length}_g{gepa}.epa.benchmark.tsv", config["repeats"])
     version: "1.0"
     params:
         m=select_model_for_epa(),

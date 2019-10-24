@@ -152,7 +152,7 @@ def build_workflow():
     if "rappas" in config["test_soft"] :
         l.append(
             expand(
-                config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_red{reduction}/{pruning}_r{length}_k{k}_o{omega}_red{reduction}_rappas.jplace",
+                config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/k{k}_o{omega}/{pruning}_r{length}_k{k}_o{omega}_red{reduction}_rappas.jplace",
                 pruning=range(0,config["pruning_count"]),
                 k=config["config_rappas"]["k"],
                 omega=config["config_rappas"]["omega"],
@@ -163,7 +163,7 @@ def build_workflow():
     #generate node distances
     l.append(config["workdir"]+"/results.csv")
     #collection of results and generation of summary plots
-    #l.append(config["workdir"]+"/experience_complitude.pdf");
+    l.append(expand(config["workdir"]+"/summary_plot_{soft}.svg",soft=config["test_soft"]));
 
     return l
 

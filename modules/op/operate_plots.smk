@@ -18,10 +18,10 @@ rule plot:
     input:
         config["workdir"]+"/results.csv"
     output:
-        config["workdir"]+"/experience_complitude.pdf"
+        expand(config["workdir"]+"/summary_plot_{soft}.svg",soft=config["test_soft"])
     log:
         config["workdir"]+"/logs/R/summary_plots.log"
     params:
         workdir=config["workdir"]
     shell:
-        "Rscript --vanilla scripts/R/summary_plots.R {input} {params.workdir} &> {log}"
+        "Rscript --vanilla scripts/R/eval_accuracy_plots_v2.R {input} {params.workdir} &> {log}"

@@ -40,6 +40,8 @@ rule placement_epang_h1:
         os.path.join(config["workdir"],"EPANG")+"/{pruning}/h1/{pruning}_r{length}_h1_g{gepang}_epang.jplace"
     log:
         config["workdir"]+"/logs/placement_epang/{pruning}_r{length}_h1_g{gepang}.log"
+    benchmark:
+        repeat(config["workdir"]+"/benchmarks/{pruning}_r{length}_h1_g{gepang}.epang.benchmark.tsv", config["repeats"])
     version: "1.0"
     params:
         tmpdir=os.path.join(config["workdir"],"EPANG","{pruning}/h1/{pruning}_r{length}_g{gepang}"),

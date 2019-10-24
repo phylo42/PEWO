@@ -49,6 +49,8 @@ rule placement_pplacer:
         config["workdir"]+"/PPLACER/{pruning}/ms{msppl}_sb{sbppl}_mp{mpppl}/{pruning}_r{length}_ms{msppl}_sb{sbppl}_mp{mpppl}_ppl.jplace"
     log:
         config["workdir"]+"/logs/placement_pplacer/{pruning}_r{length}_ms{msppl}_sb{sbppl}_mp{mpppl}.log"
+    benchmark:
+        repeat(config["workdir"]+"/benchmarks/{pruning}_r{length}_ms{msppl}_sb{sbppl}_mp{mpppl}.pplacer.benchmark.tsv", config["repeats"])
     version: "1.00"
     params:
         o=config["workdir"]+"/PPLACER/{pruning}/ms{msppl}_sb{sbppl}_mp{mpppl}/{pruning}_r{length}_ms{msppl}_sb{sbppl}_mp{mpppl}_ppl.jplace",
@@ -56,6 +58,6 @@ rule placement_pplacer:
         minlwr=config["minlwr"]
     run:
         if config["config_pplacer"]["premask"]==1 :
-            shell("pplacer -o {params.o} --verbosity 2 --keep-at-most {params.maxp} --keep-factor {params.minlwr} -c {input.p} {input.a} &> {log}")
+            shell("pplacer -o {params.o} --verbosity 2 --max-strikes {wildcards.msppl} --strike-box {wildcards.sbppl} --max-pitches {wildcards.mpppl} --keep-at-most {params.maxp} --keep-factor {params.minlwr} -c {input.p} {input.a} &> {log}")
         else:
-            shell("pplacer -o {params.o} --verbosity 2 --keep-at-most {params.maxp} --keep-factor {params.minlwr} --no-pre-mask -c {input.p} {input.a} &> {log}")
+            shell("pplacer -o {params.o} --verbosity 2 --max-strikes {wildcards.msppl} --strike-box {wildcards.sbppl} --max-pitches {wildcards.mpppl} --keep-at-most {params.maxp} --keep-factor {params.minlwr} --no-pre-mask -c {input.p} {input.a} &> {log}")
