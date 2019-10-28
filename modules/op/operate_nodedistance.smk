@@ -3,10 +3,8 @@ compute the ND (node distances) metric using the jplace outputs
 @author Benjamin Linard
 '''
 
-#configfile: "config.yaml"
 
 import os
-import numpy as numpy
 
 #debug
 if (config["debug"]==1):
@@ -16,46 +14,6 @@ if (config["debug"]==1):
 
 #rule all:
 #    input: config["workdir"]+"/results.csv"
-
-'''
-accessory function to correctly set which epa-ng heuristics are tested and with which parameters
-'''
-def select_epang_heuristics():
-    l=[]
-    if "h1" in config["config_epang"]["heuristics"]:
-        l.append(
-            expand(     config["workdir"]+"/EPANG/{pruning}/h1/{pruning}_r{length}_h1_g{gepang}_epang.jplace",
-                        pruning=range(0,config["pruning_count"]),
-                        length=config["read_length"],
-                        gepang=config["config_epang"]["h1"]["g"]
-                   )
-        )
-    if "h2" in config["config_epang"]["heuristics"]:
-        l.append(
-             expand(    config["workdir"]+"/EPANG/{pruning}/h2/{pruning}_r{length}_h2_bigg{biggepang}_epang.jplace",
-                        pruning=range(0,config["pruning_count"]),
-                        length=config["read_length"],
-                        biggepang=config["config_epang"]["h2"]["G"]
-                        )
-        )
-    if "h3" in config["config_epang"]["heuristics"]:
-        l.append(
-             expand(    config["workdir"]+"/EPANG/{pruning}/h3/{pruning}_r{length}_h3_epang.jplace",
-                        pruning=range(0,config["pruning_count"]),
-                        length=config["read_length"]
-                        )
-        )
-    if "h4" in config["config_epang"]["heuristics"]:
-        l.append(
-            expand(
-                config["workdir"]+"/EPANG/{pruning}/h4/{pruning}_r{length}_h4_epang.jplace",
-                pruning=range(0,config["pruning_count"]),
-                length=config["read_length"]
-                )
-            )
-    return l
-
-
 
 '''
 list all jplaces that should be present before computing node distances
@@ -74,7 +32,7 @@ def define_inputs():
     if "pplacer" in config["test_soft"]:
         inputs.append(
             expand(
-                config["workdir"]+"/PPLACER/{pruning}/ms{msppl}_sb{sbppl}_mp{mpppl}/{pruning}_r{length}_ms{msppl}_sb{sbppl}_mp{mpppl}_ppl.jplace",
+                config["workdir"]+"/PPLACER/{pruning}/ms{msppl}_sb{sbppl}_mp{mpppl}/{pruning}_r{length}_ms{msppl}_sb{sbppl}_mp{mpppl}_pplacer.jplace",
                 pruning=range(0,config["pruning_count"]),
                 length=config["read_length"],
                 msppl=config["config_pplacer"]["max-strikes"],

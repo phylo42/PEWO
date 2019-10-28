@@ -7,8 +7,8 @@
 #alignment in fasta format and tree in newick format
 dataset_align: test/mod_150.phy.fasta
 dataset_tree: test/RAxML_bipartitions.150.BEST.WITH
-#dataset_align: test/compendium-norec-align-abbrev.fasta
-#dataset_tree: test/compendium-norec-tree-b.newick
+#dataset_align: test/compendium-norec-exp.fasta
+#dataset_tree: test/compendium-norec-exp-tree.newick
 
 #working directory
 workdir: /home/ben/PycharmProjects/placetest_pipeline/run
@@ -20,7 +20,7 @@ states: 0
 test_soft: ["epa","epang","pplacer","rappas","apples"]
 
 #read lengths to test
-read_length: [150,300]
+read_length: [150]
 
 
 ## IF "ACCURACY" IS EVALUATED
@@ -29,7 +29,7 @@ read_length: [150,300]
 ### this section matters only when you run the "eval_accuracy.smk" workflow
 
 #number of random prunings to compute
-pruning_count: 1
+pruning_count: 50
 
 
 ## IF "RESOURCES" ARE EVALUATED
@@ -39,7 +39,14 @@ pruning_count: 1
 
 # number of identical runs to launch when evaluating RAM/CPU consumption
 # final measurements are reported as mean of the the runs.
-repeats: 1
+repeats: 3
+#defines queries source, one of the following:
+# user: query sequences are loaded from a file target by parameter "query_set"
+# simulate: queries are simulated from the input alignment (reserved for future upgrades, currently not implemented)
+query_type: user
+# queries used in resource evaluation, >10000 sequences recommended
+query_user: test/EMP_92_studies_100000.fas
+
 
 
 ########################################################################################################################
@@ -62,7 +69,7 @@ config_epa:
 
   #proportion of top scoring branch for which full optimization is computed
   #float in ]0,1]
-  G: [0.05,0.1]
+  G: [0.1]
 
 ### PPLACER
 ###############################
@@ -73,9 +80,9 @@ config_pplacer:
   #it uses a 2-step heuristic similar to EPA but called the "baseball" heuristic
   #(Matsen et al, 2012 ; doi: 10.1186/1471-2105-11-538)
 
-  max-strikes: [6,8]
-  strike-box: [3,4]
-  max-pitches: [40,60]
+  max-strikes: [6]
+  strike-box: [3]
+  max-pitches: [40]
 
   #pre-masking, 1=yes, 0=no
   premask: 1
@@ -92,13 +99,13 @@ config_epang:
   # h3: heuristic equivalent to pplacer defaults, fast
   # h4: no heuristic, very very slow but should produce the best accuracy
   #(Barbera et al, 2019 ; doi: 10.1093/sysbio/syy054)
-  heuristics: ["h1","h2","h3","h4"]
+  heuristics: ["h1","h2","h4"]
 
   #heuristic-specific parameters can be setup in following lines
   h1:
-    g: [0.99999, 0.999]
+    g: [0.99999]
   h2:
-    G: [0.05,0.1]
+    G: [0.1]
   h3:
     options: none    #reserved if any option appears in future versions
   h4:
@@ -119,24 +126,24 @@ config_rappas:
 
   #panel of k that is tested
   #integer in [2,16] (8~10 recommended, >12 often produces too long computations)
-  k: [5,6]
+  k: [6,8]
 
   #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
   #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids
   #For DNA, values in [1,2] recommended. For amino acids, values in [5,15] recommended.
-  omega: [1.75,2.00]
+  omega: [1.5,2.0]
 
   #reduction setup, e.g. gap/non-gap ratio
   #above which a site of the input alignment
   #is ignored during phylo-kmer computations
   #integer in ]0,1], a value close to 1.00 is recommended (with 1.00, only gap-only columns are filtered).
-  reduction: [0.9,0.99]
+  reduction: [0.99]
 
   #maximum amount of memory available to rappas process
   #this has no influence on placement accuracy but will impact "resource" evaluation
   #in particular, testing very large trees will be faster with more memory (due to JVM garbage collector behaviour)
   #set as an integer value, which represents the maximum amount of Gb assigned to the JVM (memory: 8 => 8 Gb of RAM)
-  memory: 16
+  memory: 32
 
 ### APPLES
 ###############################
@@ -152,14 +159,16 @@ config_apples:
   # OLS: k=0 ordinary least square (Cavalli-Sforza and Edwards 1967)
   # FM : k=2 (Fitch and Margoliash, 1967)
   # BE : k=1 (Beyer et al., 1974)
-  methods: ["OLS","FM","BE"]
+  #methods: ["OLS","FM","BE"]
+  methods: ["OLS"]
 
   #List of placement criterion to test.
   #Possible values are:
   # MLSE: Least Squares Phylogenetic Placement
   # ME : Minimum Evolution
   # HYBRID : MLSE then ME
-  criteria: ["MLSE", "ME", "HYBRID"]
+  #criteria: ["MLSE","ME","HYBRID"]
+  criteria: ["HYBRID"]
 
 
 ########################################################################################################################

@@ -8,8 +8,6 @@ using heuristic h4="no heuristics"
 # TODO add support of model parameters once module for pruned tree optimisation is done
 # TODO used optimsed tree version
 
-#configfile: "config.yaml"
-
 import os
 
 #debug
@@ -19,10 +17,6 @@ if (config["debug"]==1):
 
 #rule all:
 #    input: expand(os.path.join(config["workdir"],"EPANG")+"/{pruning}_r{length}_epang.jplace", pruning=range(0,config["pruning_count"],1), length=config["read_length"])
-
-
-def tmpdir_prefix(wildcards):
-    return wildcards.pruning+"_r"+wildcards.length
 
 '''
 operate placement
@@ -42,7 +36,7 @@ rule placement_epang_h4:
     log:
         config["workdir"]+"/logs/placement_epang/{pruning}_r{length}_h4.log"
     benchmark:
-        repeat(config["workdir"]+"/benchmarks/{pruning}_r{length}_h4.epang.benchmark.tsv", config["repeats"])
+        repeat(config["workdir"]+"/benchmarks/{pruning}_r{length}_h4_epang_benchmark.tsv", config["repeats"])
     version: "1.0"
     params:
         tmpdir=os.path.join(config["workdir"],"EPANG","{pruning}/h4/{pruning}_r{length}"),
@@ -54,7 +48,7 @@ rule placement_epang_h4:
             shell(
                 """
                 mkdir -p {params.tmpdir}
-                epa-ng --preserve-rooting on --filter-max {params.maxp} --filter-min-lwr {params.minlwr} --baseball-heur --verbose -w {params.tmpdir} -q {input.q} -t {input.t} --ref-msa {input.r} -T 1 -m {input.m} &> {log}
+                epa-ng --preserve-rooting on --filter-max {params.maxp} --filter-min-lwr {params.minlwr} --no-heur --verbose -w {params.tmpdir} -q {input.q} -t {input.t} --ref-msa {input.r} -T 1 -m {input.m} &> {log}
                 cp {params.tmpdir}/epa_info.log {params.dir}/{wildcards.pruning}_r{wildcards.length}_h4_epang_info.log
                 cp {params.tmpdir}/epa_result.jplace {params.dir}/{wildcards.pruning}_r{wildcards.length}_h4_epang.jplace
                 rm -r {params.tmpdir}
@@ -64,7 +58,7 @@ rule placement_epang_h4:
             shell(
                 """
                 mkdir -p {params.tmpdir}
-                epa-ng --no-pre-mask --preserve-rooting on --filter-max {params.maxp} --filter-min-lwr {params.minlwr} --baseball-heur --verbose -w {params.tmpdir} -q {input.q} -t {input.t} --ref-msa {input.r} -T 1 -m {input.m} &> {log}
+                epa-ng --no-pre-mask --preserve-rooting on --filter-max {params.maxp} --filter-min-lwr {params.minlwr} --no-heur --verbose -w {params.tmpdir} -q {input.q} -t {input.t} --ref-msa {input.r} -T 1 -m {input.m} &> {log}
                 cp {params.tmpdir}/epa_info.log {params.dir}/{wildcards.pruning}_r{wildcards.length}_h4_epang_info.log
                 cp {params.tmpdir}/epa_result.jplace {params.dir}/{wildcards.pruning}_r{wildcards.length}_h4_epang.jplace
                 rm -r {params.tmpdir}

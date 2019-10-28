@@ -8,34 +8,12 @@ however, a similar approach could be added later for epa/pplacer
 @author Benjamin Linard
 '''
 
-#configfile: "config.yaml"
-
 import os
-import numpy as numpy
-
 
 #debug
 if (config["debug"]==1):
     print("prunings: "+os.getcwd())
 #debug
-
-'''
-list of tested ks
-'''
-def k_list():
-    l=[]
-    for k in range(config["config_rappas"]["kmin"],config["config_rappas"]["kmax"]+config["config_rappas"]["kstep"],config["config_rappas"]["kstep"]):
-        l.append(str(k))
-    return l
-
-'''
-list of tested omegas
-'''
-def omega_list():
-    l=[]
-    for o in numpy.arange(config["config_rappas"]["omin"], config["config_rappas"]["omax"]+config["config_rappas"]["ostep"], config["config_rappas"]["ostep"]):
-        l.append(str(o))
-    return l
 
 #rule all:
 #    input: expand(config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_config",pruning=range(0,config["pruning_count"],1),k=k_list(),omega=omega_list())

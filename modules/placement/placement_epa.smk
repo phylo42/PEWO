@@ -12,8 +12,6 @@ managed by using a temp() for the corresponding output, this output may or may n
 
 import os
 
-configfile: "config.yaml"
-
 #debug
 if (config["debug"]==1):
     print("epa: "+os.getcwd())
@@ -21,48 +19,38 @@ if (config["debug"]==1):
 #rule all:
 #    input: expand(config["workdir"]+"/EPA/{pruning}/g{gepa}/{pruning}_r{length}_g{gepa}_epa.jplace", pruning=range(0,config["pruning_count"],1), length=config["read_length"], gepa=config["config_epa"]["G"])
 
-
-def select_model_for_epa():
-    if config["phylo_params"]["model"]=="GTR+G":
-        return "GTRGAMMA"
-    if config["phylo_params"]["model"]=="JTT+G":
-        return "PROTGAMMAJTT"
-    if config["phylo_params"]["model"]=="WAG+G":
-        return "PROTGAMMAWAG"
-    if config["phylo_params"]["model"]=="LG+G":
-        return "PROTGAMMALG"
-    return "NA"
-
 rule placement_epa:
     input:
         hmm=config["workdir"]+"/HMM/{pruning}_r{length}.fasta",
         t=config["workdir"]+"/T/{pruning}.tree"
     output:
-        temp(config["workdir"]+"/EPA/{pruning}/g{gepa}/RAxML_classificationLikelihoodWeights.{pruning}_r{length}"),
-        temp(config["workdir"]+"/EPA/{pruning}/g{gepa}/RAxML_classification.{pruning}_r{length}"),
-        temp(config["workdir"]+"/EPA/{pruning}/g{gepa}/RAxML_entropy.{pruning}_r{length}"),
-        temp(config["workdir"]+"/EPA/{pruning}/g{gepa}/RAxML_info.{pruning}_r{length}"),
-        temp(config["workdir"]+"/EPA/{pruning}/g{gepa}/RAxML_labelledTree.{pruning}_r{length}"),
-        temp(config["workdir"]+"/EPA/{pruning}/g{gepa}/RAxML_originalLabelledTree.{pruning}_r{length}"),
+        temp(config["workdir"]+"/EPA/{pruning}/g{gepa}/RAxML_classificationLikelihoodWeights.{pruning}_r{length}_g{gepa}"),
+        temp(config["workdir"]+"/EPA/{pruning}/g{gepa}/RAxML_classification.{pruning}_r{length}_g{gepa}"),
+        temp(config["workdir"]+"/EPA/{pruning}/g{gepa}/RAxML_entropy.{pruning}_r{length}_g{gepa}"),
+        temp(config["workdir"]+"/EPA/{pruning}/g{gepa}/RAxML_info.{pruning}_r{length}_g{gepa}"),
+        temp(config["workdir"]+"/EPA/{pruning}/g{gepa}/RAxML_labelledTree.{pruning}_r{length}_g{gepa}"),
+        temp(config["workdir"]+"/EPA/{pruning}/g{gepa}/RAxML_originalLabelledTree.{pruning}_r{length}_g{gepa}"),
         config["workdir"]+"/EPA/{pruning}/g{gepa}/{pruning}_r{length}_g{gepa}_epa.jplace"
     log:
         config["workdir"]+"/logs/placement_epa/{pruning}_r{length}_g{gepa}.log"
     benchmark:
-        repeat(config["workdir"]+"/benchmarks/{pruning}_r{length}_g{gepa}.epa.benchmark.tsv", config["repeats"])
+        repeat(config["workdir"]+"/benchmarks/{pruning}_r{length}_g{gepa}_epa_benchmark.tsv", config["repeats"])
     version: "1.0"
     params:
-        m=select_model_for_epa(),
+        m=select_model_raxmlstyle(),
         c=config["phylo_params"]["categories"],
         #G=config["config_epa"]["G"],
-        name="{pruning}_r{length}",
-        raxmlname=config["workdir"]+"/EPA/{pruning}/g{gepa}/RAxML_portableTree.{pruning}_r{length}.jplace",
+        name="{pruning}_r{length}_g{gepa}",
+        raxmlname=config["workdir"]+"/EPA/{pruning}/g{gepa}/RAxML_portableTree.{pruning}_r{length}_g{gepa}.jplace",
         outname=config["workdir"]+"/EPA/{pruning}/g{gepa}/{pruning}_r{length}_g{gepa}_epa.jplace",
         reduction=config["workdir"]+"/HMM/{pruning}_r{length}.fasta.reduced",
+        info=config["workdir"]+"/EPA/{pruning}/g{gepa}/RAxML_info.{pruning}_r{length}_g{gepa}",
         outdir= os.path.join(config["workdir"],"EPA/{pruning}/g{gepa}"),
         maxp=config["maxplacements"],
         minlwr=config["minlwr"]
     shell:
         """
+        rm -f {params.info}
         raxmlHPC-SSE3 -f v --epa-keep-placements={params.maxp} --epa-prob-threshold={params.minlwr} -w {params.outdir} -G {wildcards.gepa} -m {params.m} -c {params.c} -n {params.name} -s {input.hmm} -t {input.t} &> {log}
         mv {params.raxmlname} {params.outname}
         rm -f {params.reduction}

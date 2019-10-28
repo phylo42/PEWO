@@ -5,8 +5,6 @@ builds first a pplacer packe with taxtastic, then compute placement using the pa
 @author Benjamin Linard
 '''
 
-#configfile: "config.yaml"
-
 import os
 
 #debug
@@ -15,7 +13,7 @@ if (config["debug"]==1):
 #debug
 
 #rule all:
-#    input: expand(config["workdir"]+"/PPLACER/{pruning}_r{length}_ppl.jplace", pruning=range(0,config["pruning_count"],1), length=config["read_length"])
+#    input: expand(config["workdir"]+"/PPLACER/{pruning}_r{length}_pplacer.jplace", pruning=range(0,config["pruning_count"],1), length=config["read_length"])
 
 '''
 build pplacer pkgs using taxtastic
@@ -46,14 +44,14 @@ rule placement_pplacer:
         a=config["workdir"]+"/HMM/{pruning}_r{length}.fasta",
         p=config["workdir"]+"/PPLACER/{pruning}/{pruning}_refpkg"
     output:
-        config["workdir"]+"/PPLACER/{pruning}/ms{msppl}_sb{sbppl}_mp{mpppl}/{pruning}_r{length}_ms{msppl}_sb{sbppl}_mp{mpppl}_ppl.jplace"
+        config["workdir"]+"/PPLACER/{pruning}/ms{msppl}_sb{sbppl}_mp{mpppl}/{pruning}_r{length}_ms{msppl}_sb{sbppl}_mp{mpppl}_pplacer.jplace"
     log:
         config["workdir"]+"/logs/placement_pplacer/{pruning}_r{length}_ms{msppl}_sb{sbppl}_mp{mpppl}.log"
     benchmark:
-        repeat(config["workdir"]+"/benchmarks/{pruning}_r{length}_ms{msppl}_sb{sbppl}_mp{mpppl}.pplacer.benchmark.tsv", config["repeats"])
+        repeat(config["workdir"]+"/benchmarks/{pruning}_r{length}_ms{msppl}_sb{sbppl}_mp{mpppl}_pplacer_benchmark.tsv", config["repeats"])
     version: "1.00"
     params:
-        o=config["workdir"]+"/PPLACER/{pruning}/ms{msppl}_sb{sbppl}_mp{mpppl}/{pruning}_r{length}_ms{msppl}_sb{sbppl}_mp{mpppl}_ppl.jplace",
+        o=config["workdir"]+"/PPLACER/{pruning}/ms{msppl}_sb{sbppl}_mp{mpppl}/{pruning}_r{length}_ms{msppl}_sb{sbppl}_mp{mpppl}_pplacer.jplace",
         maxp=config["maxplacements"],
         minlwr=config["minlwr"]
     run:

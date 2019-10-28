@@ -7,10 +7,6 @@ note: this module expect AR to be already computed
 
 #TODO: add model parameters support
 
-
-#configfile: "config.yaml"
-
-
 import os
 
 #debug
@@ -28,11 +24,11 @@ rule dbbuild_rappas:
         arseq=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/AR/extended_align.phylip_phyml_ancestral_seq.txt",
         artree=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/AR/extended_align.phylip_phyml_ancestral_tree.txt",
     output:
-        q=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/k{k}_o{omega}_red{reduction}/DB.bin"
+        q=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/k{k}_o{omega}/DB.bin"
     log:
         config["workdir"]+"/logs/dbbuild_rappas/{pruning}_k{k}_o{omega}_red{reduction}.log"
     benchmark:
-        repeat(config["workdir"]+"/benchmarks/{pruning}_k{k}_o{omega}_red{reduction}.dbbuild_rappas.benchmark.tsv", config["repeats"])
+        repeat(config["workdir"]+"/benchmarks/{pruning}_k{k}_o{omega}_red{reduction}_rappas-dbbuild_benchmark.tsv", config["repeats"])
     version: "1.00"
     params:
         states=["nucl"] if config["states"]==0 else ["amino"],
@@ -57,7 +53,7 @@ rule placement_rappas:
     log:
         config["workdir"]+"/logs/placement_rappas/{pruning}/red{reduction}/k{k}_o{omega}/{pruning}_r{length}_k{k}_o{omega}_red{reduction}.log"
     benchmark:
-        repeat(config["workdir"]+"/benchmarks/{pruning}_r{length}_k{k}_o{omega}_red{reduction}.placement_rappas.benchmark.tsv", config["repeats"])
+        repeat(config["workdir"]+"/benchmarks/{pruning}_r{length}_k{k}_o{omega}_red{reduction}_rappas-placement_benchmark.tsv", config["repeats"])
     version: "1.00"
     params:
         workdir=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/k{k}_o{omega}",
@@ -68,5 +64,5 @@ rule placement_rappas:
             "java -Xms2G -Xmx"+str(config["config_rappas"]["memory"])+"G -jar $(which RAPPAS.jar) "
             "--keep-at-most {params.maxp} --keep-factor {params.minlwr} "
             "-v 1 -p p -d {input.db} -q {input.r} -w {params.workdir}  &> {log} ; "
-            "mv {params.workdir}/placements_{wildcards.pruning}_r{wildcards.length}.fasta.jplace {params.workdir}/{wildcards.pruning}_r{wildcards.length}_k{wildcards.k}_o{wildcards.omega}_rappas.jplace"
+            "mv {params.workdir}/placements_{wildcards.pruning}_r{wildcards.length}.fasta.jplace {params.workdir}/{wildcards.pruning}_r{wildcards.length}_k{wildcards.k}_o{wildcards.omega}_red{wildcards.reduction}_rappas.jplace"
          )

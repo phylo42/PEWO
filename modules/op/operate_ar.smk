@@ -6,7 +6,6 @@ which may generate ressource-consuming ARs (e.g., phyml requiring lots of RAM)
 @author Benjamin Linard
 '''
 
-#configfile: "config.yaml"
 
 import os
 
@@ -44,31 +43,6 @@ rule compute_ar_inputs:
          "--use_unrooted --arinputonly &> {log}"
 
 
-'''
-extract phylo parameters from info file to transfer them to phyml
-'''
-def extract_params(file):
-    res={}
-    with open(file,'r') as infofile:
-        lines = infofile.readlines()
-        for l in lines:
-            if l.startswith("Substitution Matrix:") :
-                res["model"]=l.split(":")[1].strip()
-            if l.startswith("alpha:") :
-                res["alpha"]=l.split(":")[1].strip()
-    infofile.close()
-    return res
-
-def select_model_for_phyml():
-    if config["phylo_params"]["model"]=="GTR+G":
-        return "GTR"
-    if config["phylo_params"]["model"]=="JTT+G":
-        return "JTT"
-    if config["phylo_params"]["model"]=="WAG+G":
-        return "WAG"
-    if config["phylo_params"]["model"]=="LG+G":
-        return "LG"
-
 rule ar:
     input:
         a=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/extended_trees/extended_align.phylip",
@@ -82,7 +56,7 @@ rule ar:
     log:
         config["workdir"]+"/logs/ar/{pruning}_red{reduction}_phyml.log"
     benchmark:
-        repeat(config["workdir"]+"/benchmarks/{pruning}_red{reduction}.ar_phyml.benchmark.tsv", config["repeats"])
+        repeat(config["workdir"]+"/benchmarks/{pruning}_red{reduction}_phyml-ar_benchmark.tsv", config["repeats"])
     params:
         outname=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}",
         c=config["phylo_params"]["categories"],
@@ -92,7 +66,7 @@ rule ar:
         shell(
             "phyml --ancestral --no_memory_check --leave_duplicates -d {params.states} -f e -o r -b 0 -v 0.0 "
             "-i {input.a} -u {input.t} -c {params.c} "
-            "-m "+select_model_for_phyml()+" -a "+phylo_params['alpha']+" &> {log} ;"
+            "-m "+select_model_phymlstyle()+" -a "+str(phylo_params['alpha'])+" &> {log} ;"
             """
             mv {params.outname}/extended_trees/extended_align.phylip_phyml_ancestral_seq.txt {params.outname}/AR/extended_align.phylip_phyml_ancestral_seq.txt
             mv {params.outname}/extended_trees/extended_align.phylip_phyml_ancestral_tree.txt {params.outname}/AR/extended_align.phylip_phyml_ancestral_tree.txt

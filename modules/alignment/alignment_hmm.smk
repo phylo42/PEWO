@@ -50,6 +50,8 @@ rule hmmalign:
     version: "1.0"
     log:
         config["workdir"]+"/logs/hmmbuild/{pruning}_r{length}.log"
+    benchmark:
+        repeat(config["workdir"]+"/benchmarks/{pruning}_r{length}_hmmbuild_benchmark.tsv", config["repeats"])
     params:
         states=["dna"] if config["states"]==0 else ["amino"]
     shell:

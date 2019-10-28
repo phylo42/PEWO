@@ -7,9 +7,6 @@ note: this module expect AR to be already computed
 
 # TODO: manage model parameters
 
-#configfile: "config.yaml"
-
-
 import os
 
 #debug
@@ -32,16 +29,6 @@ def setoutputs():
     for length in config["read_length"]:
         l.append(config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/k{k}_o{omega}/{pruning}_r"+str(length)+"_k{k}_o{omega}_red{reduction}_rappas.jplace")
     return l
-
-def select_model_for_rappasdbinram():
-    if config["phylo_params"]=="GTR+G":
-        return "GTR"
-    if config["phylo_params"]=="JTT+G":
-        return "JTT"
-    if config["phylo_params"]=="WAG+G":
-        return "WAG"
-    if config["phylo_params"]=="LG+G":
-        return "LG"
 
 #rule all:
 #    input: expand(config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_config/{pruning}_r{length}_k{k}_o{omega}_rappas.jplace", pruning=1, length=config["read_length"],k=6, omega=1.0)

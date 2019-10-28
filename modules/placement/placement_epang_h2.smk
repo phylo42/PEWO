@@ -7,8 +7,6 @@ module to operate placements with EPA-ng
 # TODO add support of model parameters once module for pruned tree optimisation is done
 # TODO used optimsed tree version
 
-#configfile: "config.yaml"
-
 import os
 
 #debug
@@ -19,9 +17,6 @@ if (config["debug"]==1):
 #rule all:
 #    input: expand(os.path.join(config["workdir"],"EPANG")+"/{pruning}_r{length}_epang.jplace", pruning=range(0,config["pruning_count"],1), length=config["read_length"])
 
-
-def tmpdir_prefix(wildcards):
-    return wildcards.pruning+"_r"+wildcards.length
 
 '''
 operate placement
@@ -41,7 +36,7 @@ rule placement_epang_h2:
     log:
         config["workdir"]+"/logs/placement_epang/{pruning}_r{length}_h2_bigg{biggepang}.log"
     benchmark:
-        repeat(config["workdir"]+"/benchmarks/{pruning}_r{length}_h2_bigg{biggepang}.epang.benchmark.tsv", config["repeats"])
+        repeat(config["workdir"]+"/benchmarks/{pruning}_r{length}_h2_bigg{biggepang}_epang_benchmark.tsv", config["repeats"])
     version: "1.0"
     params:
         tmpdir=os.path.join(config["workdir"],"EPANG","{pruning}/h2/{pruning}_r{length}_bigg{biggepang}"),
