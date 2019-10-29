@@ -143,6 +143,9 @@
       <w>.__C__S4</w>
       <w>.__C__SClassExtension</w>
       <w>.__C__SQL</w>
+      <w>.__C__SQLiteConnection</w>
+      <w>.__C__SQLiteDriver</w>
+      <w>.__C__SQLiteResult</w>
       <w>.__C__Schur</w>
       <w>.__C__SealedMethodDefinition</w>
       <w>.__C__SuperClassMethod</w>
@@ -801,6 +804,7 @@
       <w>IQR</w>
       <w>ISOdate</w>
       <w>ISOdatetime</w>
+      <w>Id</w>
       <w>Im</w>
       <w>Indometh</w>
       <w>Initialize</w>
@@ -879,6 +883,7 @@
       <w>MATCH.default</w>
       <w>MATCH.times</w>
       <w>MFI</w>
+      <w>MISSING</w>
       <w>MLE.Matern</w>
       <w>MLE.Matern.fast</w>
       <w>MLE.objective.fn</w>
@@ -1060,6 +1065,7 @@
       <w>ROCR.simple</w>
       <w>ROCR.xval</w>
       <w>RSI</w>
+      <w>RSQLite</w>
       <w>RShowDoc</w>
       <w>RSiteSearch</w>
       <w>R_system_version</w>
@@ -1138,7 +1144,11 @@
       <w>SP500</w>
       <w>SPR.dist</w>
       <w>SQL</w>
+      <w>SQLITE_RO</w>
+      <w>SQLITE_RW</w>
+      <w>SQLITE_RWC</w>
       <w>SQLKeywords</w>
+      <w>SQLite</w>
       <w>SSD</w>
       <w>SSI</w>
       <w>SSasymp</w>
@@ -1326,8 +1336,12 @@
       <w>ZigZag</w>
       <w>`!!!`</w>
       <w>`!!`</w>
+      <w>`!.bit`</w>
+      <w>`!.bitwhich`</w>
       <w>`!.hexmode`</w>
       <w>`!.octmode`</w>
+      <w>`!=.bit`</w>
+      <w>`!=.bitwhich`</w>
       <w>`!=`</w>
       <w>`!`</w>
       <w>`$.DLLInfo`</w>
@@ -1346,6 +1360,7 @@
       <w>`%--%`</w>
       <w>`%-&gt;%`</w>
       <w>`%/%`</w>
+      <w>`%0%`</w>
       <w>`%:%`</w>
       <w>`%&lt;%`</w>
       <w>`%&lt;+%`</w>
@@ -1396,6 +1411,8 @@
       <w>`%|%`</w>
       <w>`%||%`</w>
       <w>`&amp;&amp;`</w>
+      <w>`&amp;.bit`</w>
+      <w>`&amp;.bitwhich`</w>
       <w>`&amp;.hexmode`</w>
       <w>`&amp;.octmode`</w>
       <w>`&amp;`</w>
@@ -1516,13 +1533,17 @@
       <w>`.__T__cummin:base`</w>
       <w>`.__T__cumprod:base`</w>
       <w>`.__T__cumsum:base`</w>
+      <w>`.__T__dbAppendTable:DBI`</w>
       <w>`.__T__dbBegin:DBI`</w>
+      <w>`.__T__dbBeginTransaction:RSQLite`</w>
       <w>`.__T__dbBind:DBI`</w>
       <w>`.__T__dbCallProc:DBI`</w>
+      <w>`.__T__dbCanConnect:DBI`</w>
       <w>`.__T__dbClearResult:DBI`</w>
       <w>`.__T__dbColumnInfo:DBI`</w>
       <w>`.__T__dbCommit:DBI`</w>
       <w>`.__T__dbConnect:DBI`</w>
+      <w>`.__T__dbCreateTable:DBI`</w>
       <w>`.__T__dbDataType:DBI`</w>
       <w>`.__T__dbDisconnect:DBI`</w>
       <w>`.__T__dbDriver:DBI`</w>
@@ -1531,25 +1552,31 @@
       <w>`.__T__dbFetch:DBI`</w>
       <w>`.__T__dbGetException:DBI`</w>
       <w>`.__T__dbGetInfo:DBI`</w>
+      <w>`.__T__dbGetPreparedQuery:RSQLite`</w>
       <w>`.__T__dbGetQuery:DBI`</w>
       <w>`.__T__dbGetRowCount:DBI`</w>
       <w>`.__T__dbGetRowsAffected:DBI`</w>
       <w>`.__T__dbGetStatement:DBI`</w>
       <w>`.__T__dbHasCompleted:DBI`</w>
+      <w>`.__T__dbIsReadOnly:DBI`</w>
       <w>`.__T__dbIsValid:DBI`</w>
       <w>`.__T__dbListConnections:DBI`</w>
       <w>`.__T__dbListFields:DBI`</w>
+      <w>`.__T__dbListObjects:DBI`</w>
       <w>`.__T__dbListResults:DBI`</w>
       <w>`.__T__dbListTables:DBI`</w>
       <w>`.__T__dbQuoteIdentifier:DBI`</w>
+      <w>`.__T__dbQuoteLiteral:DBI`</w>
       <w>`.__T__dbQuoteString:DBI`</w>
       <w>`.__T__dbReadTable:DBI`</w>
       <w>`.__T__dbRemoveTable:DBI`</w>
       <w>`.__T__dbRollback:DBI`</w>
+      <w>`.__T__dbSendPreparedQuery:RSQLite`</w>
       <w>`.__T__dbSendQuery:DBI`</w>
       <w>`.__T__dbSendStatement:DBI`</w>
       <w>`.__T__dbSetDataMappings:DBI`</w>
       <w>`.__T__dbUnloadDriver:DBI`</w>
+      <w>`.__T__dbUnquoteIdentifier:DBI`</w>
       <w>`.__T__dbWithTransaction:DBI`</w>
       <w>`.__T__dbWriteTable:DBI`</w>
       <w>`.__T__determinant:base`</w>
@@ -1734,6 +1761,8 @@
       <w>`&lt;&lt;-`</w>
       <w>`&lt;=`</w>
       <w>`&lt;`</w>
+      <w>`==.bit`</w>
+      <w>`==.bitwhich`</w>
       <w>`==`</w>
       <w>`=`</w>
       <w>`&gt;=`</w>
@@ -1754,6 +1783,7 @@
       <w>`[.Dlist`</w>
       <w>`[.POSIXct`</w>
       <w>`[.POSIXlt`</w>
+      <w>`[.bit`</w>
       <w>`[.data.frame`</w>
       <w>`[.difftime`</w>
       <w>`[.factor`</w>
@@ -1769,6 +1799,7 @@
       <w>`[&lt;-.Date`</w>
       <w>`[&lt;-.POSIXct`</w>
       <w>`[&lt;-.POSIXlt`</w>
+      <w>`[&lt;-.bit`</w>
       <w>`[&lt;-.data.frame`</w>
       <w>`[&lt;-.discrete`</w>
       <w>`[&lt;-.factor`</w>
@@ -1776,9 +1807,11 @@
       <w>`[&lt;-`</w>
       <w>`[[.Date`</w>
       <w>`[[.POSIXct`</w>
+      <w>`[[.bit`</w>
       <w>`[[.data.frame`</w>
       <w>`[[.factor`</w>
       <w>`[[.numeric_version`</w>
+      <w>`[[&lt;-.bit`</w>
       <w>`[[&lt;-.data.frame`</w>
       <w>`[[&lt;-.factor`</w>
       <w>`[[&lt;-.numeric_version`</w>
@@ -1829,6 +1862,7 @@
       <w>`f_env&lt;-`</w>
       <w>`f_lhs&lt;-`</w>
       <w>`f_rhs&lt;-`</w>
+      <w>`field&lt;-`</w>
       <w>`first&lt;-`</w>
       <w>`fit&lt;-`</w>
       <w>`fittedModel&lt;-`</w>
@@ -1848,10 +1882,13 @@
       <w>`is.na&lt;-.factor`</w>
       <w>`is.na&lt;-.numeric_version`</w>
       <w>`is.na&lt;-`</w>
+      <w>`is.sorted&lt;-`</w>
       <w>`key&lt;-`</w>
       <w>`label&lt;-`</w>
       <w>`languageEl&lt;-`</w>
       <w>`last&lt;-`</w>
+      <w>`length&lt;-.bit`</w>
+      <w>`length&lt;-.bitwhich`</w>
       <w>`length&lt;-.discrete`</w>
       <w>`length&lt;-.factor`</w>
       <w>`length&lt;-`</w>
@@ -1863,10 +1900,13 @@
       <w>`mode&lt;-`</w>
       <w>`mostattributes&lt;-`</w>
       <w>`n'est pas`</w>
+      <w>`na.count&lt;-`</w>
       <w>`name&lt;-`</w>
       <w>`names&lt;-.POSIXlt`</w>
       <w>`names&lt;-`</w>
       <w>`niter&lt;-`</w>
+      <w>`nties&lt;-`</w>
+      <w>`nunique&lt;-`</w>
       <w>`objective&lt;-`</w>
       <w>`oldClass&lt;-`</w>
       <w>`on_failure&lt;-`</w>
@@ -1874,7 +1914,10 @@
       <w>`pad&lt;-.spam`</w>
       <w>`pad&lt;-`</w>
       <w>`parent.env&lt;-`</w>
+      <w>`physical&lt;-.default`</w>
+      <w>`physical&lt;-`</w>
       <w>`regmatches&lt;-`</w>
+      <w>`repfromto&lt;-`</w>
       <w>`residuals&lt;-`</w>
       <w>`row.names&lt;-.data.frame`</w>
       <w>`row.names&lt;-.default`</w>
@@ -1918,12 +1961,17 @@
       <w>`valueName&lt;-`</w>
       <w>`valueTags&lt;-`</w>
       <w>`valueUnit&lt;-`</w>
+      <w>`vec_slice&lt;-`</w>
       <w>`vertex.attributes&lt;-`</w>
       <w>`vertex_attr&lt;-`</w>
+      <w>`virtual&lt;-.default`</w>
+      <w>`virtual&lt;-`</w>
       <w>`window&lt;-`</w>
       <w>`xcoredata&lt;-`</w>
       <w>`xtsAttributes&lt;-`</w>
       <w>`{`</w>
+      <w>`|.bit`</w>
+      <w>`|.bitwhich`</w>
       <w>`|.hexmode`</w>
       <w>`|.octmode`</w>
       <w>`|`</w>
@@ -2107,6 +2155,8 @@
       <w>align.time</w>
       <w>alist</w>
       <w>all</w>
+      <w>all.bit</w>
+      <w>all.bitwhich</w>
       <w>all.digits</w>
       <w>all.equal</w>
       <w>all.equal.DNAbin</w>
@@ -2125,6 +2175,7 @@
       <w>all.equal.spam</w>
       <w>all.is.numeric</w>
       <w>all.names</w>
+      <w>all.ri</w>
       <w>all.vars</w>
       <w>allCircularSplits</w>
       <w>allCoef</w>
@@ -2144,6 +2195,7 @@
       <w>all_shortest_paths</w>
       <w>all_simple_paths</w>
       <w>alloc.col</w>
+      <w>allow_lossy_cast</w>
       <w>alpha</w>
       <w>alpha.centrality</w>
       <w>alpha_centrality</w>
@@ -2178,11 +2230,15 @@
       <w>anscombe</w>
       <w>anti_join</w>
       <w>any</w>
+      <w>any.bit</w>
+      <w>any.bitwhich</w>
+      <w>any.ri</w>
       <w>anyDuplicated</w>
       <w>anyDuplicated.array</w>
       <w>anyDuplicated.data.frame</w>
       <w>anyDuplicated.default</w>
       <w>anyDuplicated.matrix</w>
+      <w>anyDuplicated.rlepack</w>
       <w>anyDuplicatedT</w>
       <w>anyNA</w>
       <w>anyNA.POSIXlt</w>
@@ -2297,8 +2353,25 @@
       <w>as.array</w>
       <w>as.array.default</w>
       <w>as.binary</w>
+      <w>as.bit</w>
+      <w>as.bit.bit</w>
+      <w>as.bit.bitwhich</w>
+      <w>as.bit.double</w>
+      <w>as.bit.integer</w>
+      <w>as.bit.logical</w>
+      <w>as.bit.ri</w>
+      <w>as.bit.which</w>
       <w>as.bitsplits</w>
       <w>as.bitsplits.prop.part</w>
+      <w>as.bitwhich</w>
+      <w>as.bitwhich.bit</w>
+      <w>as.bitwhich.bitwhich</w>
+      <w>as.bitwhich.double</w>
+      <w>as.bitwhich.integer</w>
+      <w>as.bitwhich.logical</w>
+      <w>as.bitwhich.ri</w>
+      <w>as.bitwhich.which</w>
+      <w>as.blob</w>
       <w>as.call</w>
       <w>as.character</w>
       <w>as.character.AAbin</w>
@@ -2353,7 +2426,10 @@
       <w>as.document_range</w>
       <w>as.double</w>
       <w>as.double.POSIXlt</w>
+      <w>as.double.bit</w>
+      <w>as.double.bitwhich</w>
       <w>as.double.difftime</w>
+      <w>as.double.ri</w>
       <w>as.environment</w>
       <w>as.environment.xts</w>
       <w>as.evonet</w>
@@ -2375,6 +2451,9 @@
       <w>as.igraph.phylo</w>
       <w>as.image</w>
       <w>as.integer</w>
+      <w>as.integer.bit</w>
+      <w>as.integer.bitwhich</w>
+      <w>as.integer.ri</w>
       <w>as.is</w>
       <w>as.layer</w>
       <w>as.lazy</w>
@@ -2393,7 +2472,10 @@
       <w>as.list.numeric_version</w>
       <w>as.listLevelsMap</w>
       <w>as.logical</w>
+      <w>as.logical.bit</w>
+      <w>as.logical.bitwhich</w>
       <w>as.logical.factor</w>
+      <w>as.logical.ri</w>
       <w>as.matching</w>
       <w>as.matching.phylo</w>
       <w>as.math</w>
@@ -2473,6 +2555,11 @@
       <w>as.vector</w>
       <w>as.vector.factor</w>
       <w>as.vector.spam</w>
+      <w>as.which</w>
+      <w>as.which.bit</w>
+      <w>as.which.bitwhich</w>
+      <w>as.which.default</w>
+      <w>as.which.ri</w>
       <w>as.xts</w>
       <w>as.xts.data.table</w>
       <w>as.yaml</w>
@@ -2500,6 +2587,7 @@
       <w>as_adj_list</w>
       <w>as_adjacency_matrix</w>
       <w>as_bipartite</w>
+      <w>as_blob</w>
       <w>as_bytes</w>
       <w>as_call</w>
       <w>as_character</w>
@@ -2519,6 +2607,7 @@
       <w>as_integer</w>
       <w>as_labeller</w>
       <w>as_list</w>
+      <w>as_list_of</w>
       <w>as_logical</w>
       <w>as_long_data_frame</w>
       <w>as_mapper</w>
@@ -2681,6 +2770,7 @@
       <w>basismap</w>
       <w>basisnames</w>
       <w>batchSOM</w>
+      <w>bbatch</w>
       <w>bcv</w>
       <w>bd.ext</w>
       <w>bd.time</w>
@@ -2763,12 +2853,15 @@
       <w>birthdeath</w>
       <w>birthwt</w>
       <w>bisection.search</w>
+      <w>bit</w>
       <w>bitAnd</w>
       <w>bitFlip</w>
       <w>bitOr</w>
       <w>bitShiftL</w>
       <w>bitShiftR</w>
       <w>bitXor</w>
+      <w>bit_done</w>
+      <w>bit_init</w>
       <w>bitmap</w>
       <w>bitops</w>
       <w>bitsplits</w>
@@ -2778,11 +2871,13 @@
       <w>bitwShiftL</w>
       <w>bitwShiftR</w>
       <w>bitwXor</w>
+      <w>bitwhich</w>
       <w>bkde</w>
       <w>bkde2D</w>
       <w>bkfe</w>
       <w>black</w>
       <w>bladder</w>
+      <w>blob</w>
       <w>blockGraphs</w>
       <w>blocks</w>
       <w>blue</w>
@@ -2877,6 +2972,8 @@
       <w>c.Date</w>
       <w>c.POSIXct</w>
       <w>c.POSIXlt</w>
+      <w>c.bit</w>
+      <w>c.bitwhich</w>
       <w>c.difftime</w>
       <w>c.noquote</w>
       <w>c.numeric_version</w>
@@ -2891,6 +2988,9 @@
       <w>cacheGenericsMetaData</w>
       <w>cacheMetaData</w>
       <w>cacheMethod</w>
+      <w>cache_filesystem</w>
+      <w>cache_memory</w>
+      <w>cache_s3</w>
       <w>cairo_pdf</w>
       <w>cairo_ps</w>
       <w>caith</w>
@@ -3044,6 +3144,9 @@
       <w>checkWarning</w>
       <w>check_bioc</w>
       <w>check_cran</w>
+      <w>check_dots_empty</w>
+      <w>check_dots_unnamed</w>
+      <w>check_dots_used</w>
       <w>check_github</w>
       <w>check_mnsl</w>
       <w>check_packages_in_dir</w>
@@ -3086,6 +3189,8 @@
       <w>chronos</w>
       <w>chronos.control</w>
       <w>chull</w>
+      <w>chunk</w>
+      <w>chunk.default</w>
       <w>ci2d</w>
       <w>ciapower</w>
       <w>cipoisson</w>
@@ -3130,6 +3235,9 @@
       <w>clique_num</w>
       <w>cliques</w>
       <w>clogit</w>
+      <w>clone</w>
+      <w>clone.default</w>
+      <w>clone.list</w>
       <w>close</w>
       <w>close.connection</w>
       <w>close.screen</w>
@@ -3607,18 +3715,24 @@
       <w>dataframeReduce</w>
       <w>dataset</w>
       <w>datasets</w>
+      <w>datasetsDb</w>
       <w>date</w>
       <w>date_breaks</w>
       <w>date_format</w>
       <w>date_trans</w>
+      <w>dbAppendTable</w>
       <w>dbBegin</w>
+      <w>dbBeginTransaction</w>
       <w>dbBind</w>
       <w>dbBreak</w>
+      <w>dbBuildTableDefinition</w>
       <w>dbCallProc</w>
+      <w>dbCanConnect</w>
       <w>dbClearResult</w>
       <w>dbColumnInfo</w>
       <w>dbCommit</w>
       <w>dbConnect</w>
+      <w>dbCreateTable</w>
       <w>dbDataType</w>
       <w>dbDisconnect</w>
       <w>dbDriver</w>
@@ -3628,25 +3742,31 @@
       <w>dbGetDBIVersion</w>
       <w>dbGetException</w>
       <w>dbGetInfo</w>
+      <w>dbGetPreparedQuery</w>
       <w>dbGetQuery</w>
       <w>dbGetRowCount</w>
       <w>dbGetRowsAffected</w>
       <w>dbGetStatement</w>
       <w>dbHasCompleted</w>
+      <w>dbIsReadOnly</w>
       <w>dbIsValid</w>
       <w>dbListConnections</w>
       <w>dbListFields</w>
+      <w>dbListObjects</w>
       <w>dbListResults</w>
       <w>dbListTables</w>
       <w>dbQuoteIdentifier</w>
+      <w>dbQuoteLiteral</w>
       <w>dbQuoteString</w>
       <w>dbReadTable</w>
       <w>dbRemoveTable</w>
       <w>dbRollback</w>
+      <w>dbSendPreparedQuery</w>
       <w>dbSendQuery</w>
       <w>dbSendStatement</w>
       <w>dbSetDataMappings</w>
       <w>dbUnloadDriver</w>
+      <w>dbUnquoteIdentifier</w>
       <w>dbWithTransaction</w>
       <w>dbWriteTable</w>
       <w>db_analyze</w>
@@ -3756,6 +3876,7 @@
       <w>designSplits</w>
       <w>designTree</w>
       <w>designer.colors</w>
+      <w>destructure</w>
       <w>det</w>
       <w>detach</w>
       <w>detect</w>
@@ -4064,6 +4185,7 @@
       <w>element_rect</w>
       <w>element_text</w>
       <w>ellipseGrob</w>
+      <w>ellipsis</w>
       <w>ellipsoidPoints</w>
       <w>ellipsoidhull</w>
       <w>em</w>
@@ -4287,6 +4409,7 @@
       <w>fft</w>
       <w>fgl</w>
       <w>fhm</w>
+      <w>field</w>
       <w>fields</w>
       <w>fields.D</w>
       <w>fields.color.picker</w>
@@ -4439,6 +4562,7 @@
       <w>foreach</w>
       <w>foreign</w>
       <w>forest.fire.game</w>
+      <w>forget</w>
       <w>formXtViX</w>
       <w>form_data</w>
       <w>form_file</w>
@@ -5242,6 +5366,7 @@
       <w>hasTsp</w>
       <w>has_args</w>
       <w>has_attr</w>
+      <w>has_cache</w>
       <w>has_color</w>
       <w>has_element</w>
       <w>has_extension</w>
@@ -5516,8 +5641,10 @@
       <w>inform</w>
       <w>inheritedSlotNames</w>
       <w>inherits</w>
+      <w>initExtension</w>
       <w>initFieldArgs</w>
       <w>initRefFields</w>
+      <w>initRegExp</w>
       <w>initial.sp</w>
       <w>initialize</w>
       <w>initializeProject</w>
@@ -5565,6 +5692,9 @@
       <w>intersect</w>
       <w>intersection</w>
       <w>intervals</w>
+      <w>intisasc</w>
+      <w>intisdesc</w>
+      <w>intrle</w>
       <w>inv.logit</w>
       <w>invPerm</w>
       <w>invalid</w>
@@ -5615,6 +5745,8 @@
       <w>is.binary.phylo</w>
       <w>is.binary.tree</w>
       <w>is.bipartite</w>
+      <w>is.bit</w>
+      <w>is.bitwhich</w>
       <w>is.browsable</w>
       <w>is.call</w>
       <w>is.character</w>
@@ -5675,6 +5807,8 @@
       <w>is.matching</w>
       <w>is.matrix</w>
       <w>is.maximal.matching</w>
+      <w>is.memoised</w>
+      <w>is.memoized</w>
       <w>is.message</w>
       <w>is.minimal.separator</w>
       <w>is.mixed</w>
@@ -5719,6 +5853,7 @@
       <w>is.recursive</w>
       <w>is.regular</w>
       <w>is.relistable</w>
+      <w>is.ri</w>
       <w>is.rooted</w>
       <w>is.rooted.multiPhylo</w>
       <w>is.rooted.phylo</w>
@@ -5728,6 +5863,7 @@
       <w>is.simple</w>
       <w>is.single</w>
       <w>is.singleton</w>
+      <w>is.sorted</w>
       <w>is.source</w>
       <w>is.spam</w>
       <w>is.special.miss</w>
@@ -5778,6 +5914,7 @@
       <w>isGeneric</w>
       <w>isGrammarSymbol</w>
       <w>isGroup</w>
+      <w>isIdCurrent</w>
       <w>isIncomplete</w>
       <w>isInitialized</w>
       <w>isInteger</w>
@@ -5829,6 +5966,7 @@
       <w>is_bare_vector</w>
       <w>is_binary_lang</w>
       <w>is_bipartite</w>
+      <w>is_blob</w>
       <w>is_bytes</w>
       <w>is_call</w>
       <w>is_call_stack</w>
@@ -5871,6 +6009,7 @@
       <w>is_less_than</w>
       <w>is_lgl_na</w>
       <w>is_list</w>
+      <w>is_list_of</w>
       <w>is_logical</w>
       <w>is_matching</w>
       <w>is_max_matching</w>
@@ -5884,6 +6023,7 @@
       <w>is_numeric</w>
       <w>is_option_symlink</w>
       <w>is_pairlist</w>
+      <w>is_partial</w>
       <w>is_primitive</w>
       <w>is_primitive_eager</w>
       <w>is_primitive_lazy</w>
@@ -5981,6 +6121,9 @@
       <w>kernel</w>
       <w>key</w>
       <w>key2</w>
+      <w>keyorder</w>
+      <w>keysort</w>
+      <w>keysortorder</w>
       <w>keywords</w>
       <w>kidney</w>
       <w>kitten</w>
@@ -6194,6 +6337,9 @@
       <w>legendGrob</w>
       <w>length</w>
       <w>length.POSIXlt</w>
+      <w>length.bit</w>
+      <w>length.bitwhich</w>
+      <w>length.ri</w>
       <w>lengths</w>
       <w>lennon</w>
       <w>lento</w>
@@ -6269,6 +6415,7 @@
       <w>list_len</w>
       <w>list_merge</w>
       <w>list_modify</w>
+      <w>list_of</w>
       <w>list_spinners</w>
       <w>littler</w>
       <w>livmet</w>
@@ -6593,7 +6740,10 @@
       <w>matxv</w>
       <w>mauchly.test</w>
       <w>max</w>
+      <w>max.bit</w>
+      <w>max.bitwhich</w>
       <w>max.col</w>
+      <w>max.ri</w>
       <w>maxCladeCred</w>
       <w>maxSE</w>
       <w>max_bipartite_match</w>
@@ -6610,6 +6760,7 @@
       <w>maximal_ivs</w>
       <w>maximum.bipartite.matching</w>
       <w>maximum.cardinality.search</w>
+      <w>maybe_lossy_cast</w>
       <w>maybe_missing</w>
       <w>mbarclPanel</w>
       <w>mc.reset.stream</w>
@@ -6658,6 +6809,8 @@
       <w>memDecompress</w>
       <w>membership</w>
       <w>memdb_frame</w>
+      <w>memoise</w>
+      <w>memoize</w>
       <w>memory.limit</w>
       <w>memory.profile</w>
       <w>memory.size</w>
@@ -6672,7 +6825,10 @@
       <w>merge_coords</w>
       <w>merge_tree</w>
       <w>mergedTrellisLegendGrob</w>
+      <w>mergeorder</w>
       <w>merges</w>
+      <w>mergesort</w>
+      <w>mergesortorder</w>
       <w>message</w>
       <w>metaHeatmap</w>
       <w>metaNameUndo</w>
@@ -6694,6 +6850,9 @@
       <w>mime</w>
       <w>mimemap</w>
       <w>min</w>
+      <w>min.bit</w>
+      <w>min.bitwhich</w>
+      <w>min.ri</w>
       <w>min_cut</w>
       <w>min_rank</w>
       <w>min_separators</w>
@@ -6851,6 +7010,7 @@
       <w>nFm</w>
       <w>nPairs</w>
       <w>n_distinct</w>
+      <w>n_fields</w>
       <w>n_groups</w>
       <w>na.StructTS</w>
       <w>na.action</w>
@@ -6859,6 +7019,7 @@
       <w>na.approx</w>
       <w>na.approx.default</w>
       <w>na.contiguous</w>
+      <w>na.count</w>
       <w>na.delete</w>
       <w>na.detail.response</w>
       <w>na.exclude</w>
@@ -6960,21 +7121,33 @@
       <w>newBasic</w>
       <w>newClassRepresentation</w>
       <w>newEmptyObject</w>
+      <w>newJSONParser</w>
       <w>newTA</w>
+      <w>new_blob</w>
       <w>new_cnd</w>
+      <w>new_data_frame</w>
+      <w>new_date</w>
+      <w>new_datetime</w>
       <w>new_definition</w>
+      <w>new_duration</w>
       <w>new_environment</w>
+      <w>new_factor</w>
       <w>new_formula</w>
       <w>new_function</w>
       <w>new_handle</w>
       <w>new_language</w>
+      <w>new_list_of</w>
+      <w>new_ordered</w>
       <w>new_ornament</w>
       <w>new_output_handler</w>
       <w>new_overscope</w>
+      <w>new_partial</w>
       <w>new_pillar_shaft</w>
       <w>new_pillar_shaft_simple</w>
       <w>new_pool</w>
       <w>new_quosure</w>
+      <w>new_rcrd</w>
+      <w>new_vctr</w>
       <w>newcomb</w>
       <w>neworder_phylo</w>
       <w>neworder_pruningwise</w>
@@ -7131,6 +7304,7 @@
       <w>nstr</w>
       <w>nterms</w>
       <w>nth</w>
+      <w>nties</w>
       <w>ntile</w>
       <w>nuclear</w>
       <w>null.space.dimension</w>
@@ -7146,6 +7320,8 @@
       <w>numericScale</w>
       <w>numeric_dc</w>
       <w>numeric_version</w>
+      <w>nunique</w>
+      <w>nvalid</w>
       <w>nweeks</w>
       <w>nwtco</w>
       <w>nycflights13_postgres</w>
@@ -7156,6 +7332,14 @@
       <w>oPar</w>
       <w>oanda.currencies</w>
       <w>oats</w>
+      <w>obj_print</w>
+      <w>obj_print_data</w>
+      <w>obj_print_footer</w>
+      <w>obj_print_header</w>
+      <w>obj_str</w>
+      <w>obj_str_data</w>
+      <w>obj_str_footer</w>
+      <w>obj_str_header</w>
       <w>obj_sum</w>
       <w>object.size</w>
       <w>objective</w>
@@ -7449,6 +7633,8 @@
       <w>partial</w>
       <w>partial_eigen</w>
       <w>partial_eval</w>
+      <w>partial_factor</w>
+      <w>partial_frame</w>
       <w>partition.matrix</w>
       <w>partition.vector</w>
       <w>paste</w>
@@ -7540,6 +7726,8 @@
       <w>phylopic</w>
       <w>phymltest</w>
       <w>phyper</w>
+      <w>physical</w>
+      <w>physical.default</w>
       <w>pi</w>
       <w>pic</w>
       <w>pic.ortho</w>
@@ -7568,6 +7756,7 @@
       <w>plinrain</w>
       <w>plnorm</w>
       <w>plogis</w>
+      <w>plogr</w>
       <w>plot</w>
       <w>plot.Krig</w>
       <w>plot.default</w>
@@ -7813,6 +8002,11 @@
       <w>prettyNum</w>
       <w>prettyTree</w>
       <w>pretty_breaks</w>
+      <w>pretty_bytes</w>
+      <w>pretty_dt</w>
+      <w>pretty_ms</w>
+      <w>pretty_sec</w>
+      <w>prettyunits</w>
       <w>previewRd</w>
       <w>prim_name</w>
       <w>primary_selection</w>
@@ -7831,6 +8025,8 @@
       <w>print.POSIXct</w>
       <w>print.POSIXlt</w>
       <w>print.anova.gam</w>
+      <w>print.bit</w>
+      <w>print.bitwhich</w>
       <w>print.by</w>
       <w>print.char.matrix</w>
       <w>print.condition</w>
@@ -7853,9 +8049,11 @@
       <w>print.octmode</w>
       <w>print.packageInfo</w>
       <w>print.phylo</w>
+      <w>print.physical</w>
       <w>print.proc_time</w>
       <w>print.qsreg</w>
       <w>print.restart</w>
+      <w>print.ri</w>
       <w>print.rle</w>
       <w>print.simple.list</w>
       <w>print.spam</w>
@@ -7873,6 +8071,7 @@
       <w>print.summaryDefault</w>
       <w>print.summarySpatialDesign</w>
       <w>print.table</w>
+      <w>print.virtual</w>
       <w>print.warnings</w>
       <w>print.xtable</w>
       <w>print.xtableFtable</w>
@@ -8031,7 +8230,10 @@
       <w>quickPrint</w>
       <w>quickdf</w>
       <w>quickinstall</w>
+      <w>quickorder</w>
       <w>quickplot</w>
+      <w>quicksort</w>
+      <w>quicksortorder</w>
       <w>quietly</w>
       <w>quilt.plot</w>
       <w>quinModel</w>
@@ -8070,9 +8272,15 @@
       <w>radbas</w>
       <w>radbas.constant</w>
       <w>radius</w>
+      <w>radixorder</w>
+      <w>radixsort</w>
+      <w>radixsortorder</w>
       <w>rainbow</w>
       <w>rainbow_hcl</w>
       <w>raise_to_power</w>
+      <w>ramorder</w>
+      <w>ramsort</w>
+      <w>ramsortorder</w>
       <w>rand_seed</w>
       <w>random.addition</w>
       <w>random.effects</w>
@@ -8083,7 +8291,10 @@
       <w>randu</w>
       <w>ranef</w>
       <w>range</w>
+      <w>range.bit</w>
+      <w>range.bitwhich</w>
       <w>range.default</w>
+      <w>range.ri</w>
       <w>rank</w>
       <w>rankMatrix</w>
       <w>rankSystems</w>
@@ -8281,6 +8492,7 @@
       <w>regmatches</w>
       <w>regr.eval</w>
       <w>regroup</w>
+      <w>regtest.bit</w>
       <w>rel</w>
       <w>relevel</w>
       <w>relist</w>
@@ -8349,6 +8561,8 @@
       <w>rep_along</w>
       <w>rep_len</w>
       <w>repair_names</w>
+      <w>repeat.time</w>
+      <w>repfromto</w>
       <w>replace</w>
       <w>replace.substring.wild</w>
       <w>replace_na</w>
@@ -8407,6 +8621,7 @@
       <w>return_to</w>
       <w>rev</w>
       <w>rev.default</w>
+      <w>rev.rlepack</w>
       <w>rev.zoo</w>
       <w>revalue</w>
       <w>reverse_trans</w>
@@ -8423,6 +8638,7 @@
       <w>rglplot</w>
       <w>rhDNase</w>
       <w>rhyper</w>
+      <w>ri</w>
       <w>ribbon.plot</w>
       <w>rich.colors</w>
       <w>richness.yule.test</w>
@@ -8432,12 +8648,17 @@
       <w>right_join</w>
       <w>ring</w>
       <w>rivers</w>
+      <w>rjson</w>
       <w>rlang</w>
       <w>rle</w>
       <w>rlegend</w>
       <w>rlegendg</w>
       <w>rleid</w>
       <w>rleidv</w>
+      <w>rlepack</w>
+      <w>rlepack.integer</w>
+      <w>rleunpack</w>
+      <w>rleunpack.rlepack</w>
       <w>rlineage</w>
       <w>rlm</w>
       <w>rlnorm</w>
@@ -8533,6 +8754,7 @@
       <w>rsignrank</w>
       <w>rsparsematrix</w>
       <w>rsq.rpart</w>
+      <w>rsqliteVersion</w>
       <w>rss</w>
       <w>rst2pdf</w>
       <w>rst_abort</w>
@@ -8587,6 +8809,7 @@
       <w>rwilcox</w>
       <w>rygbp</w>
       <w>s</w>
+      <w>s3_register</w>
       <w>sKey</w>
       <w>sNN</w>
       <w>sNNclust</w>
@@ -8595,6 +8818,7 @@
       <w>sVariable</w>
       <w>saddle</w>
       <w>saddle.distn</w>
+      <w>safe_median</w>
       <w>safely</w>
       <w>sales</w>
       <w>salinity</w>
@@ -8936,6 +9160,7 @@
       <w>set_tidy_names</w>
       <w>set_vertex_attr</w>
       <w>setattr</w>
+      <w>setattributes</w>
       <w>setcolorder</w>
       <w>setdiff</w>
       <w>setequal</w>
@@ -8958,6 +9183,9 @@
       <w>shapiro.test</w>
       <w>sheetCount</w>
       <w>sheetNames</w>
+      <w>shellorder</w>
+      <w>shellsort</w>
+      <w>shellsortorder</w>
       <w>shift</w>
       <w>shift.time</w>
       <w>shingle</w>
@@ -9246,6 +9474,9 @@
       <w>sql_translator</w>
       <w>sql_variant</w>
       <w>sql_vector</w>
+      <w>sqliteBuildTableDefinition</w>
+      <w>sqliteCopyDatabase</w>
+      <w>sqliteQuickColumn</w>
       <w>sqrt</w>
       <w>sqrt_trans</w>
       <w>squash</w>
@@ -9363,6 +9594,7 @@
       <w>stepAIC</w>
       <w>stepfun</w>
       <w>stepfun.eval</w>
+      <w>still.identical</w>
       <w>stitch</w>
       <w>stitch_rhtml</w>
       <w>stitch_rmd</w>
@@ -9373,6 +9605,10 @@
       <w>stop</w>
       <w>stopCluster</w>
       <w>stopImplicitCluster</w>
+      <w>stop_incompatible_cast</w>
+      <w>stop_incompatible_op</w>
+      <w>stop_incompatible_size</w>
+      <w>stop_incompatible_type</w>
       <w>stopifnot</w>
       <w>storage.mode</w>
       <w>store</w>
@@ -9713,6 +9949,9 @@
       <w>subtrees</w>
       <w>subview</w>
       <w>sum</w>
+      <w>sum.bit</w>
+      <w>sum.bitwhich</w>
+      <w>sum.ri</w>
       <w>sumexact</w>
       <w>summarise</w>
       <w>summarise_</w>
@@ -9739,6 +9978,8 @@
       <w>summary.POSIXct</w>
       <w>summary.POSIXlt</w>
       <w>summary.aov</w>
+      <w>summary.bit</w>
+      <w>summary.bitwhich</w>
       <w>summary.connection</w>
       <w>summary.data.frame</w>
       <w>summary.default</w>
@@ -9753,6 +9994,7 @@
       <w>summary.phylo</w>
       <w>summary.proc_time</w>
       <w>summary.qsreg</w>
+      <w>summary.ri</w>
       <w>summary.spam</w>
       <w>summary.spam.chol.NgPeyton</w>
       <w>summary.spatialDesign</w>
@@ -10014,8 +10256,10 @@
       <w>timeBased</w>
       <w>timeBasedRange</w>
       <w>timeBasedSeq</w>
+      <w>time_ago</w>
       <w>time_bins</w>
       <w>time_trans</w>
+      <w>timeout</w>
       <w>times</w>
       <w>timestamp</w>
       <w>timetaken</w>
@@ -10449,6 +10693,7 @@
       <w>unByteCodeAssign</w>
       <w>unPaste</w>
       <w>unRematchDefinition</w>
+      <w>unattr</w>
       <w>unbox</w>
       <w>uncbind</w>
       <w>unclass</w>
@@ -10473,6 +10718,7 @@
       <w>unique.matrix</w>
       <w>unique.multiPhylo</w>
       <w>unique.numeric_version</w>
+      <w>unique.rlepack</w>
       <w>unique.warnings</w>
       <w>uniqueN</w>
       <w>uniquecombs</w>
@@ -10511,6 +10757,7 @@
       <w>unserializeJSON</w>
       <w>unsetDefaults</w>
       <w>unsetTA</w>
+      <w>unspecified</w>
       <w>unsplit</w>
       <w>unstack</w>
       <w>untangle.specials</w>
@@ -10576,6 +10823,7 @@
       <w>utf8_width</w>
       <w>utils</w>
       <w>vaggregate</w>
+      <w>vague_dt</w>
       <w>valid.just</w>
       <w>validDetails</w>
       <w>validEnc</w>
@@ -10584,6 +10832,8 @@
       <w>validUTF8</w>
       <w>validate</w>
       <w>validateCssUnit</w>
+      <w>validate_blob</w>
+      <w>validate_list_of</w>
       <w>validate_spam</w>
       <w>validate_that</w>
       <w>validspamobject</w>
@@ -10618,11 +10868,109 @@
       <w>vcount</w>
       <w>vcov</w>
       <w>vcov.gam</w>
+      <w>vctrs</w>
       <w>vcv</w>
       <w>vcv.corPhyl</w>
       <w>vcv.phylo</w>
       <w>vcv2phylo</w>
+      <w>vec_arith</w>
+      <w>vec_arith.Date</w>
+      <w>vec_arith.POSIXct</w>
+      <w>vec_arith.difftime</w>
+      <w>vec_arith.logical</w>
+      <w>vec_arith.numeric</w>
+      <w>vec_arith_base</w>
+      <w>vec_as_index</w>
+      <w>vec_as_names</w>
+      <w>vec_as_names_legacy</w>
+      <w>vec_assert</w>
+      <w>vec_assign</w>
+      <w>vec_c</w>
+      <w>vec_cast</w>
+      <w>vec_cast.Date</w>
+      <w>vec_cast.POSIXct</w>
+      <w>vec_cast.POSIXlt</w>
+      <w>vec_cast.blob</w>
+      <w>vec_cast.character</w>
+      <w>vec_cast.complex</w>
+      <w>vec_cast.data.frame</w>
+      <w>vec_cast.difftime</w>
+      <w>vec_cast.double</w>
+      <w>vec_cast.factor</w>
+      <w>vec_cast.integer</w>
+      <w>vec_cast.integer64</w>
+      <w>vec_cast.list</w>
+      <w>vec_cast.logical</w>
+      <w>vec_cast.raw</w>
+      <w>vec_cast.vctrs_list_of</w>
+      <w>vec_cast_common</w>
+      <w>vec_cbind</w>
+      <w>vec_compare</w>
+      <w>vec_count</w>
+      <w>vec_data</w>
+      <w>vec_default_cast</w>
+      <w>vec_default_ptype2</w>
       <w>vec_depth</w>
+      <w>vec_duplicate_any</w>
+      <w>vec_duplicate_detect</w>
+      <w>vec_duplicate_id</w>
+      <w>vec_empty</w>
+      <w>vec_equal</w>
+      <w>vec_equal_na</w>
+      <w>vec_in</w>
+      <w>vec_init</w>
+      <w>vec_init_along</w>
+      <w>vec_is</w>
+      <w>vec_is_empty</w>
+      <w>vec_list_cast</w>
+      <w>vec_match</w>
+      <w>vec_math</w>
+      <w>vec_math_base</w>
+      <w>vec_order</w>
+      <w>vec_proxy</w>
+      <w>vec_proxy_compare</w>
+      <w>vec_proxy_equal</w>
+      <w>vec_ptype</w>
+      <w>vec_ptype2</w>
+      <w>vec_ptype2.Date</w>
+      <w>vec_ptype2.POSIXt</w>
+      <w>vec_ptype2.blob</w>
+      <w>vec_ptype2.character</w>
+      <w>vec_ptype2.data.frame</w>
+      <w>vec_ptype2.difftime</w>
+      <w>vec_ptype2.double</w>
+      <w>vec_ptype2.factor</w>
+      <w>vec_ptype2.integer</w>
+      <w>vec_ptype2.integer64</w>
+      <w>vec_ptype2.list</w>
+      <w>vec_ptype2.logical</w>
+      <w>vec_ptype2.ordered</w>
+      <w>vec_ptype2.raw</w>
+      <w>vec_ptype2.vctrs_list_of</w>
+      <w>vec_ptype2.vctrs_unspecified</w>
+      <w>vec_ptype_abbr</w>
+      <w>vec_ptype_common</w>
+      <w>vec_ptype_finalise</w>
+      <w>vec_ptype_full</w>
+      <w>vec_ptype_show</w>
+      <w>vec_rbind</w>
+      <w>vec_recycle</w>
+      <w>vec_recycle_common</w>
+      <w>vec_repeat</w>
+      <w>vec_restore</w>
+      <w>vec_seq_along</w>
+      <w>vec_size</w>
+      <w>vec_size_common</w>
+      <w>vec_slice</w>
+      <w>vec_sort</w>
+      <w>vec_split</w>
+      <w>vec_type</w>
+      <w>vec_type2</w>
+      <w>vec_type_common</w>
+      <w>vec_unique</w>
+      <w>vec_unique_count</w>
+      <w>vec_unique_loc</w>
+      <w>vecseq</w>
       <w>vector</w>
       <w>vector_dc</w>
       <w>venn</w>
@@ -10658,6 +11006,8 @@
       <w>viridis.map</w>
       <w>viridisLite</w>
       <w>viridis_pal</w>
+      <w>virtual</w>
+      <w>virtual.default</w>
       <w>vis.gam</w>
       <w>volatility</w>
       <w>volcano</w>
@@ -10852,6 +11202,9 @@
       <w>xlsFormats</w>
       <w>xngettext</w>
       <w>xor</w>
+      <w>xor.bit</w>
+      <w>xor.bitwhich</w>
+      <w>xor.default</w>
       <w>xor.hexmode</w>
       <w>xor.octmode</w>
       <w>xpdrows.data.frame</w>
@@ -10931,6 +11284,7 @@
       <w>yule.cov</w>
       <w>yule.time</w>
       <w>zapsmall</w>
+      <w>zeallot</w>
       <w>zeroGrob</w>
       <w>zero_range</w>
       <w>ziP</w>

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/placetest_pipeline.iml" filepath="$PROJECT_DIR$/.idea/placetest_pipeline.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/PEWO.iml" filepath="$PROJECT_DIR$/.idea/PEWO.iml" />
     </modules>
   </component>
 </project>

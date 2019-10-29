@@ -1,11 +1,11 @@
-name: placetest_pipeline
+name: PEWO
 channels:
   - bioconda
   - conda-forge
   - defaults
 dependencies:
   - ant
-  - openjdk>8.0.112
+  - openjdk=11.0.1=h46a85a0_1017
   - rappas
   - epa-ng
   - hmmer
