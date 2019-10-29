@@ -15,6 +15,7 @@ run_eval_accuracy
 .snakemake
 #RAPPAS temporary files (used until RAPPAS becomes a conda package)
 viroplacetests_LITE.jar
+PEWO.jar
 RAPPAS.jar
 #images/data
 *.svg
