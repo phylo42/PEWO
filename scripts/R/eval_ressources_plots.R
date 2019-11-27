@@ -12,9 +12,13 @@ library(grid)
 library(ggplot2)
 library(Cairo)
 library(data.table)
+library(stringr)
 
-csvdir=args[1]
-files = list.files(path=csvdir,pattern="*_benchmark.tsv")
+workdir=args[1]
+
+#in ressources mode, PEWO records ressources consumption in a single "pruning" labelled "0",
+#which is in fact the full tree, not a pruning.
+files = list.files(path=paste0(workdir,"/benchmarks"),pattern="^0_.*_benchmark.tsv")
 
 # extract parameter combination and software, file per file
 # aggregate everything in a dataframe
@@ -39,22 +43,22 @@ for ( i in 1:length(files)) {
 params=unique(params)
 
 
-df=data.frame(matrix(ncol = 10+length(params), nrow = 0))
-names=c("operation","repeat","sec","hms","max_rss","max_vms","max_uss","max_pss","io_in","io_out",params)
-colnames(df)=names
+df=data.frame(matrix(ncol = 11+length(params), nrow = 0))
+
+param_names=c("s","h.m.s","max_rss","max_vms","max_uss","max_pss","io_in","io_out","mean_load","repeat","operation",params)
+colnames(df)=param_names
 
 #iterate again to fill dataframe
 for ( i in 1:length(files)) {
-    print(paste0("Opening: ",files[i]))
+    print(paste0("Parsing: ",files[i]))
     split=strsplit(files[i], "_")
     op=split[[1]][length(split[[1]])-1]
-    #params list
+    #extract params list from filename
     current_params=c()
     current_vals=c()
     if (length(split[[1]])>3) {
         counter=1
         for (j in 2:(length(split[[1]])-2) ) {
-            print(split[[1]][j])
             pname=str_extract(split[[1]][j],regex("[a-z]+"))
             pval=str_extract(split[[1]][j],regex("[A-Z0-9\\.]+"))
             current_params[counter]=pname
@@ -62,25 +66,33 @@ for ( i in 1:length(files)) {
             counter=counter+1
         }
     }
-    #open it
-    data=read.csv(file=paste(csvdir,files[i],sep="/"),sep="\t",header=TRUE)
+    #open it and extract values
+    #not that currently hour:min:sec column is not parsed correcty
+    #but this is not a problem as seconds are recorded in colum 's'
+    data=read.table(
+        file=paste(workdir,"/benchmarks/",files[i],sep="/"),sep="\t",header=TRUE,dec=".",
+        colClasses = "character", comment.char = ""
+    )
     data["repeat"]=1:dim(data)[1]
     data["operation"]=op
     for (j in 1:dim(data)[1]) {
-        line=c()
-        #build 1st half of line, eg benchmark measurements
-        col=1
-        for (k in 1:dim(data)[2]) {
-            line[col]=data[rep_counter,col]
+        #build a line, eg benchmark measurements
+        line=rep(NA,length(param_names))
+        #first 11 values are set, whatever the program
+        for (k in 1:11) {
+            line[k]=data[j,k]
         }
-        #build 2nd half of line, eg algo params
-        for (k in 1:dim(df)[2]) {
-            if (colnames(df)[k] in current_params)
-            line[col]=data[rep_counter,col]
+        #following values are set if parameter is related to the program
+        #NA otherwise
+        for (k in 12:length(param_names)) {
+            for (l in 1:length(current_params)) {
+                if (param_names[k]==current_params[l]) {
+                    line[k]=current_vals[l]
+                    break
+                }
+            }
         }
-
+        df[nrow(df) + 1,]= line
     }
-
-
-
 }
+write.table(file="benchmark.csv",df,row.names=FALSE,dec=".",na="",sep=",")

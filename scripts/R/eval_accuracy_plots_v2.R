@@ -37,6 +37,8 @@ soft_params<-list(epa=epa,epang_h1=epang_h1,epang_h2=epang_h2,epang_h3=epang_h3,
 data<-read.csv(file=args[1], sep=";", header=TRUE)
 workdir=args[2]
 
+#TODO: add parameters listing which software were actually tested and remove them from soft_list and soft_param accordingly
+
 
 #ND heatmaps per parameters
 alltables<-list()
