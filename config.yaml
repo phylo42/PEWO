@@ -9,6 +9,8 @@ dataset_align: test/mod_150.phy.fasta
 dataset_tree: test/RAxML_bipartitions.150.BEST.WITH
 #dataset_align: test/compendium-norec-exp.fasta
 #dataset_tree: test/compendium-norec-exp-tree.newick
+#dataset_align: /home/ben/Dropbox/viromeplacer/test_datasets/6leaves_tree/6_leaves_test_set.aln
+#dataset_tree: /home/ben/Dropbox/viromeplacer/test_datasets/6leaves_tree/6_leaves_test_set.tree
 
 #working directory
 workdir: /home/ben/PycharmProjects/placetest_pipeline/run
@@ -17,7 +19,7 @@ workdir: /home/ben/PycharmProjects/placetest_pipeline/run
 states: 0
 
 #which software to test, at least one of : epa, epang, pplacer, rappas, apples
-test_soft: ["epa","pplacer","epang","rappas","apples"]
+test_soft: ["rappas"]
 
 #read lengths to test
 read_length: [150,300]
@@ -29,7 +31,7 @@ read_length: [150,300]
 ### this section matters only when you run the "eval_accuracy.smk" workflow
 
 #number of random prunings to compute
-pruning_count: 3
+pruning_count: 2
 
 
 ## IF "RESOURCES" ARE EVALUATED
@@ -39,7 +41,7 @@ pruning_count: 3
 
 # number of identical runs to launch when evaluating RAM/CPU consumption
 # final measurements are reported as mean of the the runs.
-repeats: 3
+repeats: 2
 #defines queries source, one of the following:
 # user: query sequences are loaded from a file target by parameter "query_set"
 # simulate: queries are simulated from the input alignment (reserved for future upgrades, currently not implemented)
@@ -126,23 +128,44 @@ config_rappas:
 
   #panel of k that is tested
   #integer in [2,16] (8~10 recommended, >12 often produces too long computations)
-  k: [7,8]
+  k: [5,6]
 
   #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
   #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids
   #For DNA, values in [1,2] recommended. For amino acids, values in [5,15] recommended.
-  omega: [1.0,1.5,2.0]
+  omega: [1.5,2.0]
 
   #reduction setup, e.g. gap/non-gap ratio
   #above which a site of the input alignment
   #is ignored during phylo-kmer computations
   #integer in ]0,1], a value close to 1.00 is recommended (with 1.00, only gap-only columns are filtered).
-  reduction: [0.99,1.0]
+  reduction: [0.9,1.0]
+
+  #external software used to compute ancestral states probabilities (ancestral reconstruction)
+  #all software should compute approximately the same values (as same model and model parameters are called)
+  #putting more than one software in the list is useful only when 'ressources' consumption is explored
+  #
+  #following values can be currently set (software supported by RAPPAS):
+  # - PAML
+  # - PHYML
+  # - RAXMLNG
+  #
+  #overall, the following patterns are expected (oct 2019):
+  # speed: paml < phyml < raxml-ng
+  # ram  : paml < (phyml ~ raxml-ng)
+  #
+  #if you do not care about testing the behaviour of these external dependencies,
+  #set arsoft to 'RAXMLNG' and arthreads with 2 to 8 CPUs for faster computations
+  #currently, only raxml-ng can use multiple threads
+  #
+  #!!! warning, be sure to set arsoft VALUES as UPPER CASE !!!
+  arsoft: [PHYML,RAXMLNG,PAML]
+  arthreads: 2
 
   #maximum amount of memory available to rappas process
-  #this has no influence on placement accuracy but will impact "resource" evaluation
+  #this has no influence on placement accuracy but it will impact "resource" evaluation
   #in particular, testing very large trees will be faster with more memory (due to JVM garbage collector behaviour)
-  #set as an integer value, which represents the maximum amount of Gb assigned to the JVM (memory: 8 => 8 Gb of RAM)
+  #set as an integer value, which represents the maximum amount of Gb allocatable to the JVM (memory: 8 => 8 Gb of RAM)
   memory: 32
 
 ### APPLES
@@ -160,6 +183,7 @@ config_apples:
   # FM : k=2 (Fitch and Margoliash, 1967)
   # BE : k=1 (Beyer et al., 1974)
   #methods: ["OLS","FM","BE"]
+  #!warning, be sure to set methods VALUES as UPPER CASE
   methods: ["OLS","FM","BE"]
 
   #List of placement criterion to test.
@@ -168,6 +192,7 @@ config_apples:
   # ME : Minimum Evolution
   # HYBRID : MLSE then ME
   #criteria: ["MLSE","ME","HYBRID"]
+  #!warning, be sure to set criteria VALUES as UPPER CASE
   criteria: ["MLSE","ME","HYBRID"]
 
 
@@ -199,8 +224,8 @@ minlwr: 0.01
 ########################################################################################################################
 
 # By default, the workflow re-optimises all pruned tree using the model defined below.
-# Model parameters are then loaded after re-optimisation and transferred to the ML-based approaches.
-# Currently you can choose one of the following models (supported by all software) :
+# Updated model parameters are then loaded and transferred to placement software using ML approaches.
+# Currently, you can choose one of the following models :
 #   - GTR+G (nucleotides)
 #   - JTT+G (amino acids)
 #   - WAG+G (amino acids)
