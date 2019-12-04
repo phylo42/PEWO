@@ -11,13 +11,13 @@ dataset_tree: test/RAxML_bipartitions.150.BEST.WITH
 #dataset_tree: test/compendium-norec-exp-tree.newick
 
 #working directory
-workdir: /home/ben/PycharmProjects/placetest_pipeline/run
+workdir: /home/nikolai/dev/pewo/run
 
 #states used in analysis, either '0' for nucleotides or '1' for amino acids
 states: 0
 
 #which software to test, at least one of : epa, epang, pplacer, rappas, apples
-test_soft: ["epa","epang","pplacer","rappas","apples"]
+test_soft: ["epa","epang","pplacer","rappas", "rappas2", "apples"]
 
 #read lengths to test
 read_length: [150]
@@ -131,7 +131,7 @@ config_rappas:
   #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
   #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids
   #For DNA, values in [1,2] recommended. For amino acids, values in [5,15] recommended.
-  omega: [1.5,2.0]
+  omega: [1.5, 2.0]
 
   #reduction setup, e.g. gap/non-gap ratio
   #above which a site of the input alignment

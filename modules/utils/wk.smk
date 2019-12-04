@@ -163,6 +163,18 @@ def build_placements_workflow():
             )
         )
 
+    if "rappas2" in config["test_soft"]:
+        l.append(
+            expand(
+                config["workdir"]+"/RAPPAS2/{pruning}/red{reduction}/k{k}_o{omega}/{pruning}_r{length}_k{k}_o{omega}_red{reduction}_rappas.jplace",
+                pruning=range(0,config["pruning_count"]),
+                k=config["config_rappas"]["k"],
+                omega=config["config_rappas"]["omega"],
+                length=config["read_length"],
+                reduction=config["config_rappas"]["reduction"]
+            )
+        )
+
     return l
 
 

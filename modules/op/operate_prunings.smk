@@ -36,7 +36,7 @@ rule operate_pruning:
         #length_sd=config["read_length_sd"],
         #bpe=config["bpe"],
     shell:
-        "java -cp PEWO.jar PrunedTreeGenerator_LITE "
+        "java -cp `which RAPPAS.jar`:PEWO.jar PrunedTreeGenerator_LITE "
         "{params.wd} {input.a} {input.t} "
         "{params.count} {params.length} 0 1 {params.states} "
         "&> {log}"
