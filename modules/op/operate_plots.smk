@@ -15,7 +15,8 @@ rule plot_accuracy_results:
     input:
         config["workdir"]+"/results.csv"
     output:
-        accuracy_plots_outputs()
+        accuracy_plots_ND_outputs(),
+        accuracy_plots_eND_outputs()
     log:
         config["workdir"]+"/logs/R/summary_plots.log"
     params:

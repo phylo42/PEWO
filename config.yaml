@@ -13,16 +13,17 @@ dataset_tree: test/RAxML_bipartitions.150.BEST.WITH
 #dataset_tree: /home/ben/Dropbox/viromeplacer/test_datasets/6leaves_tree/6_leaves_test_set.tree
 
 #working directory
-workdir: /home/ben/PycharmProjects/placetest_pipeline/run
+#workdir: /home/ben/PycharmProjects/placetest_pipeline/run2
+workdir: /media/ben/STOCK/DATA/PEWO/run
 
 #states used in analysis, either '0' for nucleotides or '1' for amino acids
 states: 0
 
 #which software to test, at least one of : epa, epang, pplacer, rappas, apples
-test_soft: ["rappas"]
+test_soft: ["rappas","epang","pplacer","apples"]
 
 #read lengths to test
-read_length: [150,300]
+read_length: [300]
 
 
 ## IF "ACCURACY" IS EVALUATED
@@ -31,7 +32,7 @@ read_length: [150,300]
 ### this section matters only when you run the "eval_accuracy.smk" workflow
 
 #number of random prunings to compute
-pruning_count: 2
+pruning_count: 30
 
 
 ## IF "RESOURCES" ARE EVALUATED
@@ -101,11 +102,11 @@ config_epang:
   # h3: heuristic equivalent to pplacer defaults, fast
   # h4: no heuristic, very very slow but should produce the best accuracy
   #(Barbera et al, 2019 ; doi: 10.1093/sysbio/syy054)
-  heuristics: ["h1","h2","h3","h4"]
+  heuristics: ["h1"]
 
   #heuristic-specific parameters can be setup in following lines
   h1:
-    g: [0.9999,0.99999]
+    g: [0.9999,0.99999,0.999999]
   h2:
     G: [0.1,0.2]
   h3:
@@ -128,7 +129,7 @@ config_rappas:
 
   #panel of k that is tested
   #integer in [2,16] (8~10 recommended, >12 often produces too long computations)
-  k: [5,6]
+  k: [5,6,7]
 
   #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
   #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids
@@ -139,7 +140,7 @@ config_rappas:
   #above which a site of the input alignment
   #is ignored during phylo-kmer computations
   #integer in ]0,1], a value close to 1.00 is recommended (with 1.00, only gap-only columns are filtered).
-  reduction: [0.9,1.0]
+  reduction: [0.5,1.0]
 
   #external software used to compute ancestral states probabilities (ancestral reconstruction)
   #all software should compute approximately the same values (as same model and model parameters are called)
@@ -159,7 +160,7 @@ config_rappas:
   #currently, only raxml-ng can use multiple threads
   #
   #!!! warning, be sure to set arsoft VALUES as UPPER CASE !!!
-  arsoft: [PHYML,RAXMLNG,PAML]
+  arsoft: [PHYML]
   arthreads: 2
 
   #maximum amount of memory available to rappas process

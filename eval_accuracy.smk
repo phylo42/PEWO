@@ -17,7 +17,7 @@ config["repeats"]=1
 
 #utils
 include:
-    "modules/utils/wk.smk"
+    "modules/utils/workflow.smk"
 include:
     "modules/utils/etc.smk"
 #prunings
