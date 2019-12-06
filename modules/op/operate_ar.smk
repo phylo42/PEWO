@@ -105,7 +105,7 @@ rule ar_raxmlng:
             arbin+" --ancestral --redo --precision 9 --seed 1 --force msa --data-type "+states+" "
             "--threads "+str(config["config_rappas"]["arthreads"])+" "                                                                                                   
             "--msa {input.a} --tree {input.t} --model "+model+" "
-            "--blopt nr_safe --opt-model on --opt-branches on &> {log} ;"
+            "--blopt nr_safe --opt-model on --opt-branches off &> {log} ;"
             """
             mkdir -p {params.outname}/AR
             mv {params.outname}/extended_trees/extended_align.phylip.raxml.log {params.outname}/AR/extended_align.phylip.raxml.log
