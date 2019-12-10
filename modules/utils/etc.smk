@@ -40,5 +40,38 @@ def select_model_raxmlstyle():
     if config["phylo_params"]["model"]=="LG+G":
         return "PROTGAMMALG"
 
+'''
+select correct ancestral reconstruction binary depending on value set in config for arsoft
+'''
+def select_arbin(arsoft):
+    if arsoft == "PHYML":
+        return "phyml"
+    elif arsoft == "RAXMLNG" :
+        return "raxml-ng"
+    elif (arsoft == "PAML") and (config["states"]==0):
+        return "baseml"
+    elif (arsoft == "PAML") and (config["states"]==1):
+        return "codeml"
+
+def expected_ar_outputs(arsoft):
+    res=list()
+    if arsoft == "PHYML":
+        res.append(config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/AR/extended_align.phylip_phyml_ancestral_seq.txt")
+        res.append(config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/AR/extended_align.phylip_phyml_ancestral_tree.txt")
+        res.append(config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/AR/extended_align.phylip_phyml_stats.txt")
+        res.append(config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/AR/extended_align.phylip_phyml_tree.txt")
+    elif arsoft == "RAXMLNG" :
+        res.append(config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/AR/extended_align.phylip.raxml.log")
+        res.append(config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/AR/extended_align.phylip.raxml.ancestralTree")
+        res.append(config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/AR/extended_align.phylip.raxml.ancestralProbs")
+        res.append(config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/AR/extended_align.phylip.raxml.startTree")
+        res.append(config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/AR/extended_align.phylip.raxml.ancestralStates")
+        res.append(config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/AR/extended_align.phylip.raxml.rba")
+    elif arsoft == "PAML":
+        res.append(config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/AR/rst")
+    return res
+
+
+
 def tmpdir_prefix(wildcards):
     return wildcards.pruning+"_r"+wildcards.length

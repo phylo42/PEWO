@@ -27,42 +27,43 @@ def setinputsreads(pruning):
 def setoutputs():
     l=list()
     for length in config["read_length"]:
-        l.append(config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/k{k}_o{omega}/{pruning}_r"+str(length)+"_k{k}_o{omega}_red{reduction}_rappas.jplace")
+        l.append(config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/k{k}_o{omega}/{pruning}_r"+str(length)+"_k{k}_o{omega}_red{reduction}_ar{arsoft}_rappas.jplace")
     return l
 
 #rule all:
 #    input: expand(config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_config/{pruning}_r{length}_k{k}_o{omega}_rappas.jplace", pruning=1, length=config["read_length"],k=6, omega=1.0)
 
-rule dbbuild_rappas:
+rule dbbuildinram_rappas:
     input:
         a=config["workdir"]+"/A/{pruning}.align",
         t=config["workdir"]+"/T/{pruning}.tree",
-        arseq=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/AR/extended_align.phylip_phyml_ancestral_seq.txt",
-        artree=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/AR/extended_align.phylip_phyml_ancestral_tree.txt",
-        r=lambda wildcards: setinputsreads(wildcards.pruning)
+        r=lambda wildcards: setinputsreads(wildcards.pruning),
+        ar=lambda wildcards: expected_ar_outputs(wildcards.arsoft)
     output:
         setoutputs()
     log:
-        config["workdir"]+"/logs/placement_rappas/{pruning}_k{k}_o{omega}_red{reduction}.log"
+        config["workdir"]+"/logs/placement_rappas/{pruning}_k{k}_o{omega}_red{reduction}_ar{arsoft}.log"
     version: "1.00"
     params:
         states=["nucl"] if config["states"]==0 else ["amino"],
-        ardir=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/AR",
-        workdir=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/k{k}_o{omega}",
+        ardir=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/AR",
+        workdir=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/k{k}_o{omega}",
         dbfilename="DB.bin",
         querystring=lambda wildcards, input : ",".join(input.r),
         maxp=config["maxplacements"],
-        minlwr=config["minlwr"]
+        minlwr=config["minlwr"],
+        arbin=lambda wildcards: select_arbin(wildcards.arsoft)
     run:
-         shell(
-            "java -Xms2G -Xmx"+str(config["config_rappas"]["memory"])+"G -jar $(which RAPPAS.jar) -p b -b $(which phyml) "
+        shell(
+            "java -Xms2G -Xmx"+str(config["config_rappas"]["memory"])+"G -jar $(which RAPPAS.jar) -p b "
+            "-b $(which {params.arbin}) "
             "-k {wildcards.k} --omega {wildcards.omega} -t {input.t} -r {input.a} -q {params.querystring} "
             "-w {params.workdir} --ardir {params.ardir} -s {params.states} --ratio-reduction {wildcards.reduction} "
             "--keep-at-most {params.maxp} --keep-factor {params.minlwr} "
             "--use_unrooted --dbinram --dbfilename {params.dbfilename} &> {log} "
-         )
-         for length in config["read_length"]:
+        )
+        for length in config["read_length"]:
             shell(
                 "mv {params.workdir}/placements_{wildcards.pruning}_r"+str(length)+".fasta.jplace "
-                "{params.workdir}/{wildcards.pruning}_r"+str(length)+"_k{wildcards.k}_o{wildcards.omega}_red{wildcards.reduction}_rappas.jplace "
+                "{params.workdir}/{wildcards.pruning}_r"+str(length)+"_k{wildcards.k}_o{wildcards.omega}_red{wildcards.reduction}_ar{wildcards.arsoft}_rappas.jplace "
             )

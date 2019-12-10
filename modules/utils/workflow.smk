@@ -54,11 +54,11 @@ def build_accuracy_workflow():
     l.append(
         build_placements_workflow()
     )
-    #generate node distances
+    #compute node distances metrics from jplace outputs
     l.append(config["workdir"]+"/results.csv")
     #collection of results and generation of summary plots
-    l.append(set_plot_outputs())
-
+    l.append(accuracy_plots_ND_outputs())
+    l.append(accuracy_plots_eND_outputs())
     return l
 
 '''
@@ -154,12 +154,13 @@ def build_placements_workflow():
     if "rappas" in config["test_soft"] :
         l.append(
             expand(
-                config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/k{k}_o{omega}/{pruning}_r{length}_k{k}_o{omega}_red{reduction}_rappas.jplace",
+                config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/k{k}_o{omega}/{pruning}_r{length}_k{k}_o{omega}_red{reduction}_ar{arsoft}_rappas.jplace",
                 pruning=range(0,config["pruning_count"]),
                 k=config["config_rappas"]["k"],
                 omega=config["config_rappas"]["omega"],
                 length=config["read_length"],
-                reduction=config["config_rappas"]["reduction"]
+                reduction=config["config_rappas"]["reduction"],
+                arsoft=config["config_rappas"]["arsoft"]
             )
         )
 
@@ -179,12 +180,37 @@ def build_placements_workflow():
 
 
 '''
-define plot that will be computed
+define plots that will be computed in 'accuracy' mode
 '''
-def set_plot_outputs():
+def accuracy_plots_ND_outputs():
     l=list()
     #epa-ng
-    l.append( expand(config["workdir"]+"/summary_plot_epang_{heuristic}.svg",heuristic=config["config_epang"]["heuristics"]) )
+    if "epang" in config["test_soft"] :
+        l.append( expand(config["workdir"]+"/summary_plot_ND_epang_{heuristic}.svg",heuristic=config["config_epang"]["heuristics"]) )
+        l.append( expand(config["workdir"]+"/summary_table_ND_epang_{heuristic}.csv",heuristic=config["config_epang"]["heuristics"]) )
     #all other software
-    l.append( expand(config["workdir"]+"/summary_plot_{soft}.svg",soft=[x for x in config["test_soft"] if x!="epang"]) )
+    l.append( expand(config["workdir"]+"/summary_plot_ND_{soft}.svg",soft=[x for x in config["test_soft"] if x!="epang"]) )
+    l.append( expand(config["workdir"]+"/summary_table_ND_{soft}.csv",soft=[x for x in config["test_soft"] if x!="epang"]) )
+    return l
+
+'''
+define plots that will be computed in 'accuracy' mode
+'''
+def accuracy_plots_eND_outputs():
+    l=list()
+    #epa-ng
+    if "epang" in config["test_soft"] :
+        l.append( expand(config["workdir"]+"/summary_plot_eND_epang_{heuristic}.svg",heuristic=config["config_epang"]["heuristics"]) )
+        l.append( expand(config["workdir"]+"/summary_table_eND_epang_{heuristic}.csv",heuristic=config["config_epang"]["heuristics"]) )
+    #all other software
+    l.append( expand(config["workdir"]+"/summary_plot_eND_{soft}.svg",soft=[x for x in config["test_soft"] if x!="epang"]) )
+    l.append( expand(config["workdir"]+"/summary_table_eND_{soft}.csv",soft=[x for x in config["test_soft"] if x!="epang"]) )
+    return l
+
+'''
+define plots that will be computed in 'resources' mode
+'''
+def resource_plots_outputs():
+    l=list()
+    l.append( expand(config["workdir"]+"/benchmarks.csv"))
     return l

@@ -47,12 +47,13 @@ def define_inputs():
     if "rappas" in config["test_soft"]:
         inputs.append(
             expand(
-                config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/k{k}_o{omega}/{pruning}_r{length}_k{k}_o{omega}_red{reduction}_rappas.jplace",
+                config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/k{k}_o{omega}/{pruning}_r{length}_k{k}_o{omega}_red{reduction}_ar{arsoft}_rappas.jplace",
                 pruning=range(0,config["pruning_count"]),
                 k=config["config_rappas"]["k"],
                 omega=config["config_rappas"]["omega"],
                 length=config["read_length"],
-                reduction=config["config_rappas"]["reduction"]
+                reduction=config["config_rappas"]["reduction"],
+                arsoft=config["config_rappas"]["arsoft"]
             )
         )
     if "apples" in config["test_soft"]:

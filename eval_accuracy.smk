@@ -8,16 +8,16 @@ based on the setup defined in the config file.
 configfile: "config.yaml"
 
 '''
-explicitly set config to not repeat launches,
+explicitly set config to not repeat binary executions,
 which is an option that should be considered only in 'resource' evaluation mode.
-this allow to use the same config file for both 'accuracy' and 'resources' modes
+this allow to use the same config file for both 'accuracy' and 'resources' modes of PEWO worflow
 NOTE: this statement MUST be set BEFORE the "includes"
 '''
 config["repeats"]=1
 
 #utils
 include:
-    "modules/utils/wk.smk"
+    "modules/utils/workflow.smk"
 include:
     "modules/utils/etc.smk"
 #prunings
