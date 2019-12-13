@@ -2,11 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="47d029be-3794-48fe-9e3d-6b7ffc1d18fe" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/rGraphicsSettings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/rSettings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/op/operate_ar.smk" beforeDir="false" afterPath="$PROJECT_DIR$/modules/op/operate_ar.smk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eval_resources.smk" beforeDir="false" afterPath="$PROJECT_DIR$/eval_resources.smk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/alignment/alignment_hmm.smk" beforeDir="false" afterPath="$PROJECT_DIR$/modules/alignment/alignment_hmm.smk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/placement/placement_rappas_dbondisk.smk" beforeDir="false" afterPath="$PROJECT_DIR$/modules/placement/placement_rappas_dbondisk.smk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/R/eval_ressources_plots.R" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/R/eval_ressources_plots.R" afterDir="false" />
     </list>
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -27,6 +31,11 @@
   </component>
   <component name="ProjectId" id="1Pgid2Pe3iuYlmoDSTKf7CUymqa" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
@@ -49,15 +58,15 @@
       <recent name="$PROJECT_DIR$" />
     </key>
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
+  <component name="ServiceViewManager">
+    <option name="viewStates">
       <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
+        <serviceView>
+          <treeState>
+            <expand />
+            <select />
+          </treeState>
+        </serviceView>
       </list>
     </option>
   </component>
@@ -91,5 +100,15 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/test_apples/apples" />
     </ignored-roots>
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="675" y="339" width="626" height="546" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog" timestamp="1576143373606">
+      <screen x="67" y="27" width="1853" height="1173" />
+    </state>
+    <state x="675" y="339" width="626" height="546" key="#com.intellij.openapi.updateSettings.impl.PluginUpdateInfoDialog/67.27.1853.1173/1920.0.1280.1024@67.27.1853.1173" timestamp="1576143373606" />
+    <state x="647" y="439" key="com.intellij.ide.util.TipDialog" timestamp="1576253655340">
+      <screen x="67" y="27" width="1853" height="1173" />
+    </state>
+    <state x="647" y="439" key="com.intellij.ide.util.TipDialog/67.27.1853.1173/1920.0.1280.1024@67.27.1853.1173" timestamp="1576253655340" />
   </component>
 </project>

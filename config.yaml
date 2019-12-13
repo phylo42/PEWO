@@ -11,19 +11,23 @@ dataset_tree: test/RAxML_bipartitions.150.BEST.WITH
 #dataset_tree: test/compendium-norec-exp-tree.newick
 #dataset_align: /home/ben/Dropbox/viromeplacer/test_datasets/6leaves_tree/6_leaves_test_set.aln
 #dataset_tree: /home/ben/Dropbox/viromeplacer/test_datasets/6leaves_tree/6_leaves_test_set.tree
+#dataset_align: /media/ben/STOCK/DATA/PEWO/jphmm_inputs/HBV_alignment.fas
+#dataset_tree: /media/ben/STOCK/DATA/PEWO/jphmm_inputs/RAxML_bipartitions.HBV.REROOTED
 
 #working directory
 #workdir: /home/ben/PycharmProjects/placetest_pipeline/run2
-workdir: /media/ben/STOCK/DATA/PEWO/run
+workdir: /media/ben/STOCK/DATA/PEWO/bench
+#workdir: /media/ben/STOCK/DATA/PEWO/jphmm_inputs/run_hbv
+
 
 #states used in analysis, either '0' for nucleotides or '1' for amino acids
 states: 0
 
 #which software to test, at least one of : epa, epang, pplacer, rappas, apples
-test_soft: ["rappas","epang","pplacer","apples"]
+test_soft: [epa,rappas,epang,pplacer]
 
 #read lengths to test
-read_length: [300]
+read_length: [150,300]
 
 
 ## IF "ACCURACY" IS EVALUATED
@@ -48,7 +52,9 @@ repeats: 2
 # simulate: queries are simulated from the input alignment (reserved for future upgrades, currently not implemented)
 query_type: user
 # queries used in resource evaluation, >10000 sequences recommended
-query_user: test/EMP_92_studies_100000.fas
+#query_user: test/EMP_92_studies_100000.fas
+query_user: test/EMP_92_studies_10000.fas
+
 
 
 
@@ -72,7 +78,7 @@ config_epa:
 
   #proportion of top scoring branch for which full optimization is computed
   #float in ]0,1]
-  G: [0.1,0.2]
+  G: [0.01,0.05,0.1]
 
 ### PPLACER
 ###############################
@@ -83,9 +89,9 @@ config_pplacer:
   #it uses a 2-step heuristic similar to EPA but called the "baseball" heuristic
   #(Matsen et al, 2012 ; doi: 10.1186/1471-2105-11-538)
 
-  max-strikes: [6,12]
-  strike-box: [3,6]
-  max-pitches: [40,80]
+  max-strikes: [6,12,24]
+  strike-box: [3,6,12]
+  max-pitches: [40,80,160]
 
   #pre-masking, 1=yes, 0=no
   premask: 1
@@ -102,13 +108,13 @@ config_epang:
   # h3: heuristic equivalent to pplacer defaults, fast
   # h4: no heuristic, very very slow but should produce the best accuracy
   #(Barbera et al, 2019 ; doi: 10.1093/sysbio/syy054)
-  heuristics: ["h1"]
+  heuristics: ["h1","h2"]
 
   #heuristic-specific parameters can be setup in following lines
   h1:
-    g: [0.9999,0.99999,0.999999]
+    g: [0.999,0.9999,0.99999]
   h2:
-    G: [0.1,0.2]
+    G: [0.01,0.05,0.1]
   h3:
     options: none    #reserved if any option appears in future versions
   h4:
@@ -129,18 +135,18 @@ config_rappas:
 
   #panel of k that is tested
   #integer in [2,16] (8~10 recommended, >12 often produces too long computations)
-  k: [5,6,7]
+  k: [6,7,8]
 
   #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
   #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids
   #For DNA, values in [1,2] recommended. For amino acids, values in [5,15] recommended.
-  omega: [1.5,2.0]
+  omega: [1.5,1.75,2.0]
 
   #reduction setup, e.g. gap/non-gap ratio
   #above which a site of the input alignment
   #is ignored during phylo-kmer computations
   #integer in ]0,1], a value close to 1.00 is recommended (with 1.00, only gap-only columns are filtered).
-  reduction: [0.5,1.0]
+  reduction: [0.99]
 
   #external software used to compute ancestral states probabilities (ancestral reconstruction)
   #all software should compute approximately the same values (as same model and model parameters are called)
@@ -160,8 +166,8 @@ config_rappas:
   #currently, only raxml-ng can use multiple threads
   #
   #!!! warning, be sure to set arsoft VALUES as UPPER CASE !!!
-  arsoft: [PHYML,RAXMLNG,PAML]
-  arthreads: 2
+  arsoft: [PHYML,RAXMLNG]
+  arthreads: 4
 
   #maximum amount of memory available to rappas process
   #this has no influence on placement accuracy but it will impact "resource" evaluation
@@ -185,7 +191,7 @@ config_apples:
   # BE : k=1 (Beyer et al., 1974)
   #methods: ["OLS","FM","BE"]
   #!warning, be sure to set methods VALUES as UPPER CASE
-  methods: ["OLS","FM","BE"]
+  methods: [OLS,FM,BE]
 
   #List of placement criterion to test.
   #Possible values are:
@@ -194,7 +200,7 @@ config_apples:
   # HYBRID : MLSE then ME
   #criteria: ["MLSE","ME","HYBRID"]
   #!warning, be sure to set criteria VALUES as UPPER CASE
-  criteria: ["MLSE","ME","HYBRID"]
+  criteria: [MLSE,ME,HYBRID]
 
 
 ########################################################################################################################
