@@ -1,4 +1,4 @@
-# PEWO: "Pacement Evaluation WOrkflow"
+# PEWO: "Placement Evaluation WOrkflows"
 
 ## Overview
 
@@ -85,13 +85,24 @@ conda uninstall pplacer
 conda install pplacer=1.1.alpha17
 ```
 
-**2. Selet a procedure :**
+**2. Select a procedure :**
 
 Table with possible analyses/description
+Procedure | Snakefile | Description
+--- | --- | ---
+Accuracy (ND + eND) | eval_accuracy.smk | Given a reference tree/alignment, compute both the "Node Distance" and "expected Node Distance" for a set of software and a set of conditions.
+Ressources | eval_ressources.smk | Given a reference tree/alignment and a set of query reads, measures CPU/RAM consumptions for a set of software and a set of conditions.
+Likelihood Improvement | eval_likelihood.smk | Given a reference tree/alignment, compute Node Distance and expected Node Distance for a set of software and a set of conditions.
+Ressources | eval_ressources.smk | Given a reference tree/alignment and a set of query reads, measures CPU/RAM consumptions for a set of software and a set of conditions.
+
 
 **3. Setup the workflow by editing config.yaml :**
 
-2/3 sentences, details in documentation
+The file config.yaml is where you setup the workflow. It contains 4 sections:
+* *Workflow Configuration*
+* *Per software configuration*
+* *Options common to all software*
+* *Evolutionary model*
 
 **4. Test your workflow :**
 
