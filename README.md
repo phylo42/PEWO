@@ -62,49 +62,49 @@ If your Miniconda3 installation was successfull, you should be able to run the f
 ### Rapid installation
 
 ```
-#add conda repositories
-conda config add channels bioconda
-
-#install PEWO environment
+#download pipeline
+git clone https://github.com/blinard-BIOINFO/PEWO_workflow.git 
+cd PEWO
+#install PEWO environment (may take dozens of minutes)
 conda env create -f envs/environement.yaml
 ```
 
-# Usage
+## Test launch
 
-1. Activate PEWO environement:
-
-```
-conda activate PEWO
-```
-
-Note that anaconda will always install the latest software version of all phylogenetic placement software supported by PEWO.
-If you intend to test a particular version, you will need to manually downgrade to earlier versions, for instance:
+**1. Activate PEWO environement :**
 
 ```
 conda activate PEWO
-#removes the latest version of pplacer and downgrades to earlier version:
-conda remove pplacer
-conda install pplacer=
 ```
 
-2. Setup the pipeline configuration by editing the config.yaml file. 
+Note that by default, only the latest version of all phylogenetic placement software supported by PEWO is intalled.
+If you intend to evaluate a particular version, you will need to manually downgrade to earlier versions, for instance:
+
+```
+conda uninstall pplacer
+conda install pplacer=1.1.alpha17
+```
+
+**2. Selet a procedure :**
+
+Table with possible analyses/description
+
+**3. Setup the workflow by editing config.yaml :**
 
 2/3 sentences, details in documentation
 
-3. Choose and execute your workflow
+**4. Test your workflow :**
 
-First, it is strongly recommended to test if your configuration is valid and matches your needs.
-To do so, launch a dry run of the pipeline using the command
+It is strongly recommended to test if your configuration is valid and matches the nalayses you intended.
+To do so, launch a dry run of the pipeline using the command :
 
 ```
-snakemake --snakefile \[subworkflow\].smk -np --core 1 --config pruning_count=1
+snakemake --snakefile \[subworkflow\].smk -np
 ```
 
-where \[subworkflow\] is one of the subworflow listed in the table below. This will list the operations that will be run by the workflow
+where \[subworkflow\] is one of the subworflow listed in the table above. 
 
-Table with possible analyses
-
-Moreover, you can produce a graph detailling the different steps of the workflow.
+This will list the operations that will be run by the workflow. It is also recommended to export a graph detailling the different steps of the workflow (to avoid very large graphs in "Accuracy" subworkflow, we force a single pruning).
 
 ```
 # to display the graph in a window
@@ -113,6 +113,14 @@ snakemake --snakefile \[subworkflow\].smk --config pruning_count=1 --dag | dot |
 # to produce an image of the graph
 snakemake --snakefile \[subworkflow\].smk --config pruning_count=1 --dag | dot -Tsvg > graph.svg
 ```
+
+**5. Launch the analysis :**
+
+```
+snakemake --snakefile \[subworkflow\].smk -p --core [#cores] 
+```
+Note that the workflow can be launched on a grid environement such as qsub.
+Refer to the snakemake documentation to learn how to configure the snakemake workflow for such environement.
 
 ## Licence
 
