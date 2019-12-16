@@ -88,12 +88,12 @@ conda install pplacer=1.1.alpha17
 **2. Select a procedure :**
 
 Table with possible analyses/description
+
 Procedure | Snakefile | Description
 --- | --- | ---
 Accuracy (ND + eND) | eval_accuracy.smk | Given a reference tree/alignment, compute both the "Node Distance" and "expected Node Distance" for a set of software and a set of conditions.
 Ressources | eval_ressources.smk | Given a reference tree/alignment and a set of query reads, measures CPU/RAM consumptions for a set of software and a set of conditions.
 Likelihood Improvement | eval_likelihood.smk | Given a reference tree/alignment, compute Node Distance and expected Node Distance for a set of software and a set of conditions.
-Ressources | eval_ressources.smk | Given a reference tree/alignment and a set of query reads, measures CPU/RAM consumptions for a set of software and a set of conditions.
 
 
 **3. Setup the workflow by editing config.yaml :**
