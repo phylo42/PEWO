@@ -32,7 +32,7 @@ rule aronly_rappas:
 
 # Usage of the rappas-buildn:
 # rappas-buildn
-# -t tree.newick
+# -t tree.newick:
 # -x extended_tree_withBL.tree
 # -a extended_align.phylip_phyml_ancestral_seq.txt
 # -e extended_tree_node_mapping.tsv
@@ -52,7 +52,7 @@ rule dbbuild_rappas2:
     output:
         q=config["workdir"]+"/RAPPAS2/{pruning}/red{reduction}/k{k}_o{omega}/DB_k{k}_o{omega}.rps"
     log:
-        config["workdir"]+"/logs/dbbuild_rappas2/{pruning}_k{k}_o{omega}_red{reduction}.log"
+        config["workdir"]+"/logs/dbbuild_rappas2/{pr2uning}_k{k}_o{omega}_red{reduction}.log"
     benchmark:
         repeat(config["workdir"]+"/benchmarks/{pruning}_k{k}_o{omega}_red{reduction}_rappas-dbbuild_benchmark.tsv", config["repeats"])
     version:

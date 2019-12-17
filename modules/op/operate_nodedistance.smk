@@ -6,7 +6,7 @@ compute the ND (node distances) metric using the jplace outputs
 
 import os
 
-#debug
+#debug;
 if (config["debug"]==1):
     print("prunings: "+os.getcwd())
 #debug
