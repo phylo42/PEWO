@@ -152,7 +152,7 @@ for ( i in 1:length(soft_analyzed) ) {
 		}
 	}
 	svg_width<-2+(0.7*length(unique(alltables[[i]][[params[1]]])) * columns)
-	svg_height<-1+( 1.00* length(unique(alltables[[i]][[params[2]]])) )
+	svg_height<-1+( 1.5* length(unique(alltables[[i]][[params[2]]])) )
 	CairoSVG(file =paste(workdir,"/summary_plot_ND_",softname,".svg", sep=""),width=svg_width,height=svg_height)
 	print(g)
 	dev.off()
@@ -264,7 +264,7 @@ for ( i in 1:length(soft_analyzed) ) {
 		}
 	}
 	svg_width<-2+(0.7*length(unique(alltables[[i]][[params[1]]])) * columns)
-	svg_height<-1+( 1* length(unique(alltables[[i]][[params[2]]])) )
+	svg_height<-1+( 1.5* length(unique(alltables[[i]][[params[2]]])) )
 	CairoSVG(file =paste(workdir,"/summary_plot_eND_",softname,".svg", sep=""),width=svg_width,height=svg_height)
 	print(g)
 	dev.off()
