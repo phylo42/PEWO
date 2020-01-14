@@ -1,31 +1,37 @@
-'''
-A module to operate placements with RAPPAS v2
+"""
+This module makes placements with RAPPAS2
+"""
 
-@author Nikolai Romashchenko
-'''
+__author__ = "Nikolai Romashchenko"
+
 
 rule aronly_rappas:
+    """
+    Runs RAPPAS with --aronly option. 
+    This step is required until RAPPASv2 supports ancestral reconstruction by its own.
+    """
     input:
-        a=config["workdir"]+"/A/{pruning}.align",
-        t=config["workdir"]+"/T/{pruning}.tree",
-        arseq=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/AR/extended_align.phylip_phyml_ancestral_seq.txt",
-        artree=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/AR/extended_align.phylip_phyml_ancestral_tree.txt",
+        a = config["workdir"] + "/A/{pruning}.align",
+        t = config["workdir"] + "/T/{pruning}.tree",
+        arseq = config["workdir"] + "/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/AR/extended_align.phylip_phyml_ancestral_seq.txt",
+        artree = config["workdir"] + "/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/AR/extended_align.phylip_phyml_ancestral_tree.txt",
     output:
-        ar_mapping=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/AR/ARtree_id_mapping.tsv"
+        ext_mapping = config["workdir"] + "/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/extended_trees/extended_tree_node_mapping.tsv",
+        ar_mapping = config["workdir"] + "/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/AR/ARtree_id_mapping.tsv"
     log:
-        config["workdir"]+"/logs/aronly_rappas2/{pruning}_red{reduction}.log"
+        config["workdir"] + "/logs/aronly_rappas2/{pruning}_red{reduction}_ar{arsoft}.log"
     benchmark:
-        repeat(config["workdir"]+"/benchmarks/{pruning}_red{reduction}_rappas-dbbuild_benchmark.tsv", config["repeats"])
+        repeat(config["workdir"] + "/benchmarks/{pruning}_red{reduction}_ar{arsoft}_rappas-dbbuild_benchmark.tsv", config["repeats"])
     version:
         "1.00"
     params:
-        states=["nucl"] if config["states"]==0 else ["amino"],
-        ardir=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/AR",
-        workdir=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/k{k}_o{omega}",
+        states = ["nucl"] if config["states"] == 0 else ["amino"],
+        ardir = lambda wildcards: config["workdir"] + "/RAPPAS/{0}/red{1}_ar{2}/AR" % (str(wildcards.pruning), str(wildcards.reduction), wildcards.arsoft),
+        workdir = lambda wildcards: config["workdir"] + "/RAPPAS/{0}/red{1}_ar{2}/k{3}_o{4}" % (wildcards.pruning, wildcards.reduction, wildcards.arsoft, wildcards.k, wildcards.omega),
     run:
          shell(
-            "java -Xms2G -Xmx"+str(config["config_rappas"]["memory"])+"G -jar $(which RAPPAS.jar) -p b -b $(which phyml) "
-            "-k {wildcards.k} --omega {wildcards.omega} -t {input.t} -r {input.a} -q {params.querystring} "
+            "java -Xms2G -Xmx" + str(config["config_rappas"]["memory"]) + "G -jar $(which RAPPAS.jar) -p b -b $(which phyml) "
+            "-k {wildcards.k} --omega {wildcards.omega} -t {input.t} -r {input.a} "
             "-w {params.workdir} --ardir {params.ardir} -s {params.states} --ratio-reduction {wildcards.reduction} "
             "--use_unrooted --aronly &> {log} "
          )
@@ -43,22 +49,25 @@ rule aronly_rappas:
 # -j num_threds
 
 rule dbbuild_rappas2:
+    """
+    Builds a database using RAPPAS2.
+    """
     input:
         t=config["workdir"]+"/T/{pruning}.tree",
-        x=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/extended_trees/extended_tree_withBL.tree",
-        arseq=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/AR/extended_align.phylip_phyml_ancestral_seq.txt",
-        ext_mapping=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/extended_trees/extended_tree_node_mapping.tsv",
-        ar_mapping=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/AR/ARtree_id_mapping.tsv"
+        x=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/extended_trees/extended_tree_withBL.tree",
+        arseq=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/AR/extended_align.phylip_phyml_ancestral_seq.txt",
+        ext_mapping=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/extended_trees/extended_tree_node_mapping.tsv",
+        ar_mapping=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/AR/ARtree_id_mapping.tsv"
     output:
-        q=config["workdir"]+"/RAPPAS2/{pruning}/red{reduction}/k{k}_o{omega}/DB_k{k}_o{omega}.rps"
+        q=config["workdir"]+"/RAPPAS2/{pruning}/red{reduction}_ar{arsoft}/k{k}_o{omega}/DB_k{k}_o{omega}.rps"
     log:
-        config["workdir"]+"/logs/dbbuild_rappas2/{pr2uning}_k{k}_o{omega}_red{reduction}.log"
+        config["workdir"]+"/logs/dbbuild_rappas2/{pruning}_k{k}_o{omega}_red{reduction}_ar{arsoft}.log"
     benchmark:
-        repeat(config["workdir"]+"/benchmarks/{pruning}_k{k}_o{omega}_red{reduction}_rappas-dbbuild_benchmark.tsv", config["repeats"])
+        repeat(config["workdir"]+"/benchmarks/{pruning}_k{k}_o{omega}_red{reduction}_ar{arsoft}_rappas-dbbuild_benchmark.tsv", config["repeats"])
     version:
         "1.00"
     params:
-        tmpdir=config["workdir"]+"/RAPPAS2/{pruning}/red{reduction}/k{k}_o{omega}"
+        tmpdir=config["workdir"]+"/RAPPAS2/{pruning}/red{reduction}_ar{arsoft}/k{k}_o{omega}"
     run:
         shell(
             "rappas-buildn "
@@ -66,26 +75,88 @@ rule dbbuild_rappas2:
             "-w {params.tmpdir} -k {wildcards.k} -o {wildcards.omega} -j 1 &> {log}"
         )
 
-rule placement_rappas:
+def set_rappas2_input_reads(pruning):
+    """
+    Creates a list of input read files.
+    """
+    # reads are taken from the input
+    if "dataset_reads" in config:
+        return [config["dataset_reads"]]
+    # reads are generated by pruning the input tree
+    else:
+        return [os.path.join(config["workdir"], "R", + pruning + "_r{length}.fasta")]
+
+
+def set_rappas2_output():
+    """
+    Creates a list of output files.
+    """
+
+    # reads are taken from the input
+    if "dataset_reads" in config:
+        return [config["workdir"]+"/RAPPAS2/{pruning}/red{reduction}_ar{arsoft}/k{k}_o{omega}/{pruning}" +
+                "_k{k}_o{omega}_red{reduction}_ar{arsoft}_rappas.jplace"]
+    # reads are generated by pruning the input tree
+    else:
+        return [config["workdir"]+"/RAPPAS2/{pruning}/red{reduction}_ar{arsoft}/k{k}_o{omega}/{pruning}" +
+                "_r{length}_k{k}_o{omega}_red{reduction}_ar{arsoft}_rappas.jplace"]
+
+def set_rappas2_log():
+    """
+    Creates a list of log files.
+    """
+
+    # reads are taken from the input
+    if "dataset_reads" in config:
+        return [config["workdir"] + "/logs/placement_rappas2/{pruning}/red{reduction}_ar{arsoft}/k{k}_o{omega}" +
+               "/{pruning}_full_k{k}_o{omega}_red{reduction}_ar{arsoft}.log"]
+    # reads are generated by pruning the input tree
+    else:
+        return [config["workdir"] + "/logs/placement_rappas2/{pruning}/red{reduction}_ar{arsoft}/k{k}_o{omega}" +
+               "/{pruning}_r{length}_k{k}_o{omega}_red{reduction}_ar{arsoft}.log"]
+
+#def set_benchmark():
+#    """
+#    Creates a list of benchmark output files.
+#    """
+#    if "dataset_reads" in config:
+#        return [config["workdir"] + "/benchmarks/{pruning}_full_k{k}_o{omega}_red{reduction}" +
+#                "_ar{arsoft}_rappas-placement_benchmark.tsv" for _ in range(config["repeats"])]
+#    else:
+#        return [config["workdir"] + "/benchmarks/{pruning}_r{length}_k{k}_o{omega}_red{reduction}" +
+#                "_ar{arsoft}_rappas-placement_benchmark.tsv" for _ in range(config["repeats"])]
+
+rule placement_rappas2:
+    """
+    Places reads using RAPPAS2.
+    """
     input:
-        db=config["workdir"]+"/RAPPAS2/{pruning}/red{reduction}/k{k}_o{omega}/DB_k{k}_o{omega}.rps",
-        r=config["workdir"]+"/R/{pruning}_r{length}.fasta",
+        db = config["workdir"] + "/RAPPAS2/{pruning}/red{reduction}_ar{arsoft}/k{k}_o{omega}/DB_k{k}_o{omega}.rps",
+        r = lambda wildcards: set_rappas2_input_reads(wildcards.pruning)
     output:
-        config["workdir"]+"/RAPPAS2/{pruning}/red{reduction}/k{k}_o{omega}/{pruning}_r{length}_k{k}_o{omega}_red{reduction}_rappas.jplace"
+        set_rappas2_output()
     log:
-        config["workdir"]+"/logs/placement_rappas/{pruning}/red{reduction}/k{k}_o{omega}/{pruning}_r{length}_k{k}_o{omega}_red{reduction}.log"
-    benchmark:
-        repeat(config["workdir"]+"/benchmarks/{pruning}_r{length}_k{k}_o{omega}_red{reduction}_rappas-placement_benchmark.tsv", config["repeats"])
+        set_rappas2_log()
+    #benchmark:
+        #set_benchmark()
     version: "1.00"
     params:
-        workdir=config["workdir"]+"/RAPPAS2/{pruning}/red{reduction}/k{k}_o{omega}",
+        workdir=config["workdir"]+"/RAPPAS2/{pruning}/red{reduction}_ar{arsoft}/k{k}_o{omega}",
     run:
         shell(
             "rappas-placen {input.db} {params.workdir} 1 {input.r} &> {log}"
         )
 
-        for length in config["read_length"]:
+        # reads are taken from the input
+        if "dataset_reads" in config:
             shell(
-                "mv {params.workdir}/placements_{wildcards.pruning}_r"+str(length)+".fasta.jplace "
-                "{params.workdir}/{wildcards.pruning}_r"+str(length)+"_k{wildcards.k}_o{wildcards.omega}_red{wildcards.reduction}_rappas.jplace "
+                "mv {params.workdir}/placements_{wildcards.pruning}.fasta.jplace "
+                "{params.workdir}/{wildcards.pruning}_k{wildcards.k}_o{wildcards.omega}_red{wildcards.reduction}_ar{wildcards.arsoft}_rappas.jplace"
             )
+        # reads are generated by pruning the input tree
+        else:
+            for length in config["read_length"]:
+                shell(
+                    "mv {params.workdir}/placements_{wildcards.pruning}_r"+str(length)+".fasta.jplace "
+                    "{params.workdir}/{wildcards.pruning}_r"+str(length)+"_k{wildcards.k}_o{wildcards.omega}_red{wildcards.reduction}_ar{wildcards.arsoft}_rappas.jplace "
+                )

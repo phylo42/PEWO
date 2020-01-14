@@ -1,20 +1,18 @@
-'''
-optimises all pruned trees
+"""
+This module optimises pruned trees.
+"""
 
-@author Benjamin Linard
-'''
+__author__ = "Benjamin Linard, Nikolai Romashchenko"
+
 
 # TODO: add model/parameters selection in the config file, this config needs to be propagated to all placement software
 
 import os
 
 #debug
-if (config["debug"]==1):
-    print("prunings: "+os.getcwd())
+if config["debug"] == 1:
+    print("prunings: " + os.getcwd())
 #debug
-
-#rule all:
-#    input: expand(config["workdir"]+"/T/{pruning}_optimised.tree", pruning=range(0,config["pruning_count"],1))
 
 rule optimise:
     input:

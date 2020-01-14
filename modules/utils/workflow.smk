@@ -85,6 +85,48 @@ def build_resources_workflow():
     return l
 
 '''
+'''
+def build_likelihood_workflow():
+    l=list()
+
+    #placements
+    l.append(
+        _build_likelihood_workflow()
+    )
+
+    #compute node distances metrics from jplace outputs
+    #l.append(config["workdir"]+"/likelihood.csv")
+
+    #collection of results and generation of summary plots
+    #l.append(accuracy_plots_ND_outputs())
+    #l.append(accuracy_plots_eND_outputs())
+    return l
+
+
+def _build_likelihood_workflow():
+    l=list()
+
+    #hmm alignments for alignment-based methods
+    if ("epa" in config["test_soft"]) or ("epang" in config["test_soft"]) or ("pplacer" in config["test_soft"]) or ("apples" in config["test_soft"]):
+        l.append(
+            expand(
+                config["workdir"]+"/HMM/full.fasta"
+            )
+        )
+    if "rappas2" in config["test_soft"]:
+        l.append(
+            expand(
+                config["workdir"]+"/RAPPAS2/full/red{reduction}_ar{arsoft}/k{k}_o{omega}/full_k{k}_o{omega}_red{reduction}_ar{arsoft}_rappas.jplace",
+                k=config["config_rappas"]["k"],
+                omega=config["config_rappas"]["omega"],
+                reduction=config["config_rappas"]["reduction"],
+                arsoft=config["config_rappas"]["arsoft"]
+            )
+        )
+
+    return l
+
+'''
 builds expected outputs from placement software are tested.
 ("test_soft" field in the config file)
 '''
@@ -167,12 +209,13 @@ def build_placements_workflow():
     if "rappas2" in config["test_soft"]:
         l.append(
             expand(
-                config["workdir"]+"/RAPPAS2/{pruning}/red{reduction}/k{k}_o{omega}/{pruning}_r{length}_k{k}_o{omega}_red{reduction}_rappas.jplace",
+                config["workdir"]+"/RAPPAS2/{pruning}/red{reduction}_ar{arsoft}/k{k}_o{omega}/{pruning}_r{length}_k{k}_o{omega}_red{reduction}_ar{arsoft}_rappas.jplace",
                 pruning=range(0,config["pruning_count"]),
                 k=config["config_rappas"]["k"],
                 omega=config["config_rappas"]["omega"],
                 length=config["read_length"],
-                reduction=config["config_rappas"]["reduction"]
+                reduction=config["config_rappas"]["reduction"],
+                arsoft=config["config_rappas"]["arsoft"]
             )
         )
 

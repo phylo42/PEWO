@@ -43,7 +43,7 @@ for ( i in 1:length(files)) {
 params=unique(params)
 
 
-df=data.frame(matrix(ncol = 11+length(params), nrow = 0))
+df=data.frame(matrix(ncol = 11+length(params), nrow = 0)
 
 param_names=c("s","h.m.s","max_rss","max_vms","max_uss","max_pss","io_in","io_out","mean_load","repeat","operation",params)
 colnames(df)=param_names

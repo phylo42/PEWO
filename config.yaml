@@ -12,6 +12,11 @@ dataset_tree: test/RAxML_bipartitions.150.BEST.WITH
 #dataset_align: /home/ben/Dropbox/viromeplacer/test_datasets/6leaves_tree/6_leaves_test_set.aln
 #dataset_tree: /home/ben/Dropbox/viromeplacer/test_datasets/6leaves_tree/6_leaves_test_set.tree
 
+#dataset_align: test/0.align
+#dataset_tree: test/0.tree
+#dataset_reads: test/0_r300.fasta
+
+
 #working directory
 workdir: /home/nikolai/dev/pewo/run
 
@@ -19,7 +24,8 @@ workdir: /home/nikolai/dev/pewo/run
 states: 0
 
 #which software to test, at least one of : epa, epang, pplacer, rappas, apples
-test_soft: ["epang","pplacer","rappas", "rappas2", "apples"]
+#test_soft: ["epang","pplacer","rappas", "rappas2", "apples"]
+test_soft: ["epang","pplacer","rappas"]
 
 #read lengths to test
 read_length: [300]
@@ -30,7 +36,10 @@ read_length: [300]
 
 ### this section matters only when you run the "eval_accuracy.smk" workflow
 
-#number of random prunings to compute
+# Enable prunings. If set to False, the dataset_reads parameter is mandatory
+# Otherwise reads are generated from pruned clades
+enable_prunings: True
+# Number of random prunings to compute
 pruning_count: 30
 
 
@@ -139,7 +148,7 @@ config_rappas:
   #above which a site of the input alignment
   #is ignored during phylo-kmer computations
   #integer in ]0,1], a value close to 1.00 is recommended (with 1.00, only gap-only columns are filtered).
-  reduction: [0.5,1.0]
+  reduction: [0.99]
 
   #external software used to compute ancestral states probabilities (ancestral reconstruction)
   #all software should compute approximately the same values (as same model and model parameters are called)
@@ -159,7 +168,7 @@ config_rappas:
   #currently, only raxml-ng can use multiple threads
   #
   #!!! warning, be sure to set arsoft VALUES as UPPER CASE !!!
-  arsoft: [PHYML,RAXMLNG,PAML]
+  arsoft: [PHYML]
   arthreads: 2
 
   #maximum amount of memory available to rappas process

@@ -1,26 +1,23 @@
-'''
-computes extended trees + AR files, which are inputs to RAPPAS db_build
+"""
+This module computes extended trees and AR files, which are inputs to RAPPAS db_build.
 this first is generally managed by RAPPAS, but separated here to facilitate analysis of very large datasets
 which may generate ressource-consuming ARs (e.g., phyml requiring lots of RAM)
+"""
 
-@author Benjamin Linard
-'''
+__author__ = "Benjamin Linard, Nikolai Romashchenko"
 
 
 import os
 
-#debug
-if (config["debug"]==1):
-    print("exttree: "+os.getcwd())
-#debug
+if config["debug"] == 1:
+    print("exttree: " + os.getcwd())
 
-#rule all:
-#    input: expand(config["workdir"]+"/RAPPAS/{pruning}/AR/extended_align.phylip_phyml_ancestral_seq.txt", pruning=range(0,config["pruning_count"],1))
 
-'''
-prepare ar outputs using RAPPAS
-'''
+
 rule compute_ar_inputs:
+    """
+    Prepares AR outputs using RAPPAS.
+    """
     input:
         a=config["workdir"]+"/A/{pruning}.align",
         t=config["workdir"]+"/T/{pruning}.tree"
