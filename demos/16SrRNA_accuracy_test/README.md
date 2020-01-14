@@ -17,7 +17,7 @@ range of topologies (1 leaf pruned, large clades pruned, ...).
 
 ## How to launch
 
-``̀
+```
 #Download pipeline
 git clone https://github.com/blinard-BIOINFO/PEWO_workflow.git 
 cd PEWO_workflow
