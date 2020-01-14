@@ -89,15 +89,15 @@ def build_resources_workflow():
 def build_likelihood_workflow():
     l=list()
 
-    #placements
+    # get placements
     l.append(
         _build_likelihood_workflow()
     )
 
-    #compute node distances metrics from jplace outputs
-    #l.append(config["workdir"]+"/likelihood.csv")
+    # compute likelihood values from jplace outputs
+    l.append(config["workdir"]+"/likelihood.csv")
 
-    #collection of results and generation of summary plots
+    # collection of results and generation of summary plots
     #l.append(accuracy_plots_ND_outputs())
     #l.append(accuracy_plots_eND_outputs())
     return l

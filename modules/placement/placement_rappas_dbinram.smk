@@ -9,7 +9,7 @@ __author__ = "Benjamin Linard, Nikolai Romashchenko"
 import os
 
 
-def set_rappas_input_reads(pruning):
+def get_rappas_input_reads(pruning):
     """
     Creates a list of input reads files. For generated reads from a pruning,
     all read lengths are passed in a single RAPPAS execution.
@@ -24,7 +24,7 @@ def set_rappas_input_reads(pruning):
                 for length in config["read_length"]]
 
 
-def set_rappas_output():
+def get_rappas_output():
     """
     Creates a list of output files.
     """
@@ -46,10 +46,10 @@ rule db_build_in_ram_rappas:
     input:
         a = config["workdir"]+"/A/{pruning}.align",
         t = config["workdir"]+"/T/{pruning}.tree",
-        r = lambda wildcards: set_rappas_input_reads(wildcards.pruning),
+        r = lambda wildcards: get_rappas_input_reads(wildcards.pruning),
         ar = lambda wildcards: expected_ar_outputs(wildcards.arsoft)
     output:
-        set_rappas_output()
+        get_rappas_output()
     log:
         config["workdir"]+"/logs/placement_rappas/{pruning}_k{k}_o{omega}_red{reduction}_ar{arsoft}.log"
     version: "1.00"

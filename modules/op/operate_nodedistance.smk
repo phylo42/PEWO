@@ -1,7 +1,8 @@
-'''
-compute the ND (node distances) metric using the jplace outputs
-@author Benjamin Linard
-'''
+"""
+Computes the ND (node distance) metric using .jplace output files
+"""
+
+__author__ = "Benjamin Linard, Nikolai Romashchenko"
 
 
 import os
@@ -15,64 +16,10 @@ if (config["debug"]==1):
 #rule all:
 #    input: config["workdir"]+"/results.csv"
 
-'''
-list all jplaces that should be present before computing node distances
-'''
-def define_inputs():
-    inputs=list()
-    if "epa" in config["test_soft"]:
-        inputs.append(
-            expand(
-                config["workdir"]+"/EPA/{pruning}/g{gepa}/{pruning}_r{length}_g{gepa}_epa.jplace",
-                pruning=range(0,config["pruning_count"]),
-                length=config["read_length"],
-                gepa=config["config_epa"]["G"]
-            )
-        )
-    if "pplacer" in config["test_soft"]:
-        inputs.append(
-            expand(
-                config["workdir"]+"/PPLACER/{pruning}/ms{msppl}_sb{sbppl}_mp{mpppl}/{pruning}_r{length}_ms{msppl}_sb{sbppl}_mp{mpppl}_pplacer.jplace",
-                pruning=range(0,config["pruning_count"]),
-                length=config["read_length"],
-                msppl=config["config_pplacer"]["max-strikes"],
-                sbppl=config["config_pplacer"]["strike-box"],
-                mpppl=config["config_pplacer"]["max-pitches"]
-            )
-        )
-    if "epang" in config["test_soft"]:
-        inputs.append(
-            select_epang_heuristics()
-        )
-    if "rappas" in config["test_soft"]:
-        inputs.append(
-            expand(
-                config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/k{k}_o{omega}/{pruning}_r{length}_k{k}_o{omega}_red{reduction}_ar{arsoft}_rappas.jplace",
-                pruning=range(0,config["pruning_count"]),
-                k=config["config_rappas"]["k"],
-                omega=config["config_rappas"]["omega"],
-                length=config["read_length"],
-                reduction=config["config_rappas"]["reduction"],
-                arsoft=config["config_rappas"]["arsoft"]
-            )
-        )
-    if "apples" in config["test_soft"]:
-        inputs.append(
-            expand(
-                config["workdir"]+"/APPLES/{pruning}/m{meth}_c{crit}/{pruning}_r{length}_m{meth}_c{crit}_apples.jplace",
-                pruning=range(0,config["pruning_count"]),
-                length=config["read_length"],
-                meth=config["config_apples"]["methods"],
-                crit=config["config_apples"]["criteria"]
-            )
-        )
-    #print(inputs)
-    return inputs
-
 
 rule compute_nodedistance:
     input:
-        jplace_files=define_inputs()
+        jplace_files = get_jplace_inputs()
     output:
         config["workdir"]+"/results.csv"
     log:

@@ -7,16 +7,16 @@
 #alignment in fasta format and tree in newick format
 #dataset_align: test/mod_150.phy.fasta
 #dataset_tree: test/RAxML_bipartitions.150.BEST.WITH
-dataset_align: test/compendium-norec-exp.fasta
-dataset_tree: test/compendium-norec-exp-tree.newick
+#dataset_align: test/compendium-norec-exp.fasta
+#dataset_tree: test/compendium-norec-exp-tree.newick
 #dataset_align: /home/ben/Dropbox/viromeplacer/test_datasets/6leaves_tree/6_leaves_test_set.aln
 #dataset_tree: /home/ben/Dropbox/viromeplacer/test_datasets/6leaves_tree/6_leaves_test_set.tree
 #dataset_align: /media/ben/STOCK/DATA/PEWO/jphmm_inputs/HBV_alignment.fas
 #dataset_tree: /media/ben/STOCK/DATA/PEWO/jphmm_inputs/RAxML_bipartitions.HBV.REROOTED
 
-#dataset_align: test/0.align
-#dataset_tree: test/0.tree
-#dataset_reads: test/0_r300.fasta
+dataset_align: test/0.align
+dataset_tree: test/0.tree
+dataset_reads: test/0_r300.fasta
 
 
 #working directory
@@ -30,7 +30,7 @@ states: 0
 test_soft: ["epang","pplacer","rappas"]
 
 #read lengths to test
-read_length: [150,300,500]
+read_length: [300]
 
 
 ## IF "ACCURACY" IS EVALUATED
@@ -40,9 +40,9 @@ read_length: [150,300,500]
 
 # Enable prunings. If set to False, the dataset_reads parameter is mandatory
 # Otherwise reads are generated from pruned clades
-enable_prunings: True
+enable_prunings: False
 # Number of random prunings to compute
-pruning_count: 30
+pruning_count: 10
 
 
 ## IF "RESOURCES" ARE EVALUATED
@@ -141,12 +141,12 @@ config_rappas:
 
   #panel of k that is tested
   #integer in [2,16] (8~10 recommended, >12 often produces too long computations)
-  k: [6,7,8,9]
+  k: [6]
 
   #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
   #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids
   #For DNA, values in [1,2] recommended. For amino acids, values in [5,15] recommended.
-  omega: [1.5, 2.0]
+  omega: [2.0]
 
   #reduction setup, e.g. gap/non-gap ratio
   #above which a site of the input alignment

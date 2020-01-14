@@ -1,14 +1,29 @@
-'''
-diverse utilitarian functions
+"""
+Diverse utilitarian functions
+"""
 
-@author Benjamin Linard
-'''
+__author__ = "Benjamin Linard, Nikolai Romashchenko"
 
 
-'''
-extract phylo parameters from info file to transfer them to phyml
-'''
+from Bio import SeqIO
+
+
+def get_sequence_ids(input_file):
+    """
+    Retrieves sequence IDs from the input .fasta file.
+    """
+    return [record.id for record in SeqIO.parse(input_file, "fasta")]
+
+
+# get IDs of all queries in the file
+query_ids = get_sequence_ids(config["dataset_reads"])
+
+
+
 def extract_params(file):
+    '''
+    extract phylo parameters from info file to transfer them to phyml
+    '''
     res={}
     with open(file,'r') as infofile:
         lines = infofile.readlines()
@@ -75,3 +90,58 @@ def expected_ar_outputs(arsoft):
 
 def tmpdir_prefix(wildcards):
     return wildcards.pruning+"_r"+wildcards.length
+
+
+def get_jplace_inputs():
+    """
+    Creates a list of all .jplace files that should be present before computing node distances/likelihoods
+    """
+    inputs = []
+    if "epa" in config["test_soft"]:
+        inputs.append(
+            expand(
+                config["workdir"]+"/EPA/{pruning}/g{gepa}/{pruning}_r{length}_g{gepa}_epa.jplace",
+                pruning=range(0,config["pruning_count"]),
+                length=config["read_length"],
+                gepa=config["config_epa"]["G"]
+            )
+        )
+    if "pplacer" in config["test_soft"]:
+        inputs.append(
+            expand(
+                config["workdir"]+"/PPLACER/{pruning}/ms{msppl}_sb{sbppl}_mp{mpppl}/{pruning}_r{length}_ms{msppl}_sb{sbppl}_mp{mpppl}_pplacer.jplace",
+                pruning=range(0,config["pruning_count"]),
+                length=config["read_length"],
+                msppl=config["config_pplacer"]["max-strikes"],
+                sbppl=config["config_pplacer"]["strike-box"],
+                mpppl=config["config_pplacer"]["max-pitches"]
+            )
+        )
+    if "epang" in config["test_soft"]:
+        inputs.append(
+            select_epang_heuristics()
+        )
+    if "rappas" in config["test_soft"]:
+        inputs.append(
+            expand(
+                config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/k{k}_o{omega}/{pruning}_r{length}_k{k}_o{omega}_red{reduction}_ar{arsoft}_rappas.jplace",
+                pruning=range(0,config["pruning_count"]),
+                k=config["config_rappas"]["k"],
+                omega=config["config_rappas"]["omega"],
+                length=config["read_length"],
+                reduction=config["config_rappas"]["reduction"],
+                arsoft=config["config_rappas"]["arsoft"]
+            )
+        )
+    if "apples" in config["test_soft"]:
+        inputs.append(
+            expand(
+                config["workdir"]+"/APPLES/{pruning}/m{meth}_c{crit}/{pruning}_r{length}_m{meth}_c{crit}_apples.jplace",
+                pruning=range(0,config["pruning_count"]),
+                length=config["read_length"],
+                meth=config["config_apples"]["methods"],
+                crit=config["config_apples"]["criteria"]
+            )
+        )
+    return inputs
+

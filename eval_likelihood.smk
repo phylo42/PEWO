@@ -1,9 +1,11 @@
-'''
-WORKFLOW TO EVALUATE PLACEMENT ACCURACY, GIVEN PARAMETERS SET IN "config.yaml"
-This snakefile loads all necessary modules and builds the evaluation workflow itself
-based on the setup defined in the config file.
-@author Nikolai Romashchenko
-'''
+"""
+This is a workflow to evaluate likelihood of extended trees, given the parameters
+set in "config.yaml". This snakefile loads all necessary modules and builds
+the evaluation workflow itself based on the setup defined in the config file.
+"""
+
+__author__ = "Nikolai Romashchenko"
+
 
 configfile: "config.yaml"
 
@@ -24,8 +26,8 @@ include:
 include:
     "modules/op/operate_prunings.smk"
 # Tree optimisation
-include:
-    "modules/op/operate_optimisation.smk"
+#include:
+#    "modules/op/operate_optimisation.smk"
 # phylo-kmer placement, e.g.: rappas
 include:
     "modules/op/operate_ar.smk"
@@ -34,8 +36,7 @@ include:
 #include:
 #    "modules/placement/placement_rappas2.smk"
 #alignment (for distance-based and ML approaches)
-include:
-    "modules/alignment/alignment_hmm_full.smk"
+
 #ML-based placements, e.g.: epa, epang, pplacer
 include:
     "modules/placement/placement_epa.smk"
@@ -55,6 +56,8 @@ include:
 #results evaluation and plots
 #include:
 #    "modules/op/operate_nodedistance.smk"
+include:
+       "modules/alignment/alignment_hmm_ll.smk"
 include:
     "modules/op/operate_likelihood.smk"
 #include:
