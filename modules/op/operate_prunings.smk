@@ -37,7 +37,7 @@ rule operate_pruning:
         #bpe=config["bpe"],
 	jar=config["pewo_jar"]
     shell:
-        "java -cp {params.pewo_jar} PrunedTreeGenerator_LITE "
+        "java -cp {params.jar} PrunedTreeGenerator_LITE "
         "{params.wd} {input.a} {input.t} "
         "{params.count} {params.length} 0 1 {params.states} "
         "&> {log}"
