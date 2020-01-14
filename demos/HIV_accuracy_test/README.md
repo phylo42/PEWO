@@ -4,12 +4,12 @@
 
 This demo measures placement accuracy in terms of Node Distance (ND)
 and expected Node Distance (eND)for a reference dataset
-of 150 16S-rRNA barcodes.
+of 104 HIV complete genomes.
 
-EPA-ng, PPlacer, RAPPAS and Apples are tested.
+EPA-ng, PPlacer, RAPPAS are tested.
 
-Only 10 pruning are launched and a limited set of parameters is tested.
-This analysis will require around 2 hours of computation.
+Only 10 pruning are launched and only default parameters are tested.
+This analysis will require around 1 hours of computation.
 
 A better analysis would ask for >50 prunings; to generate a wide
 range of topologies (1 leaf pruned, large clades pruned, ...).
@@ -22,23 +22,24 @@ range of topologies (1 leaf pruned, large clades pruned, ...).
 git clone https://github.com/blinard-BIOINFO/PEWO_workflow.git 
 cd PEWO_workflow
 
-#Install PEWO environment (may take some time...)
-conda env create -f envs/environement.yaml
+#Execute insallation script
+chmod u+x INSTALL.sh
+./INSTALL.sh
 
-#Load environement
+#After installation, load environement
 conda activate PEWO
 
 #Test workflow before launch
 snakemake -np \
 --snakefile eval_accuracy.smk \
---config workdir=`pwd`/demos/16SrRNA_accuracy_test/run \
---configfile demos/16SrRNA_accuracy_test/config.yaml
+--config workdir=`pwd`/demos/HIV_accuracy_test/run \
+--configfile demos/HIV_accuracy_test/config.yaml
 
 #Execute workflow, using 4 CPU cores
 snakemake -p --cores 4 \
 --snakefile eval_accuracy.smk \
---config workdir=`pwd`/demos/16SrRNA_accuracy_test/run \
---configfile demos/16SrRNA_accuracy_test/config.yaml
+--config workdir=`pwd`/demos/HIV_accuracy_test/run \
+--configfile demos/HIV_accuracy_test/config.yaml
 ```
 
 ## Comments
