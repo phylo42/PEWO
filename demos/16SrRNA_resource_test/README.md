@@ -62,4 +62,4 @@ Results summaries and plots will be written in
 'demos/16SrRNA_resource_test/run'.
 
 See PEWO wiki for a more detailed explanation of the results:
-https://github.com/blinard-BIOINFO/PEWO_workflow
+github.com/blinard-BIOINFO/PEWO_workflow/wiki
