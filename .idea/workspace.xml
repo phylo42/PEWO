@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="47d029be-3794-48fe-9e3d-6b7ffc1d18fe" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/scripts/R/eval_ressources_plots.R" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/R/eval_ressources_plots.R" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/demos/HIV_accuracy_test/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/demos/HIV_accuracy_test/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

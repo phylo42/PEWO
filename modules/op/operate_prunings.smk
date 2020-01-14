@@ -35,8 +35,9 @@ rule operate_pruning:
         length=str(config["read_length"]).replace("[","").replace("]","").replace(" ",""),
         #length_sd=config["read_length_sd"],
         #bpe=config["bpe"],
+	jar)config["pewo_jar"]
     shell:
-        "java -cp PEWO.jar PrunedTreeGenerator_LITE "
+        "java -cp {params.pewo_jar} PrunedTreeGenerator_LITE "
         "{params.wd} {input.a} {input.t} "
         "{params.count} {params.length} 0 1 {params.states} "
         "&> {log}"

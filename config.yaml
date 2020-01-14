@@ -193,7 +193,7 @@ config_apples:
   # BE : k=1 (Beyer et al., 1974)
   #methods: ["OLS","FM","BE"]
   #!warning, be sure to set methods VALUES as UPPER CASE
-  methods: [OLS,FM,BE]
+  methods: [OLS,BE]
 
   #List of placement criterion to test.
   #Possible values are:
@@ -251,3 +251,5 @@ phylo_params:
 
 #if 1, prints some debug lines
 debug: 0
+#path to java scripts (compiled at installation)
+pewo_jar: scripts/java/PEWO_java/dist/PEWO.jar

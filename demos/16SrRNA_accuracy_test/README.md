@@ -19,16 +19,17 @@ range of topologies (1 leaf pruned, large clades pruned, ...).
 
 Download pipeline.
 ```
-git clone https://github.com/blinard-BIOINFO/PEWO_workflow.git 
+git clone --recursive https://github.com/blinard-BIOINFO/PEWO_workflow.git 
 cd PEWO_workflow
 ```
 
-Install PEWO environment (may take some time...).
+Execute installation script
 ```
-conda env create -f envs/environement.yaml
+chmod u+x INSTALL.sh
+./INSTALL.sh
 ```
 
-Load environement.
+After installation, load environement.
 ```
 conda activate PEWO
 ```
