@@ -16,9 +16,42 @@ library(stringr)
 
 workdir=args[1]
 
+#definition of software paramters
+
+epa<-c("g")
+epang_h1<-c("h","g")
+epang_h2<-c("h","bigg")
+epang_h3<-c("h")
+epang_h4<-c("h")
+pplacer<-c("ms","sb","mp")
+rappasdbbuild<-c("k","o","red","ar")
+rappasplacement<-c("k","o","red","ar")
+apples<-c("m","c")
+hmmbuild<-NULL
+ansrec<-c("red","ar")
+
+soft_params<-list(
+                    "epa"=epa,
+                    "epang_h1"=epang_h1,
+                    "epang_h2"=epang_h2,
+                    "epang_h3"=epang_h3,
+                    "epang_h4"=epang_h4,
+                    "pplacer"=pplacer,
+                    "rappas-dbbuild"=rappasdbbuild,
+                    "rappas-placement"=rappasplacement,
+                    "apples"=apples,
+                    "hmmbuild"=hmmbuild,
+                    "ansrec"=ansrec
+                )
+
+
+
 #in ressources mode, PEWO records ressources consumption in a single "pruning" labelled "0",
 #which is in fact the full tree, not a pruning.
 files = list.files(path=paste0(workdir,"/benchmarks"),pattern="^0_.*_benchmark.tsv")
+
+
+
 
 # extract parameter combination and software, file per file
 # aggregate everything in a dataframe
@@ -95,4 +128,182 @@ for ( i in 1:length(files)) {
         df[nrow(df) + 1,]= line
     }
 }
-write.table(file="benchmark.csv",df,row.names=FALSE,dec=".",na="",sep=",")
+#convert numeric columns from string to numeric
+df["s"]<-as.numeric(df$s)
+df["max_rss"]<-as.numeric(df$max_rss)
+df["max_vms"]<-as.numeric(df$max_vms)
+df["max_uss"]<-as.numeric(df$max_uss)
+df["max_pss"]<-as.numeric(df$max_pss)
+df["io_in"]<-as.numeric(df$io_in)
+df["io_out"]<-as.numeric(df$io_out)
+df["mean_load"]<-as.numeric(df$mean_load)
+
+write.table(df,file=paste0(workdir,"/ressource_results.tsv"),row.names=FALSE, na="",col.names=TRUE, sep="\t",quote=TRUE)
+
+#define list of operations that were actually tested and remove them from soft_list and soft_param accordingly
+op_analyzed<-unique(df$operation)
+if ("epang" %in% op_analyzed) {
+    op_analyzed<-op_analyzed[-match("epang",op_analyzed)]
+    heur<-unique(df$h)
+    heur<-heur[!is.na(heur)]
+    for (h in heur) {
+        op_analyzed<-c(op_analyzed,paste0("epang_h",h))
+    }
+}
+
+#do a mean over repeats.
+#do do so build one aggregate formula per operation
+
+results_per_op<-list()
+
+results <- data.frame(fake="", stringsAsFactors=FALSE)
+results <- results[-1,]
+
+
+#for each $ressource parameter
+ressource<-names(df)[c(1,3:9)]
+i<-1
+for (opname in op_analyzed) {
+    j<-1
+    for (ress in ressource) {
+
+        formula_mean<-paste0(ress," ~ operation")
+        if (length(soft_params[opname][[1]])>0) {  #is ==0 when no params
+            for ( p in 1:length(soft_params[opname][[1]] ) ) {
+                formula_mean<-paste(formula_mean, " + ",soft_params[opname][[1]][p], sep="")
+            }
+        }
+        #aggregate as mean per pruning
+        data<-NULL
+        if (length(grep("epang",opname))>0) {
+            data<-df[df$operation=="epang" & df$h==substr(opname,nchar(opname),nchar(opname)),]
+        } else {
+            data<-df[df$operation==opname,]
+        }
+
+        data_mean<-aggregate(as.formula(formula_mean), data, mean)
+        data_sd<-aggregate(as.formula(formula_mean), data, sd)  # not used for now, but could add error bars to barplots
+
+        #put per software results in a list
+        if (j==1) {
+
+            #create label from parameter combination as last column
+            labels<-c()
+            colnames<-names(data_mean)
+            for (line in 1:dim(data_mean)[1]) {
+                label<-paste0(data_mean[line,1],"_")
+                for ( col in 2:(length(colnames)-1)) {
+                    label<-paste0(label,colnames[col],data_mean[line,col],"_")
+                }
+                labels[line]<-label
+            }
+            data_mean["labels"]<-labels
+            print(data_mean)
+            #add very first dataframes in list
+            results_per_op[[i]]<-data_mean
+
+
+        } else { #only add mean of current ressource
+            results_per_op[[i]][ress]<-data_mean[ress]
+        }
+
+        j<-j+1
+    }#end of ressource loop
+
+
+    i<-i+1
+}#end of op_analyzed loop
+names(results_per_op)<-op_analyzed
+
+
+
+###################################################
+###################################################
+###################################################
+
+## PLOTS SECTION
+
+#here, manual selection of which stats are output as plots
+stats_to_plot<-c("s","max_pss")
+human_readable_name<-c("Seconds","PSS Memory (Mo)")
+
+
+###########################################
+## PLOTS 1 : summary plot per operation
+
+
+for (op in 1:length(results_per_op)) {
+    svg_width<-2+(0.5*dim(results_per_op[[op]])[1]) #0.5 per column + margins
+    svg_height<-2+(nchar(max(results_per_op[[op]]$labels))*0.1)
+    for (i in 1:length(stats_to_plot)) {
+        CairoSVG(file =paste(workdir,"/summary_plot_RES_",op_analyzed[op],"_",stats_to_plot[i],".svg", sep=""),width=svg_width,height=svg_height)
+        #g<-ggplot(data=results_per_op[[op]], aes(x=reorder(labels,formula(stats_to_plot[i])),y=formula(stats_to_plot[i])) ) +
+        g<-ggplot(data=results_per_op[[op]], aes_string(x = sprintf("reorder(labels,%s)",stats_to_plot[i]) , y = sprintf("%s",stats_to_plot[i])) ) +
+          geom_bar(stat="identity") +
+          theme(axis.text.x = element_text(angle = -90)) +
+          labs(x="Parameters", y=human_readable_name[i])
+        print(g)
+        dev.off()
+    }
+}
+
+###########################################
+## PLOTS 2 : summary plot of all operations
+
+#merge dataframes and use only "operation","label","$ressource" columns
+merged<-NULL
+for (op in results_per_op) {
+    if (is.null(merged)) {
+        merged<-op[,c("operation","labels",stats_to_plot)]
+    } else {
+        merged<-rbind(merged,op[,c("operation","labels",stats_to_plot)])
+    }
+}
+svg_width<-2+(0.5*dim(merged)[1]) #0.5 per column + margins
+svg_height<-2+(nchar(max(merged$labels))*0.1)
+for (i in 1:length(stats_to_plot)) {
+    CairoSVG(file =paste(workdir,"/summary_plot_RES_all_",stats_to_plot[i],".svg", sep=""),width=svg_width,height=svg_height)
+    #g<-ggplot(data=results_per_op[[op]], aes(x=reorder(labels,formula(stats_to_plot[i])),y=formula(stats_to_plot[i])) ) +
+    g<-ggplot(data=merged, aes_string(x = sprintf("reorder(labels,%s)",stats_to_plot[i]) , y = sprintf("%s",stats_to_plot[i])) ) +
+      geom_bar(stat="identity") +
+      theme(axis.text.x = element_text(angle = -90)) +
+      labs(x="Parameters", y=human_readable_name[i])
+    print(g)
+    dev.off()
+}
+
+###########################################
+## PLOTS 3 : time for full analysis
+#  e.g (align + placement)*sample for alignment-based approaches
+#       ansrec + dbbuild + placement*sample for alignment-free approches
+
+#associate operations to analyses
+analyses<-list()
+analyses["epa"]<-c("hmmbuild","epa")
+analyses["epang_h1"]<-c("hmmbuild","epang_h1")
+analyses["epang_h2"]<-c("hmmbuild","epang_h2")
+analyses["epang_h3"]<-c("hmmbuild","epang_h3")
+analyses["epang_h4"]<-c("hmmbuild","epang_h4")
+analyses["pplacer"]<-c("hmmbuild","pplacer")
+analyses["apples"]<-c("hmmbuild","apples")
+
+
+analyses["rappas"]<-c("ansrec","rappas-dbbuild","rappas-placement")
+
+time_alignment<-function(time_placement,time_alignment,sample_count) {
+    return(sample_count*(time_placement+time_alignment))
+}
+time_placement<-function(time_ar,time_db,time_placement,sample_count) {
+    return(time_ar+time_db+(time_placement*sample_count))
+}
+
+
+ansrec_and_dbbuild<-merge(results_per_op["ansrec"][[1]],results_per_op["rappas-dbbuild"][[1]],by=c("red","ar"))
+all_op<-merge(ansrec_and_dbbuild,results_per_op["rappas-placement"][[1]],by=c("red","ar","o","k"))
+
+#time for 1 analysis
+all_op["sample_x1"]<-all_op["s.x"]+all_op["s.y"]+all_op["s"]
+
+#time for 1000 analyses
+all_op["sample_x1"]<-all_op["s.x"]+all_op["s.y"]+all_op["s"]*1000
+

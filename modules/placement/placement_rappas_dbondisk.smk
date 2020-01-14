@@ -31,7 +31,7 @@ rule dbbuild_rappas:
         ardir=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/AR",
         workdir=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/k{k}_o{omega}",
         dbfilename="DB.bin",
-        arbin=select_arbin(wildcards.arsoft)
+        arbin=lambda wildcards: select_arbin(wildcards.arsoft)
     run:
          shell(
             "java -Xms2G -Xmx"+str(config["config_rappas"]["memory"])+"G -jar $(which RAPPAS.jar) -v 1 -p b -b $(which {params.arbin}) "
@@ -43,12 +43,12 @@ rule dbbuild_rappas:
 
 rule placement_rappas:
     input:
-        db=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/k{k}_o{omega}/DB.bin",
+        db=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/k{k}_o{omega}/DB.bin",
         r=config["workdir"]+"/R/{pruning}_r{length}.fasta",
     output:
-        config["workdir"]+"/RAPPAS/{pruning}/red{reduction}/k{k}_o{omega}/{pruning}_r{length}_k{k}_o{omega}_red{reduction}_ar{arsoft}_rappas.jplace"
+        config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/k{k}_o{omega}/{pruning}_r{length}_k{k}_o{omega}_red{reduction}_ar{arsoft}_rappas.jplace"
     log:
-        config["workdir"]+"/logs/placement_rappas/{pruning}/red{reduction}/k{k}_o{omega}/{pruning}_r{length}_k{k}_o{omega}_red{reduction}_ar{arsoft}.log"
+        config["workdir"]+"/logs/placement_rappas/{pruning}/red{reduction}_ar{arsoft}/k{k}_o{omega}/{pruning}_r{length}_k{k}_o{omega}_red{reduction}_ar{arsoft}.log"
     benchmark:
         repeat(config["workdir"]+"/benchmarks/{pruning}_r{length}_k{k}_o{omega}_red{reduction}_ar{arsoft}_rappas-placement_benchmark.tsv", config["repeats"])
     version: "1.00"
@@ -61,5 +61,5 @@ rule placement_rappas:
             "java -Xms2G -Xmx"+str(config["config_rappas"]["memory"])+"G -jar $(which RAPPAS.jar) "
             "--keep-at-most {params.maxp} --keep-factor {params.minlwr} "
             "-v 1 -p p -d {input.db} -q {input.r} -w {params.workdir}  &> {log} ; "
-            "mv {params.workdir}/placements_{wildcards.pruning}_r{wildcards.length}.fasta.jplace {params.workdir}/{wildcards.pruning}_r{wildcards.length}_k{wildcards.k}_o{wildcards.omega}_red{wildcards.reduction}_ar{arsoft}_rappas.jplace"
+            "mv {params.workdir}/placements_{wildcards.pruning}_r{wildcards.length}.fasta.jplace {params.workdir}/{wildcards.pruning}_r{wildcards.length}_k{wildcards.k}_o{wildcards.omega}_red{wildcards.reduction}_ar{wildcards.arsoft}_rappas.jplace"
          )

@@ -19,7 +19,7 @@ config["read_length"]=[0]
 
 #utils
 include:
-    "modules/utils/wk.smk"
+    "modules/utils/workflow.smk"
 include:
     "modules/utils/etc.smk"
 #prepare input files

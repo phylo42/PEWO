@@ -18,7 +18,7 @@ dependencies:
   - r-base=3.6.1=hba50c9b_5
   - r-cairo=1.5_10=r36hcdcec82_1
   - r-ggplot2=3.2.1=r36h6115d3f_0
-  - r-rcolorbrewer=1.1_2=r36h6115d3f_1002q
+  - r-rcolorbrewer=1.1_2=r36h6115d3f_1002
   - snakemake
   - pip:
      - psycopg2-binary
