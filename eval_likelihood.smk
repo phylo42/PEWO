@@ -9,13 +9,12 @@ __author__ = "Nikolai Romashchenko"
 
 configfile: "config.yaml"
 
-'''
-explicitly set config to not repeat binary executions,
-which is an option that should be considered only in 'resource' evaluation mode.
-this allow to use the same config file for both 'accuracy' and 'resources' modes of PEWO worflow
-NOTE: this statement MUST be set BEFORE the "includes"
-'''
-config["repeats"]=1
+
+# Explicitly set config to not repeat binary executions,
+# which is an option that should be considered only in 'resource' evaluation mode.
+# this allow to use the same config file for both 'accuracy' and 'resources' modes of PEWO worflow
+# NOTE: this statement MUST be set BEFORE the "includes"
+config["repeats"] = 1
 
 # utils
 include:
@@ -26,8 +25,8 @@ include:
 include:
     "modules/op/operate_prunings.smk"
 # Tree optimisation
-#include:
-#    "modules/op/operate_optimisation.smk"
+include:
+    "modules/op/operate_optimisation.smk"
 # phylo-kmer placement, e.g.: rappas
 include:
     "modules/op/operate_ar.smk"
@@ -37,7 +36,9 @@ include:
 #    "modules/placement/placement_rappas2.smk"
 #alignment (for distance-based and ML approaches)
 
-#ML-based placements, e.g.: epa, epang, pplacer
+include:
+       "modules/alignment/alignment_hmm_ll.smk"
+# ML-based placements, e.g.: epa, epang, pplacer
 include:
     "modules/placement/placement_epa.smk"
 include:
@@ -57,15 +58,13 @@ include:
 #include:
 #    "modules/op/operate_nodedistance.smk"
 include:
-       "modules/alignment/alignment_hmm_ll.smk"
-include:
     "modules/op/operate_likelihood.smk"
 #include:
 #    "modules/op/operate_plots.smk"
 
-'''
-top snakemake rule, necessary to launch the workflow
-'''
 rule all:
-     input:
+    """
+    top snakemake rule, necessary to launch the workflow
+    """
+    input:
          build_likelihood_workflow()

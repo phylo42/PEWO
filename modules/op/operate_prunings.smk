@@ -15,13 +15,6 @@ if config["debug"] == 1:
     print("prunings: ", os.getcwd())
 
 
-def prunings_enabled():
-    """
-    Checks if prunings are enabled in the config file.
-    """
-    return "enable_prunings" in config and config["enable_prunings"] == True
-
-
 def get_input_reads():
     """
     Creates an input read file parameter.

@@ -43,7 +43,7 @@ rule extend_trees:
     """
     input:
         queries = expand(config["workdir"] + "/R+/{query}.fasta", query=query_ids),
-        placements = get_jplace_inputs(),
+        placements = get_jplace_outputs(),
         tree = config["dataset_tree"]
     output:
         ext_trees = expand(config["workdir"] + "/T+/{query}.tree", query=query_ids),

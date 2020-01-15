@@ -27,7 +27,7 @@ workdir: /home/nikolai/dev/pewo/run
 states: 0
 
 #which software to test, at least one of : epa, epang, pplacer, rappas, apples
-test_soft: ["epang","pplacer","rappas"]
+test_soft: ["rappas"]
 
 #read lengths to test
 read_length: [300]
