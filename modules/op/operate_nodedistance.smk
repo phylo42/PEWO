@@ -19,7 +19,7 @@ if (config["debug"]==1):
 
 rule compute_nodedistance:
     input:
-        jplace_files = get_jplace_inputs()
+        jplace_files = get_jplace_outputs()
     output:
         config["workdir"]+"/results.csv"
     log:

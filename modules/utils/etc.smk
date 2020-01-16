@@ -52,9 +52,10 @@ def prunings_enabled() -> bool:
     return "enable_prunings" in config and config["enable_prunings"] == True
 
 
-def get_jplace_outputdir_template(software: PlacementSoftware) -> str:
+def get_base_outputdir_template(software: PlacementSoftware) -> str:
     """
-    Creates an output directory name template for .jplace files depends on software used.
+    Creates a name template for the main output directory of given software.
+    This directory is used to store .jplace output and other files.
     """
     _check_software(software)
 
@@ -95,7 +96,7 @@ def get_common_queryname_template() -> str:
     return "{pruning}_r{length}" if prunings_enabled() else "{query}"
 
 
-def get_common_queryname_template_args() -> Mapping[str, Any]:
+def get_common_template_args() -> Mapping[str, Any]:
     """
     Each placement query has a template name based on two type of inputs:
     1) common arguments: tree and query sequences -- independent of software
@@ -140,7 +141,7 @@ def get_full_queryname_template(software: PlacementSoftware) -> str:
         raise NotImplementedError()
 
 
-def get_full_queryname_template_args(software: PlacementSoftware) -> Mapping[str, Any]:
+def get_output_template_args(software: PlacementSoftware) -> Mapping[str, Any]:
     """
     Each placement query has a template name based on two type of inputs:
     1) common arguments: tree and query sequences -- independent of software
@@ -153,7 +154,7 @@ def get_full_queryname_template_args(software: PlacementSoftware) -> Mapping[str
     _check_software(software)
 
     # get common template arguments
-    template_args = get_common_queryname_template_args()
+    template_args = get_common_template_args()
 
     # specify template arguments based on software
     if software == PlacementSoftware.EPA:
@@ -191,41 +192,49 @@ def get_jplace_filename_template(software: PlacementSoftware) -> str:
     return get_full_queryname_template(software) + "_" + software_name + ".jplace"
 
 
+def get_output_filename_template(software: PlacementSoftware, extension: str) -> str:
+    """
+    Creates a .{extension} filename template based on software used.
+    """
+    assert len(extension) > 0
+    extension = "." + extension if extension[0] != "." else extension
+    return get_full_queryname_template(software) + extension
+
+
 def get_jplace_output_template(software: PlacementSoftware) -> str:
     """
     Creates a name template of .jplace output files produced by specific software.
     """
-    # general output filename template
-    output_dir_template =  get_jplace_outputdir_template(software)
-    return os.path.join(output_dir_template, get_jplace_filename_template(software))
-
-
-def _get_jplace_outputs(software: PlacementSoftware) -> List[str]:
-    """
-    Creates a list of .jplace output files produced by specific software.
-    """
-    # get the output template
-    template = get_jplace_output_template(software)
-    # get the full set of arguments to expand the template
-    template_args = get_full_queryname_template_args(software)
-    return expand(template, **template_args)
-
-
-def get_log_filename_template(software: PlacementSoftware) -> str:
-    """
-    Creates a .log filename template based on software used.
-    """
-    # {full_template}.log
-    return get_full_queryname_template(software)  + ".log"
+    return os.path.join(get_base_outputdir_template(software),
+                        get_jplace_filename_template(software))
 
 
 def get_log_output_template(software: PlacementSoftware) -> str:
     """
     Creates a name template of .log output files produced by specific software.
     """
-    # general output filename template
-    output_dir_template =  get_log_outputdir_template(software)
-    return os.path.join(output_dir_template, get_log_filename_template(software))
+    return os.path.join(get_log_outputdir_template(software),
+                        get_output_filename_template(software, "log"))
+
+
+def get_output_template(software: PlacementSoftware, extension: str) -> str:
+    """
+    Creates a name template of .{extension} output files produced by specific software.
+    Used to produce .tree, .align etc. file name templates. Stored in the output
+    directory of given software.
+    """
+    return os.path.join(get_base_outputdir_template(software),
+                        get_output_filename_template(software, extension))
+
+
+def _get_jplace_outputs(software: PlacementSoftware) -> List[str]:
+    """
+    Creates a list of .jplace output files produced by specific software.
+    """
+    return expand(get_jplace_output_template(software),
+                  **get_output_template_args(software))
+
+
 
 
 def extract_params(file):

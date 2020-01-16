@@ -5,6 +5,7 @@ This module computes the likelihood of a tree.
 __author__ = "Nikolai Romashchenko"
 
 import os
+from Bio import SeqIO
 
 
 def split_fasta(input_file):
@@ -42,29 +43,30 @@ rule extend_trees:
     Extends a tree with given sequences.
     """
     input:
-        queries = expand(config["workdir"] + "/R+/{query}.fasta", query=query_ids),
-        placements = get_jplace_outputs(),
+        fasta = config["workdir"] + "/R+/{query}.fasta",
+        #jplace_files = get_jplace_outputs(),
+        jplace = get_jplace_output_template(PlacementSoftware.RAPPAS),
         tree = config["dataset_tree"]
     output:
-        ext_trees = expand(config["workdir"] + "/T+/{query}.tree", query=query_ids),
-    log:
-        config["workdir"] + "/logs/extend_trees.log"
+        ext_trees = get_output_template(PlacementSoftware.RAPPAS, "tree"),
+    #log:
+    #    config["workdir"] + "/logs/extend_tree_{query}.log"
     version:
         "1.00"
     run:
-        pass
+        shell("echo {input.jplace}")
 
 
 rule calculate_likelihood:
     input:
-        alignments = expand(config["workdir"] + "/HMM+/{query}.align", query=query_ids),
-        trees = expand(config["workdir"] + "/T+/{query}.tree", query=query_ids),
+        alignment = os.path.join(config["workdir"], "HMM+", "{query}.align"),
+        tree = get_output_template(PlacementSoftware.RAPPAS, "tree")
     output:
-        likelihood = expand(config["workdir"] + "/LL/{query}.txt", query=query_ids),
+        likelihood = get_output_template(PlacementSoftware.RAPPAS, "txt")
     params:
         workdir = config["workdir"]
-    log:
-        config["workdir"] + "/logs/likelihood.log"
+    #log:
+    #    config["workdir"] + "/logs/likelihood.log"
     version:
         "1.00"
     run:
@@ -73,10 +75,11 @@ rule calculate_likelihood:
         'grep "Final LogLikelihood" > {output.likelihood}'
 
 
+
 rule operate_likelihood:
     input:
-        #jplace_files = get_jplace_inputs(),
-        likelihoods = expand(config["workdir"] + "/LL/{query}.txt", query=query_ids),
+        likelihood = expand(get_output_template(PlacementSoftware.RAPPAS, "txt"),
+                            **get_output_template_args(PlacementSoftware.RAPPAS))
     output:
         result = config["workdir"] + "/likelihood.csv"
     run:
