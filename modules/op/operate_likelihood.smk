@@ -43,40 +43,48 @@ rule extend_trees:
     Extends a tree with given sequences.
     """
     input:
-        fasta = config["workdir"] + "/R+/{query}.fasta",
-        #jplace_files = get_jplace_outputs(),
         jplace = get_jplace_output_template(PlacementSoftware.RAPPAS),
-        tree = config["dataset_tree"]
+        mapping = config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/AR/ARtree_id_mapping.tsv",
+        tree = config["dataset_tree"],
     output:
-        ext_trees = get_output_template(PlacementSoftware.RAPPAS, "tree"),
-    #log:
-    #    config["workdir"] + "/logs/extend_tree_{query}.log"
+        ext_tree = get_output_template(PlacementSoftware.RAPPAS, "tree")
     version:
         "1.00"
     run:
-        shell("echo {input.jplace}")
+        shell(
+            "scripts/extend_tree.py {input.tree} {output.ext_tree} {input.jplace}"
+        )
 
 
 rule calculate_likelihood:
+    """
+    Calculates the likelihood of each extended tree.
+    """
     input:
         alignment = os.path.join(config["workdir"], "HMM+", "{query}.align"),
         tree = get_output_template(PlacementSoftware.RAPPAS, "tree")
     output:
         likelihood = get_output_template(PlacementSoftware.RAPPAS, "txt")
     params:
-        workdir = config["workdir"]
+        workdir = config["workdir"],
+        model = "GTR+G"
     #log:
     #    config["workdir"] + "/logs/likelihood.log"
     version:
         "1.00"
-    run:
-        "mkdir -p {params.workdir}/LL"
-        'raxml-ng --evaluate --msa {input.alignment} --tree {input.tree} --model GTR+G | '
-        'grep "Final LogLikelihood" > {output.likelihood}'
+    shell:
+        # run raxml-ng
+        'raxml-ng --evaluate --msa {input.alignment} --tree {input.tree} --model {params.model} --redo'
+        # parse the output to get just the number
+        '| grep "Final LogLikelihood" | cut -d" " -f3'
+        '> {output.likelihood}'
 
 
 
-rule operate_likelihood:
+rule combine_likelihoods:
+    """
+    Combines the results of likelihood calculation for all trees in a .csv file.
+    """
     input:
         likelihood = expand(get_output_template(PlacementSoftware.RAPPAS, "txt"),
                             **get_output_template_args(PlacementSoftware.RAPPAS))
