@@ -9,7 +9,7 @@ __license__ = "MIT"
 
 
 import os
-from typing import Union, Any, Dict
+from typing import Union, Any, Dict, List
 from pewo.software import PlacementSoftware
 from pewo.config import is_supported, prunings_enabled
 from pewo.io import fasta
@@ -20,6 +20,13 @@ def _check_software(software: Union[PlacementSoftware, Any]) -> None:
     Assert wrapper for _is_supported().
     """
     assert is_supported(software), str(software) + " is not valid placement software."
+
+
+def get_template_wildcards(template: str) -> List[str]:
+    """
+    Returns the list of wildcards in the input template.
+    """
+    pass
 
 
 def get_base_outputdir_template(config: Dict, software: PlacementSoftware) -> str:

@@ -3,6 +3,7 @@ A module to operate hmm alignments for likelihood evaluations
 """
 
 __author__ = "Nikolai Romashchenko"
+__license__ = "MIT"
 
 
 import os
@@ -65,5 +66,5 @@ rule psiblast_to_fasta:
     log:
         os.path.join(config["workdir"], "logs", "psiblast2fasta", "{query}.log")
     shell:
-        "pewo/psiblast2fasta.py {input.psiblast} {output.alignment} &> {log}"
+        "pewo/alignment/psiblast2fasta.py {input.psiblast} {output.alignment} &> {log}"
 

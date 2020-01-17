@@ -1,13 +1,17 @@
-'''
+"""
 module to operate hmm profile alignments between pruned leaves and pruned alignments
 1) build hmm profile from pruned alignment
 2) align reads to profile
 3) convert psiblast output alignment to fasta alignment
+"""
 
-@author Benjamin Linard
-'''
+
+__author__ = "Benjamin Linard, Nikolai Romashchenko"
+__license__ = "MIT"
+
 
 import os
+
 
 #debug
 if (config["debug"]==1):
@@ -19,10 +23,11 @@ if (config["debug"]==1):
 #rule all:
 #    input: expand(config["workdir"]+"/HMM/{pruning}_r{length}.fasta", pruning=range(0,config["pruning_count"],1), length=config["read_length"])
 
-'''
-build hmm profile
-'''
+
 rule hmmbuild:
+    """
+    build hmm profile
+    """
     input:
         config["workdir"]+"/A/{pruning}.align"
     output:
@@ -37,10 +42,11 @@ rule hmmbuild:
         "hmmbuild --cpu {threads} --{params.states} "
         "{output} {input} &> {log}"
 
-'''
-align to profile
-'''
+
 rule hmmalign:
+    """
+    align to profile
+    """
     input:
         hmm=config["workdir"]+"/HMM/{pruning}.hmm",
         align=config["workdir"]+"/A/{pruning}.align",
@@ -58,25 +64,27 @@ rule hmmalign:
         "hmmalign --{params.states} --outformat PSIBLAST -o {output} "
         "--mapali {input.align} {input.hmm} {input.reads} &> {log}"
 
-'''
-convert from psiblast to fast format
-'''
+
 rule psiblast_to_fasta:
+    """
+    convert from psiblast to fast format
+    """
     input:
-        config["workdir"]+"/HMM/{pruning}_r{length}.psiblast"
+        psiblast = [config["workdir"] + "/HMM/{pruning}_r{length}.psiblast"]
     output:
-        config["workdir"]+"/HMM/{pruning}_r{length}.fasta"
+        config["workdir"] + "/HMM/{pruning}_r{length}.fasta"
     version: "1.0"
     log:
-        config["workdir"]+"/logs/psiblast2fasta/{pruning}_r{length}.log"
+        config["workdir"] + "/logs/psiblast2fasta/{pruning}_r{length}.log"
     shell:
-        "pewo/psiblast2fasta.py {input} {output} &> {log}"
+        "pewo/alignment/psiblast2fasta.py {input} {output} &> {log}"
 
-'''
-split hmm alignment results in "query only" and "reference alignment only" sub-alignments
-contrary to other placement software, such input is required by epa-ng
-'''
+
 rule split_alignment:
+    """
+    split hmm alignment results in "query only" and "reference alignment only" sub-alignments
+    contrary to other placement software, such input is required by epa-ng
+    """
     input:
         align=config["workdir"]+"/HMM/{pruning}_r{length}.fasta",
         reads=config["workdir"]+"/R/{pruning}_r{length}.fasta"

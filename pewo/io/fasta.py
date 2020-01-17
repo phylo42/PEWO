@@ -8,21 +8,30 @@ __license__ = "MIT"
 
 import os
 from Bio import SeqIO
-from typing import List, List
+from typing import List
+
+
+def _seq_id_filter(id: str) -> str:
+    """
+    Replaces underscores and semicolons with dashes in the sequence IDs.
+    This is needed to have nice output filename templates with underscore
+    as a delimiter for parameters
+    """
+    result = id.replace("_", "-")
+    return result.replace(";", "-")
 
 
 def get_sequence_ids(input_file: str) -> List[str]:
     """
     Retrieves sequence IDs from the input .fasta file.
     """
-
-    # replace underscores with dashes, needed to have nice output
-    # filename templates with underscore as a delimiter for parameters
-    underscore_filter = lambda x: x.replace("_", "-")
-    return [underscore_filter(record.id) for record in SeqIO.parse(input_file, "fasta")]
+    return [_seq_id_filter(record.id) for record in SeqIO.parse(input_file, "fasta")]
 
 
 def _write_fasta(records: List[SeqIO.SeqRecord], filename: str) -> None:
+    """
+    Writes a list of fasta records to file.
+    """
     with open(filename, "w") as output:
         SeqIO.write(records, output, "fasta")
 
@@ -34,7 +43,7 @@ def split_fasta(input_file: str, output_dir: str) -> List[str]:
     """
     files = []
     for record in SeqIO.parse(input_file, "fasta"):
-        output_file = os.path.join(output_dir, record.id + ".fasta")
+        output_file = os.path.join(output_dir, _seq_id_filter(record.id) + ".fasta")
         _write_fasta([record], output_file)
         files.append(output_file)
 
