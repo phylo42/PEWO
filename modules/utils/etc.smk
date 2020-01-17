@@ -3,238 +3,12 @@ Diverse utilitarian functions
 """
 
 __author__ = "Benjamin Linard, Nikolai Romashchenko"
-
-import os
-from Bio import SeqIO
-from enum import Enum
-from typing import List, Mapping, Any, Union
+__license__ = "MIT"
 
 
-class PlacementSoftware(Enum):
-    EPA = "epa"
-    EPA_NG = "epang"
-    PPLACER = "pplacer"
-    APPLES = "apples"
-    RAPPAS = "rappas"
-    RAPPAS2 = "rappas2"
-
-
-def _is_supported(software: Union[PlacementSoftware, Any]) -> bool:
-    """
-    Checks if software is supported. Takes anything as input, returns True
-    if the input parameter is PlacementSoftware.
-    """
-    return type(software) == PlacementSoftware
-
-
-def _check_software(software: Union[PlacementSoftware, Any]) -> None:
-    """
-    Assert wrapper for _is_supported().
-    """
-    assert _is_supported(software), str(software) + " is not valid placement software."
-
-
-def get_sequence_ids(input_file: str) -> List[str]:
-    """
-    Retrieves sequence IDs from the input .fasta file.
-    """
-    return [record.id for record in SeqIO.parse(input_file, "fasta")]
-
-
-# get IDs of all queries in the file
-query_ids = get_sequence_ids(config["dataset_reads"])
-
-
-def prunings_enabled() -> bool:
-    """
-    Checks if prunings are enabled in the config file.
-    """
-    return "enable_prunings" in config and config["enable_prunings"] == True
-
-
-def get_base_outputdir_template(software: PlacementSoftware) -> str:
-    """
-    Creates a name template for the main output directory of given software.
-    This directory is used to store .jplace output and other files.
-    """
-    _check_software(software)
-
-    if software == PlacementSoftware.EPA:
-        return os.path.join(config["workdir"], "EPA", "{pruning}", "g{gepa}")
-    elif software == PlacementSoftware.EPA_NG:
-        raise NotImplementedError()
-    elif software == PlacementSoftware.PPLACER:
-        raise NotImplementedError()
-    elif software == PlacementSoftware.APPLES:
-        raise NotImplementedError()
-    elif software == PlacementSoftware.RAPPAS:
-        return os.path.join(config["workdir"], "RAPPAS", "{pruning}", "red{reduction}_ar{arsoft}", "k{k}_o{omega}")
-    elif software == PlacementSoftware.RAPPAS2:
-        raise NotImplementedError()
-
-
-def get_log_outputdir_template(software: PlacementSoftware) -> str:
-    """
-    Creates an output directory name template for .log files depends on software used.
-    """
-    _check_software(software)
-    return os.path.join(config["workdir"], "logs", "placement_" + software.value, "{pruning}")
-
-
-def get_common_queryname_template() -> str:
-    """
-    Each placement query has a template name based on two type of inputs:
-    1) common arguments: tree and query sequences -- independent of software
-    2) specific arguments: model params etc. -- depends on software used
-
-    This method creates an placement output filename template, based on the
-    first type of inputs, and is independent of placement software used.
-    """
-
-    # For generated queries take the pruning and read length as an output template name.
-    # For user queries take query file name as a template
-    return "{pruning}_r{length}" if prunings_enabled() else "{query}"
-
-
-def get_common_template_args() -> Mapping[str, Any]:
-    """
-    Each placement query has a template name based on two type of inputs:
-    1) common arguments: tree and query sequences -- independent of software
-    2) specific arguments: model params etc. -- depends on software used
-
-    This method creates a dict of common template arguments that can be passed to
-    'expand' function of snakemake to resolve the common query name template given
-    by get_common_queryname_template().
-    """
-
-    if prunings_enabled():
-        return {"prunings": range(config["pruning_count"]),
-                "length": config["read_length"]}
-    else:
-        return {"query": query_ids}
-
-
-def get_full_queryname_template(software: PlacementSoftware) -> str:
-    """
-    Each placement query has a template name based on two type of inputs:
-    1) common arguments: tree and query sequences -- independent of software
-    2) specific arguments: model params etc. -- depends on software used
-
-    This method creates a full placement output filename template, based on the
-    both types of inputs. Thus it extends the name given by
-    get_common_queryname_template(), specifying it by the software given.
-    It is used to produce .jplace files, .log files etc.s
-    """
-    _check_software(software)
-
-    if software == PlacementSoftware.EPA:
-        return get_common_queryname_template() + "_g{gepa}"
-    elif software == PlacementSoftware.EPA_NG:
-        raise NotImplementedError()
-    elif software == PlacementSoftware.PPLACER:
-        raise NotImplementedError()
-    elif software == PlacementSoftware.APPLES:
-        raise NotImplementedError()
-    elif software == PlacementSoftware.RAPPAS:
-        return get_common_queryname_template() + "_k{k}_o{omega}_red{reduction}_ar{arsoft}"
-    elif software == PlacementSoftware.RAPPAS2:
-        raise NotImplementedError()
-
-
-def get_output_template_args(software: PlacementSoftware) -> Mapping[str, Any]:
-    """
-    Each placement query has a template name based on two type of inputs:
-    1) common arguments: tree and query sequences -- independent of software
-    2) specific arguments: model params etc. -- depends on software used
-
-    This method creates a dict of specified template arguments that depends on the
-    software given. These arguments can be passed to 'expand' function of snakemake
-    to resolve the full query name template given by get_full_queryname_template().
-    """
-    _check_software(software)
-
-    # get common template arguments
-    template_args = get_common_template_args()
-
-    # specify template arguments based on software
-    if software == PlacementSoftware.EPA:
-        template_args["gepa"] = config["config_epa"]["G"]
-    elif software == PlacementSoftware.EPA_NG:
-        raise NotImplementedError()
-    elif software == PlacementSoftware.PPLACER:
-        raise NotImplementedError()
-    elif software == PlacementSoftware.APPLES:
-        raise NotImplementedError()
-    elif software == PlacementSoftware.RAPPAS:
-        template_args.update(config["config_rappas"])
-    elif software == PlacementSoftware.RAPPAS2:
-        raise NotImplementedError()
-    else:
-        raise RuntimeError("Unsupported software: " + software.value)
-
-    # a general rule for all software
-    if not prunings_enabled():
-        template_args["pruning"] = ["full"]
-
-    return template_args
-
-
-def get_jplace_filename_template(software: PlacementSoftware) -> str:
-    """
-    Creates a .jplace filename template based on software used.
-    """
-    _check_software(software)
-
-    # get the sofware name in lower case from Enum value
-    software_name = software.value
-
-    # {full_template}_{software}.jplace
-    return get_full_queryname_template(software) + "_" + software_name + ".jplace"
-
-
-def get_output_filename_template(software: PlacementSoftware, extension: str) -> str:
-    """
-    Creates a .{extension} filename template based on software used.
-    """
-    assert len(extension) > 0
-    extension = "." + extension if extension[0] != "." else extension
-    return get_full_queryname_template(software) + extension
-
-
-def get_jplace_output_template(software: PlacementSoftware) -> str:
-    """
-    Creates a name template of .jplace output files produced by specific software.
-    """
-    return os.path.join(get_base_outputdir_template(software),
-                        get_jplace_filename_template(software))
-
-
-def get_log_output_template(software: PlacementSoftware) -> str:
-    """
-    Creates a name template of .log output files produced by specific software.
-    """
-    return os.path.join(get_log_outputdir_template(software),
-                        get_output_filename_template(software, "log"))
-
-
-def get_output_template(software: PlacementSoftware, extension: str) -> str:
-    """
-    Creates a name template of .{extension} output files produced by specific software.
-    Used to produce .tree, .align etc. file name templates. Stored in the output
-    directory of given software.
-    """
-    return os.path.join(get_base_outputdir_template(software),
-                        get_output_filename_template(software, extension))
-
-
-def _get_jplace_outputs(software: PlacementSoftware) -> List[str]:
-    """
-    Creates a list of .jplace output files produced by specific software.
-    """
-    return expand(get_jplace_output_template(software),
-                  **get_output_template_args(software))
-
-
+from typing import List, Dict
+from pewo.software import PlacementSoftware
+from pewo.templates import get_jplace_output_template, get_output_template_args
 
 
 def extract_params(file):
@@ -252,6 +26,7 @@ def extract_params(file):
     infofile.close()
     return res
 
+
 def select_model_phymlstyle():
     if config["phylo_params"]["model"]=="GTR+G":
         return "GTR"
@@ -261,6 +36,7 @@ def select_model_phymlstyle():
         return "WAG"
     if config["phylo_params"]["model"]=="LG+G":
         return "LG"
+
 
 def select_model_raxmlstyle():
     if config["phylo_params"]["model"]=="GTR+G":
@@ -272,10 +48,12 @@ def select_model_raxmlstyle():
     if config["phylo_params"]["model"]=="LG+G":
         return "PROTGAMMALG"
 
-'''
-select correct ancestral reconstruction binary depending on value set in config for arsoft
-'''
+
+
 def select_arbin(arsoft):
+    """
+    select correct ancestral reconstruction binary depending on value set in config for arsoft
+    """
     if arsoft == "PHYML":
         return "phyml"
     elif arsoft == "RAXMLNG" :
@@ -284,6 +62,7 @@ def select_arbin(arsoft):
         return "baseml"
     elif (arsoft == "PAML") and (config["states"]==1):
         return "codeml"
+
 
 def expected_ar_outputs(arsoft):
     res=list()
@@ -304,10 +83,11 @@ def expected_ar_outputs(arsoft):
     return res
 
 
-'''
-accessory function to correctly set which epa-ng heuristics are tested and with which parameters
-'''
+
 def select_epang_heuristics():
+    '''
+    accessory function to correctly set which epa-ng heuristics are tested and with which parameters
+    '''
     l=[]
     if "h1" in config["config_epang"]["heuristics"]:
         l.append(
@@ -343,8 +123,12 @@ def select_epang_heuristics():
     return l
 
 
-def tmpdir_prefix(wildcards):
-    return wildcards.pruning + "_r" + wildcards.length
+def _get_jplace_outputs(config: Dict, software: PlacementSoftware) -> List[str]:
+    """
+    Creates a list of .jplace output files produced by specific software.
+    """
+    return expand(get_jplace_output_template(config, software),
+                  **get_output_template_args(config, software))
 
 
 def get_jplace_outputs() -> List[str]:
@@ -372,7 +156,7 @@ def get_jplace_outputs() -> List[str]:
             select_epang_heuristics()
         )
     if "rappas" in config["test_soft"]:
-        inputs.extend(_get_jplace_outputs(PlacementSoftware.RAPPAS))
+        inputs.extend(_get_jplace_outputs(config, PlacementSoftware.RAPPAS))
     if "apples" in config["test_soft"]:
         inputs.extend(
             expand(

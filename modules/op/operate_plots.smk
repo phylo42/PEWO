@@ -22,7 +22,7 @@ rule plot_accuracy_results:
     params:
         workdir=config["workdir"]
     shell:
-        "Rscript --vanilla scripts/R/eval_accuracy_plots_v2.R {input} {params.workdir} &> {log}"
+        "Rscript --vanilla pewo/R/eval_accuracy_plots_v2.R {input} {params.workdir} &> {log}"
 
 # rule plot_resource_results:
 #     input:
@@ -34,4 +34,4 @@ rule plot_accuracy_results:
 #     params:
 #         workdir=config["workdir"]
 #     shell:
-#         "Rscript --vanilla scripts/R/eval_accuracy_plots_v2.R {input} {params.workdir} &> {log}"
+#         "Rscript --vanilla pewo/R/eval_accuracy_plots_v2.R {input} {params.workdir} &> {log}"

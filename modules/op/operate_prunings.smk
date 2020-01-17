@@ -9,6 +9,7 @@ __author__ = "Benjamin Linard, Nikolai Romashchenko"
 # TODO: keep or remove read length sd ?
 
 import os
+from pewo.config import prunings_enabled
 
 
 if config["debug"] == 1:
@@ -19,7 +20,7 @@ def get_input_reads():
     """
     Creates an input read file parameter.
     """
-    return [] if prunings_enabled() else config["dataset_reads"]
+    return [] if prunings_enabled(config) else config["dataset_reads"]
 
 
 def get_output_alignments():
@@ -27,7 +28,7 @@ def get_output_alignments():
     Creates a list of output alignment files.
     """
     output_directory = os.path.join(config["workdir"], "A")
-    if prunings_enabled():
+    if prunings_enabled(config):
         return [os.path.join(output_directory, "{}.align".format(pruning))
                 for pruning in range(config["pruning_count"])]
     else:
@@ -39,7 +40,7 @@ def get_output_trees():
     Creates a list of output tree files.
     """
     output_directory = os.path.join(config["workdir"], "T")
-    if prunings_enabled():
+    if prunings_enabled(config):
         return [os.path.join(output_directory, "{}.tree".format(pruning))
                 for pruning in range(config["pruning_count"])]
     else:
@@ -51,7 +52,7 @@ def get_output_leaves():
     Creates a list of output fasta files with removed leaves.
     """
     output_directory = os.path.join(config["workdir"], "G")
-    if prunings_enabled():
+    if prunings_enabled(config):
         return [os.path.join(output_directory, "{}.fasta".format(pruning))
                 for pruning in range(config["pruning_count"])]
     else:
@@ -63,7 +64,7 @@ def get_output_read_files():
     Creates a list of output read files.
     """
     output_directory = os.path.join(config["workdir"], "R")
-    if prunings_enabled():
+    if prunings_enabled(config):
         return [os.path.join(output_directory, "{0}_r{1}.fasta".format(pruning, length))
                 for pruning in range(config["pruning_count"])
                 for length in config["read_length"]]
@@ -75,7 +76,7 @@ def get_params_length():
     """
     Creates {params.length} parameter if needed.
     """
-    if prunings_enabled():
+    if prunings_enabled(config):
         return str(config["read_length"]).replace("[","").replace("]","").replace(" ","")
     else:
         return None
@@ -106,7 +107,7 @@ rule operate_pruning:
         #length_sd=config["read_length_sd"],
         #bpe=config["bpe"],
     run:
-        if prunings_enabled():
+        if prunings_enabled(config):
             shell(
                 "java -cp `which RAPPAS.jar`:PEWO.jar PrunedTreeGenerator_LITE "
                 "{params.wd} {input.a} {input.t} "

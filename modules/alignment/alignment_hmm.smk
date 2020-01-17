@@ -70,7 +70,7 @@ rule psiblast_to_fasta:
     log:
         config["workdir"]+"/logs/psiblast2fasta/{pruning}_r{length}.log"
     shell:
-        "scripts/psiblast2fasta.py {input} {output} &> {log}"
+        "pewo/psiblast2fasta.py {input} {output} &> {log}"
 
 '''
 split hmm alignment results in "query only" and "reference alignment only" sub-alignments
@@ -85,4 +85,4 @@ rule split_alignment:
         config["workdir"]+"/HMM/{pruning}_r{length}.fasta_refs"
     version: "1.0"
     shell:
-        "scripts/split_hmm_alignment.py {input.reads} {input.align}"
+        "pewo/split_hmm_alignment.py {input.reads} {input.align}"

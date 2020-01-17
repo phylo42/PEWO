@@ -60,4 +60,4 @@ rule clustalo_split_alignment:
         config["workdir"]+"/HMM/{pruning}_r{length}.fasta_refs"
     version: "1.0"
     shell:
-        "scripts/split_hmm_alignment.py {input.reads} {input.align}"
+        "pewo/split_hmm_alignment.py {input.reads} {input.align}"

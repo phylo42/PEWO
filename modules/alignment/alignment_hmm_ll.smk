@@ -65,5 +65,5 @@ rule psiblast_to_fasta:
     log:
         os.path.join(config["workdir"], "logs", "psiblast2fasta", "{query}.log")
     shell:
-        "scripts/psiblast2fasta.py {input.psiblast} {output.alignment} &> {log}"
+        "pewo/psiblast2fasta.py {input.psiblast} {output.alignment} &> {log}"
 

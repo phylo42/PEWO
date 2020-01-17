@@ -4,6 +4,11 @@ Note: this module expect AR to be already computed
 """
 
 __author__ = "Benjamin Linard, Nikolai Romashchenko"
+__license__ = "MIT"
+
+
+from pewo.templates import get_jplace_output_template, \
+                           get_log_output_template
 
 
 def get_rappas_input_reads(pruning):
@@ -31,9 +36,9 @@ rule db_build_in_ram_rappas:
         r = lambda wildcards: get_rappas_input_reads(wildcards.pruning),
         ar = lambda wildcards: expected_ar_outputs(wildcards.arsoft)
     output:
-        get_jplace_output_template(PlacementSoftware.RAPPAS)
+        get_jplace_output_template(config, PlacementSoftware.RAPPAS)
     log:
-        get_log_output_template(PlacementSoftware.RAPPAS)
+        get_log_output_template(config, PlacementSoftware.RAPPAS)
         #config["workdir"] + "/logs/placement_rappas/" + get_log_template(PlacementSoftware.RAPPAS)
     version: "1.00"
     params:

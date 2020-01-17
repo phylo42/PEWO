@@ -5,21 +5,11 @@ This module computes the likelihood of a tree.
 __author__ = "Nikolai Romashchenko"
 
 import os
-from Bio import SeqIO
-
-
-def split_fasta(input_file):
-    """
-    Splits the input .fasta file into multiple .fasta files,
-    one sequence per file.
-    """
-    output_directory = os.path.join(config["workdir"], "R+")
-
-    for record in SeqIO.parse(input_file, "fasta"):
-        output_file = os.path.join(output_directory, record.id + ".fasta")
-
-        with open(output_file, "w") as output:
-            SeqIO.write([record], output, "fasta")
+from pewo.io import fasta
+from pewo.software import PlacementSoftware
+from pewo.templates import get_jplace_output_template, \
+                           get_output_template, \
+                           get_output_template_args
 
 
 rule split_queries:
@@ -29,13 +19,15 @@ rule split_queries:
     input:
         reads = config["dataset_reads"]
     output:
-        queries = expand(config["workdir"] + "/R+/{query}.fasta", query=query_ids)
+        queries = expand(config["workdir"] + "/R+/{query}.fasta",
+                         query=fasta.get_sequence_ids(config["dataset_reads"]))
     log:
         config["workdir"] + "/logs/split_queries.log"
     version:
         "1.00"
     run:
-        split_fasta(config["dataset_reads"])
+        output_directory = os.path.join(config["workdir"], "R+")
+        fasta.split_fasta(config["dataset_reads"], output_directory)
 
 
 rule extend_trees:
@@ -43,16 +35,16 @@ rule extend_trees:
     Extends a tree with given sequences.
     """
     input:
-        jplace = get_jplace_output_template(PlacementSoftware.RAPPAS),
+        jplace = get_jplace_output_template(config, PlacementSoftware.RAPPAS),
         mapping = config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/AR/ARtree_id_mapping.tsv",
         tree = config["dataset_tree"],
     output:
-        ext_tree = get_output_template(PlacementSoftware.RAPPAS, "tree")
+        ext_tree = get_output_template(config, PlacementSoftware.RAPPAS, "tree")
     version:
         "1.00"
     run:
         shell(
-            "scripts/extend_tree.py {input.tree} {output.ext_tree} {input.jplace}"
+            "pewo/extend_tree.py {input.tree} {output.ext_tree} {input.jplace}"
         )
 
 
@@ -62,9 +54,9 @@ rule calculate_likelihood:
     """
     input:
         alignment = os.path.join(config["workdir"], "HMM+", "{query}.align"),
-        tree = get_output_template(PlacementSoftware.RAPPAS, "tree")
+        tree = get_output_template(config, PlacementSoftware.RAPPAS, "tree")
     output:
-        likelihood = get_output_template(PlacementSoftware.RAPPAS, "txt")
+        likelihood = get_output_template(config, PlacementSoftware.RAPPAS, "txt")
     params:
         workdir = config["workdir"],
         model = "GTR+G"
@@ -86,8 +78,8 @@ rule combine_likelihoods:
     Combines the results of likelihood calculation for all trees in a .csv file.
     """
     input:
-        likelihood = expand(get_output_template(PlacementSoftware.RAPPAS, "txt"),
-                            **get_output_template_args(PlacementSoftware.RAPPAS))
+        likelihood = expand(get_output_template(config, PlacementSoftware.RAPPAS, "txt"),
+                            **get_output_template_args(config, PlacementSoftware.RAPPAS))
     output:
         result = config["workdir"] + "/likelihood.csv"
     run:
