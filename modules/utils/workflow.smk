@@ -44,6 +44,43 @@ def select_epang_heuristics():
             )
     return l
 
+'''
+accessory function to correctly set which epa-ng heuristics are tested and with which parameters
+'''
+def select_epang_heuristics_benchmarks():
+    l=[]
+    if "h1" in config["config_epang"]["heuristics"]:
+        l.append(
+            expand(     config["workdir"]+"/benchmarks/{pruning}_r{length}_h1_g{gepang}_epang_benchmark.tsv",
+                        pruning=range(0,config["pruning_count"]),
+                        length=config["read_length"],
+                        gepang=config["config_epang"]["h1"]["g"]
+                   )
+        )
+    if "h2" in config["config_epang"]["heuristics"]:
+        l.append(
+             expand(    config["workdir"]+"/benchmarks/{pruning}_r{length}_h2_bigg{biggepang}_epang_benchmark.tsv",
+                        pruning=range(0,config["pruning_count"]),
+                        length=config["read_length"],
+                        biggepang=config["config_epang"]["h2"]["G"]
+                        )
+        )
+    if "h3" in config["config_epang"]["heuristics"]:
+        l.append(
+             expand(    config["workdir"]+"/benchmarks/{pruning}_r{length}_h3_epang_benchmark.tsv",
+                        pruning=range(0,config["pruning_count"]),
+                        length=config["read_length"]
+                        )
+        )
+    if "h4" in config["config_epang"]["heuristics"]:
+        l.append(
+            expand(
+                config["workdir"]+"/benchmarks/{pruning}_r{length}_h4_epang_benchmark.tsv",
+                pruning=range(0,config["pruning_count"]),
+                length=config["read_length"]
+                )
+            )
+    return l
 
 '''
 builds the list of outputs,for a "accuracy" workflow
@@ -57,31 +94,28 @@ def build_accuracy_workflow():
     #compute node distances metrics from jplace outputs
     l.append(config["workdir"]+"/results.csv")
     #collection of results and generation of summary plots
-    l.append(accuracy_plots_ND_outputs())
-    l.append(accuracy_plots_eND_outputs())
+    l.append(accuracy_plots_ND())
+    l.append(accuracy_plots_eND())
     return l
 
 '''
 builds the list of outputs,for a "resources" workflow
 '''
 def build_resources_workflow():
-
     l=list()
-
     #call outputs from operate_inputs module to build input reads as pruning=0 and r=0
     l.append( config["workdir"]+"/A/0.align")
     l.append( config["workdir"]+"/T/0.tree")
     l.append( config["workdir"]+"/G/0.fasta")
     l.append( config["workdir"]+"/R/0_r0.fasta")
-
     #placements
     l.append(
         build_placements_workflow()
     )
-
+    #benchmarks
+    l.append(benchmarks_results())
     #collection of results and generation of summary plots
-    #l.append(build_plots())
-
+    l.append(resource_plots())
     return l
 
 '''
@@ -168,9 +202,100 @@ def build_placements_workflow():
 
 
 '''
+define expected benchmark files, which are written by snakemake in workdir/benchmarks 
+'''
+def benchmarks_results():
+    l=list()
+    #hmm alignments for alignment-based methods
+    if ("epa" in config["test_soft"]) or ("epang" in config["test_soft"]) or ("pplacer" in config["test_soft"]) or ("apples" in config["test_soft"]) :
+        l.append(
+            expand(
+                config["workdir"]+"/benchmarks/{pruning}_r{length}_hmmalign_benchmark.tsv",
+                pruning=range(0,config["pruning_count"],1),
+                length=config["read_length"]
+            )
+        )
+    #pplacer placements
+    if "pplacer" in config["test_soft"] :
+        l.append(
+            expand(
+                config["workdir"]+"/benchmarks/{pruning}_r{length}_ms{msppl}_sb{sbppl}_mp{mpppl}_pplacer_benchmark.tsv",
+                pruning=range(0,config["pruning_count"]),
+                length=config["read_length"],
+                msppl=config["config_pplacer"]["max-strikes"],
+                sbppl=config["config_pplacer"]["strike-box"],
+                mpppl=config["config_pplacer"]["max-pitches"]
+            )
+        )
+    #epa placements
+    if "epa" in config["test_soft"] :
+        l.append(
+            expand(
+                config["workdir"]+"/benchmarks/{pruning}_r{length}_g{gepa}_epa_benchmark.tsv",
+                pruning=range(0,config["pruning_count"]),
+                length=config["read_length"],
+                gepa=config["config_epa"]["G"]
+            )
+        )
+    #epa-ng placements
+    if "epang" in config["test_soft"] :
+        l.append(
+            #different heuristics can be called, leading to different results and completely different runtimes
+            select_epang_heuristics_benchmarks()
+        )
+    #apples placements
+    if "apples" in config["test_soft"] :
+        l.append(
+            expand(
+                config["workdir"]+"/benchmarks/{pruning}_r{length}_m{meth}_c{crit}_apples_benchmark.tsv",
+                pruning=range(0,config["pruning_count"]),
+                length=config["read_length"],
+                meth=config["config_apples"]["methods"],
+                crit=config["config_apples"]["criteria"]
+            )
+        )
+    #rappas
+    #for resource evaluation, AR, dbbuild and placement are split for independent measures
+    if "rappas" in config["test_soft"] :
+        #ar
+        l.append(
+            expand(
+                config["workdir"]+"/benchmarks/{pruning}_red{reduction}_ar{arsoft}_ansrec_benchmark.tsv",
+                pruning=range(0,config["pruning_count"]),
+                reduction=config["config_rappas"]["reduction"],
+                arsoft=config["config_rappas"]["arsoft"]
+            )
+        )
+        #dbbuild
+        l.append(
+            expand(
+                config["workdir"]+"/benchmarks/{pruning}_k{k}_o{omega}_red{reduction}_ar{arsoft}_rappas-dbbuild_benchmark.tsv",
+                pruning=range(0,config["pruning_count"]),
+                k=config["config_rappas"]["k"],
+                omega=config["config_rappas"]["omega"],
+                reduction=config["config_rappas"]["reduction"],
+                arsoft=config["config_rappas"]["arsoft"]
+            )
+        )
+        #placement
+        l.append(
+            expand(
+                config["workdir"]+"/benchmarks/{pruning}_r{length}_k{k}_o{omega}_red{reduction}_ar{arsoft}_rappas-placement_benchmark.tsv",
+                pruning=range(0,config["pruning_count"]),
+                k=config["config_rappas"]["k"],
+                omega=config["config_rappas"]["omega"],
+                length=config["read_length"],
+                reduction=config["config_rappas"]["reduction"],
+                arsoft=config["config_rappas"]["arsoft"]
+            )
+        )
+    return l
+
+
+'''
 define plots that will be computed in 'accuracy' mode
 '''
-def accuracy_plots_ND_outputs():
+def accuracy_plots_ND():
     l=list()
     #epa-ng
     if "epang" in config["test_soft"] :
@@ -184,7 +309,7 @@ def accuracy_plots_ND_outputs():
 '''
 define plots that will be computed in 'accuracy' mode
 '''
-def accuracy_plots_eND_outputs():
+def accuracy_plots_eND():
     l=list()
     #epa-ng
     if "epang" in config["test_soft"] :
@@ -198,7 +323,7 @@ def accuracy_plots_eND_outputs():
 '''
 define plots that will be computed in 'resources' mode
 '''
-def resource_plots_outputs():
+def resource_plots():
     l=list()
-    l.append( expand(config["workdir"]+"/benchmarks.csv"))
+    l.append(config["workdir"]+"/ressource_results.tsv")
     return l

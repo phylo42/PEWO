@@ -3,7 +3,6 @@ compute the different prunings using the alignment/tree set in config file
 @author Benjamin Linard
 '''
 
-# TODO: add trifurcations tests ? currently disabled
 # TODO: keep or remove read length sd ?
 
 import os

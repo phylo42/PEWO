@@ -9,6 +9,7 @@ run
 *.svg
 *.pdf
 *.csv
+*.tsv
 #directories built by demos
 demos/HIV_accuracy_test/run
 demos/16SrRNA_accuracy_test/run

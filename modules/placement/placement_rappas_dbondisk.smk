@@ -5,8 +5,6 @@ note: this module expect AR to be already computed
 @author Benjamin Linard
 '''
 
-#TODO: add model parameters support
-
 import os
 
 #debug
@@ -14,6 +12,7 @@ if (config["debug"]==1):
     print("epa: "+os.getcwd())
 #debug
 
+# model parameters do not need to be passed, as they are useful only at AR
 rule dbbuild_rappas:
     input:
         a=config["workdir"]+"/A/{pruning}.align",

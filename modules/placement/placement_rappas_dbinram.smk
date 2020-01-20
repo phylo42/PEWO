@@ -5,8 +5,6 @@ note: this module expect AR to be already computed
 @author Benjamin Linard
 '''
 
-# TODO: manage model parameters
-
 import os
 
 #debug
@@ -30,9 +28,7 @@ def setoutputs():
         l.append(config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/k{k}_o{omega}/{pruning}_r"+str(length)+"_k{k}_o{omega}_red{reduction}_ar{arsoft}_rappas.jplace")
     return l
 
-#rule all:
-#    input: expand(config["workdir"]+"/RAPPAS/{pruning}/k{k}_o{omega}_config/{pruning}_r{length}_k{k}_o{omega}_rappas.jplace", pruning=1, length=config["read_length"],k=6, omega=1.0)
-
+# model parameters do not need to be passed, as they are useful only at AR
 rule dbbuildinram_rappas:
     input:
         a=config["workdir"]+"/A/{pruning}.align",
