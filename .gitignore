@@ -1,23 +1,15 @@
+#IDE
+.idea/*
 #data directories built by the workflow
-A
-T
-HMM
-EPA
-EPANG
-PPLACER
-RAPPAS
-AR
 logs
 run
-run_eval_ressources
-run_eval_accuracy
 #snakemake temporary files
 .snakemake
-#RAPPAS temporary files (used until RAPPAS becomes a conda package)
-viroplacetests_LITE.jar
-PEWO.jar
-RAPPAS.jar
-#images/data
+#images/results built by workflows
 *.svg
 *.pdf
 *.csv
+#directories built by demos
+demos/HIV_accuracy_test/run
+demos/16SrRNA_accuracy_test/run
+demos/16SrRNA_resource_test/run
