@@ -113,7 +113,7 @@ def build_resources_workflow():
         build_placements_workflow()
     )
     #benchmarks
-    l.append(benchmarks_results())
+    l.append(build_benchmarks_workflow())
     #collection of results and generation of summary plots
     l.append(resource_plots())
     return l
@@ -202,9 +202,9 @@ def build_placements_workflow():
 
 
 '''
-define expected benchmark files, which are written by snakemake in workdir/benchmarks 
+define expected benchmark outputs, which are written by snakemake in workdir/benchmarks 
 '''
-def benchmarks_results():
+def build_benchmarks_workflow():
     l=list()
     #hmm alignments for alignment-based methods
     if ("epa" in config["test_soft"]) or ("epang" in config["test_soft"]) or ("pplacer" in config["test_soft"]) or ("apples" in config["test_soft"]) :

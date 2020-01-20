@@ -26,7 +26,7 @@ rule plot_accuracy_results:
 
 rule plot_resource_results:
      input:
-         benchmarks_results()
+         build_benchmarks_workflow()
      output:
          resource_plots()
      log:

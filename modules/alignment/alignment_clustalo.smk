@@ -11,7 +11,7 @@ import os
 
 #debug
 if (config["debug"]==1):
-    print("hmm: "+os.getcwd())
+    print("clustalo: "+os.getcwd())
 #debug
 
 
