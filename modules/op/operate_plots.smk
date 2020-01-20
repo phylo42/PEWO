@@ -34,4 +34,4 @@ rule plot_resource_results:
      params:
          workdir=config["workdir"]
      shell:
-         "Rscript --vanilla scripts/R/eval_resource_plots.R {params.workdir} &> {log}"
+         "Rscript --vanilla scripts/R/eval_resources_plots.R {params.workdir} &> {log}"
