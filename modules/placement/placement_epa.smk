@@ -1,40 +1,62 @@
-'''
-module to operate placements with EPA (part of raxml)
+"""
+This module operates placements with EPA (part of raxml)
 note1: that raxml outputs many files, but only the jplace is kept
 note2: raxml outputs results only in current working directory, so EPA dir needs to be explicitly set
 note3: raxml may create a .reduced file in the directory of the input alignment, while this was initially
 managed by using a temp() for the corresponding output, this output may or may not exists
+"""
 
-@author Benjamin Linard
-'''
+__author__ = "Benjamin Linard, Nikolai Romashchenko"
+
 
 # TODO: SSE3 version is used as default, there should be a way to test SSE3/AVX availability from python and launch correct version accordingly
 
 import os
+from snakemake.io import Namedlist, temp
+from pewo.software import PlacementSoftware
+from pewo.templates import get_experiment_dir_template, \
+    get_output_template, get_log_template, get_queryname_template
 
-#debug
-if (config["debug"]==1):
-    print("epa: "+os.getcwd())
 
-#rule all:
-#    input: expand(config["workdir"]+"/EPA/{pruning}/g{gepa}/{pruning}_r{length}_g{gepa}_epa.jplace", pruning=range(0,config["pruning_count"],1), length=config["read_length"], gepa=config["config_epa"]["G"])
+def _get_epa_placement_output() -> Namedlist:
+    """
+    Creates a list of output file name templates produced by EPA.
+    """
+    _experiment_dir = get_experiment_dir_template(config, PlacementSoftware.EPA)
+
+    raxml_templates = [
+        # get_queryname_template returns a template like [INPUT SETPARAMS ]_[SOFTWARE PARAMS],
+        # e.g. {pruning}_r{read_length}_g{gepa}.
+        # Take this template and add as postfix to all RAxML output files
+        prefix + "." + get_queryname_template(config, PlacementSoftware.EPA)
+        for prefix in [
+            "RAxML_classificationLikelihoodWeights",
+            "RAxML_entropy",
+            "RAxML_info",
+            "RAxML_labelledTree",
+            "RAxML_originalLabelledTree"
+        ]
+    ]
+
+    # create an output Namedlist of RAxML file templates
+    output = Namedlist(
+        [temp(os.path.join(_experiment_dir, template)) for template in raxml_templates]
+    )
+
+    # add .jplace name template
+    output.append(get_output_template(config, PlacementSoftware.EPA, "jplace"))
+    output.add_name("jplace")
+    return output
+
 
 rule placement_epa:
     input:
-        hmm=config["workdir"]+"/HMM/{pruning}_r{length}.fasta",
-        t=config["workdir"]+"/T/{pruning}.tree"
-    output:
-        temp(config["workdir"]+"/EPA/{pruning}/g{gepa}/RAxML_classificationLikelihoodWeights.{pruning}_r{length}_g{gepa}"),
-        temp(config["workdir"]+"/EPA/{pruning}/g{gepa}/RAxML_classification.{pruning}_r{length}_g{gepa}"),
-        temp(config["workdir"]+"/EPA/{pruning}/g{gepa}/RAxML_entropy.{pruning}_r{length}_g{gepa}"),
-        temp(config["workdir"]+"/EPA/{pruning}/g{gepa}/RAxML_info.{pruning}_r{length}_g{gepa}"),
-        temp(config["workdir"]+"/EPA/{pruning}/g{gepa}/RAxML_labelledTree.{pruning}_r{length}_g{gepa}"),
-        temp(config["workdir"]+"/EPA/{pruning}/g{gepa}/RAxML_originalLabelledTree.{pruning}_r{length}_g{gepa}"),
-        config["workdir"]+"/EPA/{pruning}/g{gepa}/{pruning}_r{length}_g{gepa}_epa.jplace"
-    log:
-        config["workdir"]+"/logs/placement_epa/{pruning}_r{length}_g{gepa}.log"
-    benchmark:
-        repeat(config["workdir"]+"/benchmarks/{pruning}_r{length}_g{gepa}_epa_benchmark.tsv", config["repeats"])
+        hmm = config["workdir"] + "/HMM/{pruning}_r{length}.fasta",
+        t = config["workdir"] + "/T/{pruning}.tree"
+    output: _get_epa_placement_output()
+    log: get_log_template(config, PlacementSoftware.EPA)
+    #benchmark:
+    #    repeat(config["workdir"]+"/benchmarks/{pruning}_r{length}_g{gepa}_epa_benchmark.tsv", config["repeats"])
     version: "1.0"
     params:
         m=select_model_raxmlstyle(),

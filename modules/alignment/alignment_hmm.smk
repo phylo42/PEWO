@@ -34,7 +34,8 @@ rule hmmbuild:
         config["workdir"]+"/HMM/{pruning}.hmm"
     log:
         config["workdir"]+"/logs/hmmbuild/{pruning}.log"
-    version: "1.0"
+    version:
+        "1.0"
     params:
         states=["dna"] if config["states"]==0 else ["amino"]
     threads: 1
@@ -53,7 +54,8 @@ rule hmmalign:
         reads=config["workdir"]+"/R/{pruning}_r{length}.fasta"
     output:
         temp(config["workdir"]+"/HMM/{pruning}_r{length}.psiblast")
-    version: "1.0"
+    version:
+        "1.0"
     log:
         config["workdir"]+"/logs/hmmbuild/{pruning}_r{length}.log"
     benchmark:

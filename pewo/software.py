@@ -1,6 +1,5 @@
 """
-This module contains the definition of a data structure
-for placement software supported in PEWO.
+This module contains the definition of a data structure for software supported in PEWO.
 """
 
 __author__ = "Nikolai Romashchenko"
@@ -8,6 +7,7 @@ __license__ = "MIT"
 
 
 from enum import Enum
+from typing import Union
 
 
 class PlacementSoftware(Enum):
@@ -17,3 +17,21 @@ class PlacementSoftware(Enum):
     APPLES = "apples"
     RAPPAS = "rappas"
     RAPPAS2 = "rappas2"
+
+    @staticmethod
+    def get_by_value(value):
+        """
+        Returns Enum value by string key.
+        """
+        return PlacementSoftware._value2member_map_[value]
+
+
+class AlignmentSoftware(Enum):
+    HMMER = "hmmer"
+
+
+class CustomScripts(Enum):
+    PSIBLAST2_FASTA = "psiblast2fasta"
+
+
+Software = Union[PlacementSoftware, AlignmentSoftware, CustomScripts]

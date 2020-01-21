@@ -9,6 +9,8 @@ __author__ = "Nikolai Romashchenko"
 
 configfile: "config.yaml"
 
+config["pruning_count"] = 1
+config["read_length"] = [0]
 
 # Explicitly set config to not repeat binary executions,
 # which is an option that should be considered only in 'resource' evaluation mode.

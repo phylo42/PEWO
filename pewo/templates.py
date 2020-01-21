@@ -1,43 +1,51 @@
 """
-This module contains functions that generate snakemake templates
-for output files.
+This module contains functions that generate snakemake templates for output files and directories.
 """
-
 
 __author__ = "Nikolai Romashchenko"
 __license__ = "MIT"
 
 
 import os
-from typing import Union, Any, Dict, List
-from pewo.software import PlacementSoftware
-from pewo.config import is_supported, prunings_enabled
+from typing import Union, Any, Dict
+import pewo.config as cfg
+from pewo.software import Software, PlacementSoftware, AlignmentSoftware
 from pewo.io import fasta
 
 
-def _check_software(software: Union[PlacementSoftware, Any]) -> None:
+def _check_software(software: Any) -> None:
     """
     Assert wrapper for _is_supported().
     """
-    assert is_supported(software), str(software) + " is not valid placement software."
+    assert cfg.is_supported(software), str(software) + " is not valid placement software."
 
 
-def get_template_wildcards(template: str) -> List[str]:
+def get_software_dir(config: Dict,
+                     software: Union[PlacementSoftware, AlignmentSoftware]) -> str:
     """
-    Returns the list of wildcards in the input template.
-    """
-    pass
-
-
-def get_base_outputdir_template(config: Dict, software: PlacementSoftware) -> str:
-    """
-    Creates a name template for the main output directory of given software.
-    This directory is used to store .jplace output and other files.
+    Returns a working directory for given software.
     """
     _check_software(software)
 
+    work_dir = cfg.get_work_dir(config)
+    return os.path.join(work_dir, software.value.upper())
+
+
+def get_experiment_dir_template(config: Dict, software: PlacementSoftware) -> str:
+    """
+    Returns a name template of a working directory path for an experiment.
+    One experiment is conducted by given software with fixed specific
+    software parameters and a fixed input set (i.e. phylogenetic tree and alignment).
+    """
+    _check_software(software)
+
+    software_dir = get_software_dir(config, software)
+
+    # A subdirectory template for the given input set
+    input_set_dir_template = "{pruning}"
+
     if software == PlacementSoftware.EPA:
-        return os.path.join(config["workdir"], "EPA", "{pruning}", "g{gepa}")
+        return os.path.join(software_dir, input_set_dir_template, "g{gepa}")
     elif software == PlacementSoftware.EPA_NG:
         raise NotImplementedError()
     elif software == PlacementSoftware.PPLACER:
@@ -45,17 +53,24 @@ def get_base_outputdir_template(config: Dict, software: PlacementSoftware) -> st
     elif software == PlacementSoftware.APPLES:
         raise NotImplementedError()
     elif software == PlacementSoftware.RAPPAS:
-        return os.path.join(config["workdir"], "RAPPAS", "{pruning}", "red{reduction}_ar{arsoft}", "k{k}_o{omega}")
+        return os.path.join(software_dir, input_set_dir_template, "red{reduction}_ar{arsoft}", "k{k}_o{omega}")
     elif software == PlacementSoftware.RAPPAS2:
         raise NotImplementedError()
 
 
-def get_log_outputdir_template(config: Dict, software: PlacementSoftware) -> str:
+def get_experiment_log_dir_template(config: Dict, software: Software) -> str:
     """
-    Creates an output directory name template for .log files depends on software used.
+    Returns a name template of a log directory path for an experiment.
+    One experiment is conducted by given software with fixed specific
+    software parameters and a fixed input set (i.e. phylogenetic tree and alignment).
+
+    Software can be a value of a type from pewo.software, or a string
+    for scripts (e.g. psiblast2fasta.py).
     """
     _check_software(software)
-    return os.path.join(config["workdir"], "logs", "placement_" + software.value, "{pruning}")
+
+    software_name = software.value if type(software) in [PlacementSoftware, AlignmentSoftware] else software
+    return os.path.join(cfg.get_work_dir(config), "logs", software_name, "{pruning}")
 
 
 def get_common_queryname_template(config: Dict) -> str:
@@ -70,7 +85,7 @@ def get_common_queryname_template(config: Dict) -> str:
 
     # For generated queries take the pruning and read length as an output template name.
     # For user queries take query file name as a template
-    return "{pruning}_r{length}" if prunings_enabled(config) else "{query}"
+    return "{pruning}_r{length}" if cfg.generate_reads(config) else "{query}_r{length}"
 
 
 def get_common_template_args(config: Dict) -> Dict[str, Any]:
@@ -84,15 +99,20 @@ def get_common_template_args(config: Dict) -> Dict[str, Any]:
     by get_common_queryname_template().
     """
 
-    if prunings_enabled(config):
-        return {"prunings": range(config["pruning_count"]),
-                "length": config["read_length"]}
+    if cfg.generate_reads(config):
+        return {
+            "pruning": range(config["pruning_count"]),
+            "length": config["read_length"]
+        }
     else:
-        query_ids = fasta.get_sequence_ids(config["dataset_reads"])
-        return {"query": query_ids}
+        return {
+            "pruning": ["0"],
+            "length": ["0"],
+            "query": fasta.get_sequence_ids(config["dataset_reads"])
+        }
 
 
-def get_full_queryname_template(config: Dict, software: PlacementSoftware) -> str:
+def get_queryname_template(config: Dict, software: PlacementSoftware) -> str:
     """
     Each placement query has a template name based on two type of inputs:
     1) common arguments: tree and query sequences -- independent of software
@@ -127,12 +147,14 @@ def get_output_template_args(config: Dict, software: PlacementSoftware) -> Dict[
 
     This method creates a dict of specified template arguments that depends on the
     software given. These arguments can be passed to 'expand' function of snakemake
-    to resolve the full query name template given by get_full_queryname_template().
+    to resolve the full query name template given by get_queryname_template().
     """
     _check_software(software)
 
     # get common template arguments
     template_args = get_common_template_args(config)
+
+    template_args["software"] = software.value
 
     # specify template arguments based on software
     if software == PlacementSoftware.EPA:
@@ -149,25 +171,7 @@ def get_output_template_args(config: Dict, software: PlacementSoftware) -> Dict[
         raise NotImplementedError()
     else:
         raise RuntimeError("Unsupported software: " + software.value)
-
-    # a general rule for all software
-    if not prunings_enabled(config):
-        template_args["pruning"] = ["full"]
-
     return template_args
-
-
-def get_jplace_filename_template(config: Dict, software: PlacementSoftware) -> str:
-    """
-    Creates a .jplace filename template based on software used.
-    """
-    _check_software(software)
-
-    # get the sofware name in lower case from Enum value
-    software_name = software.value
-
-    # {full_template}_{software}.jplace
-    return get_full_queryname_template(config, software) + "_" + software_name + ".jplace"
 
 
 def get_output_filename_template(config: Dict, software: PlacementSoftware, extension: str) -> str:
@@ -175,31 +179,26 @@ def get_output_filename_template(config: Dict, software: PlacementSoftware, exte
     Creates a .{extension} filename template based on software used.
     """
     assert len(extension) > 0
+    _check_software(software)
+
     extension = "." + extension if extension[0] != "." else extension
-    return get_full_queryname_template(config, software) + extension
+    return get_queryname_template(config, software) + "_" + software.value + extension
 
 
-def get_jplace_output_template(config: Dict, software: PlacementSoftware) -> str:
-    """
-    Creates a name template of .jplace output files produced by specific software.
-    """
-    return os.path.join(get_base_outputdir_template(config, software),
-                        get_jplace_filename_template(config, software))
-
-
-def get_log_output_template(config: Dict, software: PlacementSoftware) -> str:
+def get_log_template(config: Dict, software: Software) -> str:
     """
     Creates a name template of .log output files produced by specific software.
     """
-    return os.path.join(get_log_outputdir_template(config, software),
+    return os.path.join(get_experiment_log_dir_template(config, software),
                         get_output_filename_template(config, software, "log"))
 
 
-def get_output_template(config: Dict, software: PlacementSoftware, extension: str) -> str:
+def get_output_template(config: Dict, software: Union[PlacementSoftware, AlignmentSoftware], extension: str) -> str:
     """
     Creates a name template of .{extension} output files produced by specific software.
     Used to produce .tree, .align etc. file name templates. Stored in the output
     directory of given software.
     """
-    return os.path.join(get_base_outputdir_template(config, software),
+    _check_software(software)
+    return os.path.join(get_experiment_dir_template(config, software),
                         get_output_filename_template(config, software, extension))

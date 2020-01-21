@@ -8,7 +8,7 @@ __license__ = "MIT"
 
 from typing import List, Dict
 from pewo.software import PlacementSoftware
-from pewo.templates import get_jplace_output_template, get_output_template_args
+from pewo.templates import get_output_filename_template, get_output_template_args
 
 
 def extract_params(file):
@@ -127,7 +127,7 @@ def _get_jplace_outputs(config: Dict, software: PlacementSoftware) -> List[str]:
     """
     Creates a list of .jplace output files produced by specific software.
     """
-    return expand(get_jplace_output_template(config, software),
+    return expand(get_output_filename_template(config, software, "jplace"),
                   **get_output_template_args(config, software))
 
 

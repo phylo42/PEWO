@@ -82,13 +82,7 @@ def extend_tree(tree: Phylo.BaseTree, branch_id: int, node_name: str) -> None:
     x.name = ''
 
 
-if __name__ == "__main__":
-    assert len(sys.argv) == 4
-
-    input_file = sys.argv[1]
-    output_file = sys.argv[2]
-    jplace_file = sys.argv[3]
-
+def make_extended_tree(input_file: str, output_file: str, jplace_file: str) -> None:
     # get the placed sequence id and the best branch post-order id
     branch_id, seq_name = get_best_placement(jplace_file)
 
@@ -100,3 +94,12 @@ if __name__ == "__main__":
 
     # output the modified tree
     Phylo.write(tree, output_file, "newick")
+
+
+if __name__ == "__main__":
+    assert len(sys.argv) == 4
+
+    input_file = sys.argv[1]
+    output_file = sys.argv[2]
+    jplace_file = sys.argv[3]
+    make_extended_tree(input_file, output_file, jplace_file)

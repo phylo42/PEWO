@@ -16,7 +16,6 @@
 
 dataset_align: test/0.align
 dataset_tree: test/0.tree
-dataset_reads: test/0_r300.fasta
 
 
 #working directory
@@ -28,9 +27,21 @@ states: 0
 
 #which software to test, at least one of : epa, epang, pplacer, rappas, apples
 test_soft: ["rappas"]
+#test_soft: ["epa"]
 
-#read lengths to test
+
+# Indicates if PEWO should generate reads from the input tree or take an input fasta file
+# with sequences.
+generate_reads: False
+
+# If generate_reads is set to False, user must provide an input dataset.
+dataset_reads: test/0_r300.fasta
+
+# READ GENERATION
+# Read lengths to generate
 read_length: [300]
+# Number of random prunings to compute
+pruning_count: 10
 
 
 ## IF "ACCURACY" IS EVALUATED
@@ -38,11 +49,6 @@ read_length: [300]
 
 ### this section matters only when you run the "eval_accuracy.smk" workflow
 
-# Enable prunings. If set to False, the dataset_reads parameter is mandatory
-# Otherwise reads are generated from pruned clades
-enable_prunings: False
-# Number of random prunings to compute
-pruning_count: 10
 
 
 ## IF "RESOURCES" ARE EVALUATED

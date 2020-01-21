@@ -6,6 +6,9 @@ e.g., define snakemake outputs depending on tested software
 '''
 
 
+from pewo.io import fasta
+from pewo.templates import get_output_template, get_output_template_args
+
 
 '''
 builds the list of outputs,for a "accuracy" workflow
@@ -52,41 +55,18 @@ def build_likelihood_workflow():
     l=list()
 
     # get placements
-    l.append(
-        _build_likelihood_workflow()
-    )
+    #l.append(
+    #    _build_likelihood_workflow()
+    #)
 
     # compute likelihood values from jplace outputs
-    l.append(config["workdir"]+"/likelihood.csv")
+    l.append(config["workdir"] + "/likelihood.csv")
 
     # collection of results and generation of summary plots
     #l.append(accuracy_plots_ND_outputs())
     #l.append(accuracy_plots_eND_outputs())
     return l
 
-
-def _build_likelihood_workflow():
-    l=list()
-
-    #hmm alignments for alignment-based methods
-    if ("epa" in config["test_soft"]) or ("epang" in config["test_soft"]) or ("pplacer" in config["test_soft"]) or ("apples" in config["test_soft"]):
-        l.append(
-            expand(
-                config["workdir"]+"/HMM/full.fasta"
-            )
-        )
-    if "rappas2" in config["test_soft"]:
-        l.append(
-            expand(
-                config["workdir"]+"/RAPPAS2/full/red{reduction}_ar{arsoft}/k{k}_o{omega}/full_k{k}_o{omega}_red{reduction}_ar{arsoft}_rappas.jplace",
-                k=config["config_rappas"]["k"],
-                omega=config["config_rappas"]["omega"],
-                reduction=config["config_rappas"]["reduction"],
-                arsoft=config["config_rappas"]["arsoft"]
-            )
-        )
-
-    return l
 
 '''
 builds expected outputs from placement software are tested.

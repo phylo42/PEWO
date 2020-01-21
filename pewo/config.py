@@ -7,21 +7,41 @@ __author__ = "Nikolai Romashchenko"
 __license__ = "MIT"
 
 
-from typing import Union, Any
-from pewo.software import PlacementSoftware
+from typing import Any, Dict
+from pewo.software import PlacementSoftware, AlignmentSoftware
 
 
-def is_supported(software: Union[PlacementSoftware, Any]) -> bool:
+def get_work_dir(config: Dict) -> str:
+    """
+    Returns working directory path. This is the root directory of PEWO output.
+    """
+    return config["workdir"]
+
+
+def is_supported(software: Any) -> bool:
     """
     Checks if software is supported. Takes anything as input, returns True
-    if the input parameter is PlacementSoftware.
+    if the input parameter is PlacementSoftware, AlignmentSoftware or
+    a custom script name.
     """
-    return type(software) == PlacementSoftware
+    custom_scripts = [
+        "psiblast2fasta",
+    ]
+
+    return type(software) == PlacementSoftware or \
+           type(software) == AlignmentSoftware or \
+           software in custom_scripts
 
 
-def prunings_enabled(config) -> bool:
+def software_tested(config: Dict, software: PlacementSoftware) -> bool:
     """
-    Checks if prunings are enabled in the config file.
+    Checks if given software is being tested.
     """
-    return "enable_prunings" in config and config["enable_prunings"] == True
+    return software.value in config["test_soft"]
 
+
+def generate_reads(config: Dict) -> bool:
+    """
+    Returns if PEWO should generate reads from the input tree.
+    """
+    return "generate_reads" in config and config["generate_reads"]
