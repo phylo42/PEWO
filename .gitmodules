@@ -1,3 +1,3 @@
 [submodule "scripts/java/PEWO_java"]
 	path = scripts/java/PEWO_java
-	url = https://github.com/blinard-BIOINFO/PEWO_java.git
+	url = https://github.com/blinard-BIOINFO/PEWO_java
