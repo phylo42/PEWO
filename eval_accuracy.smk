@@ -33,7 +33,7 @@ include:
     "modules/placement/placement_rappas_dbinram.smk"
 #alignment (for distance-based and ML approaches)
 include:
-    "modules/alignment/alignment_hmm.smk"
+    "modules/alignment/alignment_hmm_ll.smk"
 #ML-based placements, e.g.: epa, epang, pplacer
 include:
     "modules/placement/placement_epa.smk"

@@ -20,11 +20,11 @@ def get_best_placement(jplace_filename: str) -> Tuple[int, str]:
     with open(jplace_filename) as jplace_file:
         content = json.load(jplace_file)
 
-        # check if .jplace has one placement
+        # check if .jplace has at least one placement
         assert "placements" in content
         placements = content["placements"]
 
-        assert len(placements) == 1
+        assert len(placements) > 0
         place_dict = placements[0]
 
         # get the best placement
@@ -33,17 +33,20 @@ def get_best_placement(jplace_filename: str) -> Tuple[int, str]:
 
         best_placement = place_dict["p"][0]
 
-        # check if the placement is well-formed and return it
+        # check if the placement is well-formed
         assert len(best_placement) == 5
         best_branch = best_placement[0]
 
         # get query name
-        assert "nm" in place_dict
-        assert len(place_dict["nm"]) > 0
+        assert ("nm" in place_dict or "n" in place_dict)
+        if "nm" in place_dict:
+            seq_name = place_dict["nm"][0][0]
+        elif "n" in place_dict:
+            seq_name = place_dict["n"][0]
+        else:
+            raise RuntimeError("An error occured while parsing " + jplace_filename)
 
-        nm = place_dict["nm"][0]
-        assert len(nm) > 0
-        seq_name = nm[0]
+        print(seq_name)
 
         return best_branch, seq_name
 

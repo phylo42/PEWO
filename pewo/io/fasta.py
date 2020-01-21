@@ -43,7 +43,14 @@ def split_fasta(input_file: str, output_dir: str) -> List[str]:
     """
     files = []
     for record in SeqIO.parse(input_file, "fasta"):
-        output_file = os.path.join(output_dir, _seq_id_filter(record.id) + ".fasta")
+
+        #FIXME:
+        # By the convention, _r0 means "variable read length". Adding this
+        # makes implicit dependency on the read file name convention in ALL rules
+        # looking for read files: alignment_hmm, placement_rappas_dbinram etc.
+        output_file = os.path.join(output_dir,
+                                   _seq_id_filter(record.id) + "_r0" + ".fasta")
+        print(output_file)
         _write_fasta([record], output_file)
         files.append(output_file)
 

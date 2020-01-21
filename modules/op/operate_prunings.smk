@@ -52,7 +52,7 @@ rule operate_pruning:
         a = expand(config["workdir"] + "/A/{pruning}.align", pruning=range(config["pruning_count"])),
         t = expand(config["workdir"] + "/T/{pruning}.tree", pruning=range(config["pruning_count"])),
         g = expand(config["workdir"] + "/G/{pruning}.fasta", pruning=range(config["pruning_count"])),
-        r = get_pruning_output_read_files()
+        r = get_pruning_output_read_files() if cfg.generate_reads(config) else []
     log:
         config["workdir"] + "/logs/operate_pruning.log"
     version:
@@ -78,6 +78,5 @@ rule operate_pruning:
                 "mkdir -p {params.wd}/A {params.wd}/T {params.wd}/G {params.wd}/R;"
                 "cp {input.a} {params.wd}/A/0.align;"
                 "cp {input.t} {params.wd}/T/0.tree;"
-                "cp {input.r} {params.wd}/R/0_r0.fasta;"
                 "touch {params.wd}/G/0.fasta;"
             )

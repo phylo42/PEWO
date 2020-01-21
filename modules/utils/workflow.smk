@@ -1,13 +1,16 @@
-'''
-functions related to workflow constructions
-e.g., define snakemake outputs depending on tested software
+"""
+Functions related to workflow constructions,
+e.g. define snakemake outputs depending on tested software
+"""
 
-@author Benjamin Linard
-'''
+__author__ = "Benjamin Linard, Nikolai Romashchenko"
+__license__ = "MIT"
 
 
-from pewo.io import fasta
-from pewo.templates import get_output_template, get_output_template_args
+import os
+from typing import List
+from pewo.software import AlignmentSoftware
+from pewo.templates import get_software_dir, get_common_queryname_template, get_common_template_args
 
 
 '''
@@ -68,32 +71,41 @@ def build_likelihood_workflow():
     return l
 
 
-'''
-builds expected outputs from placement software are tested.
-("test_soft" field in the config file)
-'''
+def _get_query_alignment_output() -> List[str]:
+    """
+    Returns the list of .fasta files of aligned query files. These files
+    must be produced by the alignment stage.
+    """
+    _alignment_dir = get_software_dir(config, AlignmentSoftware.HMMER)
+    query_alignment_template = os.path.join(_alignment_dir,
+                                            "{pruning}",
+                                            get_common_queryname_template(config) + ".fasta")
+    return expand(query_alignment_template, **get_common_template_args(config))
+
+
 def build_placements_workflow():
+    """
+    Builds expected outputs from tested placement software ("test_soft" field in the config file)
+    """
 
     l=list()
 
-    #tree optimization
-    l.append(
+    # tree optimization
+    l.extend(
         expand(
-            config["workdir"]+"/T/{pruning}_optimised.tree",
-            pruning=range(0,config["pruning_count"],1)
+            config["workdir"] + "/T/{pruning}_optimised.tree",
+            pruning = range(config["pruning_count"])
         )
     )
 
-    #hmm alignments for alignment-based methods
-    if ("epa" in config["test_soft"]) or ("epang" in config["test_soft"]) or ("pplacer" in config["test_soft"]) or ("apples" in config["test_soft"]) :
-        l.append(
-            expand(
-                config["workdir"]+"/HMM/{pruning}_r{length}.fasta",
-                pruning=range(0,config["pruning_count"],1),
-                length=config["read_length"]
-            )
-        )
-    #pplacer placements
+    # hmm alignments for alignment-based methods
+    # TODO: implement it with pewo.software types
+    require_alignment = ["epa", "epang", "pplacer", "apples"]
+    # check if there is any software that requires alignment
+    if any(soft in config["test_soft"] for soft in require_alignment):
+        l.extend(_get_query_alignment_output())
+
+    # pplacer placements
     if "pplacer" in config["test_soft"] :
         l.append(
             expand(

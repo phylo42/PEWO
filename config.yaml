@@ -26,21 +26,23 @@ states: 0
 
 #which software to test, at least one of : epa, epang, pplacer, rappas, apples
 
-test_soft: [epa]
-#test_soft: [epa, rappas]
+#test_soft: [epa]
+test_soft: [epa, rappas]
 #test_soft: [pplacer]
 
 
 # Indicates if PEWO should generate reads from the input tree or take an input fasta file
 # with sequences.
-generate_reads: True
+#generate_reads: True
+generate_reads: False
+
 
 # If generate_reads is set to False, user must provide an input dataset.
-#dataset_reads: test/0_r300.fasta
+dataset_reads: test/0_r300.fasta
 
 # READ GENERATION
 # Read lengths to generate
-read_length: [300]
+read_length: [300, 600]
 # Number of random prunings to compute
 pruning_count: 10
 
@@ -147,7 +149,7 @@ config_rappas:
 
   #panel of k that is tested
   #integer in [2,16] (8~10 recommended, >12 often produces too long computations)
-  k: [6]
+  k: [6, 7]
 
   #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
   #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids

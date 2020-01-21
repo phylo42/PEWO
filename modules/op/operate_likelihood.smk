@@ -13,8 +13,8 @@ from pewo.likelihood.likelihood import combine_csv
 from pewo.likelihood.extend_tree import make_extended_tree
 from pewo.io import fasta
 from pewo.software import PlacementSoftware, AlignmentSoftware
-from pewo.templates import get_output_template,\
-    get_output_template_args, get_software_dir
+from pewo.templates import get_output_template, get_common_queryname_template, \
+    get_output_template_args, get_software_dir, get_common_template_args
 
 
 _work_dir = cfg.get_work_dir(config)
@@ -28,8 +28,9 @@ rule split_queries:
         reads = config["dataset_reads"]
     output:
         queries = expand(
-            os.path.join(_work_dir, "R", "{query}.fasta"),
-            query=fasta.get_sequence_ids(config["dataset_reads"])
+            os.path.join(_work_dir, "R",
+                         get_common_queryname_template(config) + ".fasta"),
+            **get_common_template_args(config)
         )
     log:
         config["workdir"] + "/logs/split_queries.log"
@@ -89,14 +90,16 @@ def _calculate_likelihood(input: InputFiles, output: Namedlist, params: Namedlis
 
 def _get_aligned_query_template(config: Dict) -> str:
     # TODO: Generalize this for other alignment software
-    _hmm_software_dir = get_software_dir(config, AlignmentSoftware.HMMER)
-    return os.path.join(_hmm_software_dir, "{pruning}", "{query}.align")
+    _alignment_dir = get_software_dir(config, AlignmentSoftware.HMMER)
+    return os.path.join(_alignment_dir,
+                        "{pruning}",
+                        get_common_queryname_template(config) + ".fasta")
 
 # WARNING
 #
 # A wall of copy-pasted code below. All the rules calculate_likelihood_XXX are just
 # a bunch of copy-paste. Input, output, params patterns are all the same.
-# As far as I know, there is no way in beautiful Snakemake to generalize this code.
+# As far as I know, there is no way to generalize this code in beautiful Snakemake.
 # *sigh*
 #
 # Any changes to these rules must be consistent to each other.

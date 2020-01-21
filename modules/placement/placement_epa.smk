@@ -9,7 +9,8 @@ managed by using a temp() for the corresponding output, this output may or may n
 __author__ = "Benjamin Linard, Nikolai Romashchenko"
 
 
-# TODO: SSE3 version is used as default, there should be a way to test SSE3/AVX availability from python and launch correct version accordingly
+#TODO: SSE3 version is used as default, there should be a way to test SSE3/AVX availability
+# from python and launch correct version accordingly
 
 import os
 from snakemake.io import Namedlist, temp
@@ -17,7 +18,8 @@ import pewo.config as cfg
 from pewo.software import PlacementSoftware
 from pewo.software import AlignmentSoftware
 from pewo.templates import get_experiment_dir_template, get_output_template, \
-    get_log_template, get_queryname_template,  get_common_queryname_template, get_software_dir
+    get_log_template, get_queryname_template,  get_common_queryname_template, \
+    get_software_dir
 
 
 def _get_epa_placement_output() -> Namedlist:
@@ -51,7 +53,13 @@ def _get_epa_placement_output() -> Namedlist:
 
 
 
+_working_dir = cfg.get_work_dir(config)
 _epa_experiment_dir = get_experiment_dir_template(config, PlacementSoftware.EPA)
+
+#FIXME:
+# Unnecessary dependendancy on the alignment software
+_alignment_dir = get_software_dir(config, AlignmentSoftware.HMMER)
+
 
 rule placement_epa:
     """
@@ -59,10 +67,16 @@ rule placement_epa:
     """
 
     input:
-        hmm = config["workdir"] + "/HMM/{pruning}_r{length}.fasta",
-        t = config["workdir"] + "/T/{pruning}.tree"
-    output: _get_epa_placement_output()
-    log: get_log_template(config, PlacementSoftware.EPA)
+        hmm = os.path.join(_alignment_dir,
+                           "{pruning}",
+                           get_common_queryname_template(config) + ".fasta"),
+        t = os.path.join(_working_dir,
+                         "T",
+                         "{pruning}.tree")
+    output:
+        _get_epa_placement_output()
+    log:
+        get_log_template(config, PlacementSoftware.EPA)
     #benchmark:
     #    repeat(config["workdir"]+"/benchmarks/{pruning}_r{length}_g{gepa}_epa_benchmark.tsv", config["repeats"])
     version: "1.0"
@@ -70,14 +84,12 @@ rule placement_epa:
         m = select_model_raxmlstyle(),
         c = config["phylo_params"]["categories"],
         #G=config["config_epa"]["G"],
-        name = "{pruning}_r{length}_g{gepa}",
+        name = get_queryname_template(config, PlacementSoftware.EPA),
         raxmlname = os.path.join(_epa_experiment_dir,
                                  "RAxML_portableTree." + get_queryname_template(config, PlacementSoftware.EPA) + ".jplace"),
         outname = get_output_template(config, PlacementSoftware.EPA, "jplace"),
 
-        #FIXME:
-        # Unnecessary dependendancy on the alignment software
-        reduction = os.path.join(get_software_dir(config, AlignmentSoftware.HMMER),
+        reduction = os.path.join(_alignment_dir,
                                  get_common_queryname_template(config) + ".fasta.reduced"),
         info = os.path.join(_epa_experiment_dir,
                             "RAxML_info." + get_queryname_template(config, PlacementSoftware.EPA)),
