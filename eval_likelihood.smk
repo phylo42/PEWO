@@ -34,10 +34,8 @@ include:
     "modules/op/operate_ar.smk"
 include:
     "modules/placement/placement_rappas_dbinram.smk"
-#include:
-#    "modules/placement/placement_rappas2.smk"
-#alignment (for distance-based and ML approaches)
 
+#alignment (for distance-based and ML approaches)
 include:
        "modules/alignment/alignment_hmm_ll.smk"
 # ML-based placements, e.g.: epa, epang, pplacer

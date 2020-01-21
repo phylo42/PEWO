@@ -31,8 +31,6 @@ include:
     "modules/op/operate_ar.smk"
 include:
     "modules/placement/placement_rappas_dbinram.smk"
-include:
-    "modules/placement/placement_rappas2.smk"
 #alignment (for distance-based and ML approaches)
 include:
     "modules/alignment/alignment_hmm.smk"
