@@ -8,7 +8,7 @@ __license__ = "MIT"
 
 import os
 import pewo.config as cfg
-from pewo.software import AlignmentSoftware
+from pewo.software import AlignmentSoftware, CustomScripts
 from pewo.templates import get_software_dir, get_experiment_log_dir_template
 
 
@@ -18,17 +18,18 @@ _hmm_software_dir = get_software_dir(config, AlignmentSoftware.HMMER)
 
 rule hmm_build:
     """
-    build hmm profile
+    Builds an hmm profile.
     """
     input:
-        alignment = config["dataset_align"]
+        alignment = os.path.join(_work_dir, "A", "{pruning}.align")
     output:
         hmm = os.path.join(_hmm_software_dir, "{pruning}.hmm")
-    # TODO: add logs
-    log: config["workdir"]+"/logs/hmmbuild/{pruning}.log"
-    version: "1.0"
+    log:
+        get_experiment_log_dir_template(config, AlignmentSoftware.HMMER)
+    version:
+        "1.0"
     params:
-        states=["dna"] if config["states"]==0 else ["amino"]
+        states = ["dna"] if config["states"] == 0 else ["amino"]
     threads: 1
     shell:
         "hmmbuild --cpu {threads} --{params.states} {output.hmm} {input.alignment} &> {log}"
@@ -36,7 +37,7 @@ rule hmm_build:
 
 rule hmm_align:
     """
-    Aligns a query to a profile
+    Aligns a query to a profile.
     """
     input:
         hmm = os.path.join(_hmm_software_dir, "{pruning}.hmm"),
@@ -46,7 +47,8 @@ rule hmm_align:
         psiblast = os.path.join(_hmm_software_dir, "{pruning}", "{query}.psiblast")
     version:
         "1.0"
-    log: os.path.join(get_experiment_log_dir_template(config, AlignmentSoftware.HMMER), "{query}.log")
+    log:
+        os.path.join(get_experiment_log_dir_template(config, AlignmentSoftware.HMMER), "{query}.log")
     benchmark:
         repeat(
             os.path.join(_work_dir, "benchmarks", "{pruning}", "{query}_hmmbuild_benchmark.tsv"),
@@ -69,7 +71,7 @@ rule psiblast_to_fasta:
         alignment = os.path.join(_hmm_software_dir, "{pruning}", "{query}.align")
     version:
         "1.0"
-    log: os.path.join(get_experiment_log_dir_template(config, "psiblast2fasta"), "{query}.log")
+    log: os.path.join(get_experiment_log_dir_template(config, CustomScripts.PSIBLAST_2_FASTA), "{query}.log")
     shell:
         "pewo/alignment/psiblast2fasta.py {input.psiblast} {output.alignment} &> {log}"
 

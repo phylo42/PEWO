@@ -30,7 +30,7 @@ def get_rappas_input_reads(pruning):
                 for length in config["read_length"]]
 
 
-_experiment_dir = get_experiment_dir_template(config, PlacementSoftware.RAPPAS)
+_rappas_experiment_dir = get_experiment_dir_template(config, PlacementSoftware.RAPPAS)
 
 rule db_build_in_ram_rappas:
     """
@@ -52,8 +52,8 @@ rule db_build_in_ram_rappas:
         #FIXME:
         # This probably should be changed, because it depends on the
         # implementation of get_experiment_dir_template for RAPPAS in pewo.templates.
-        ardir = os.path.join(Path(_experiment_dir).parent, "AR"),
-        workdir = _experiment_dir,
+        ardir = os.path.join(Path(_rappas_experiment_dir).parent, "AR"),
+        workdir = _rappas_experiment_dir,
         dbfilename = "DB.bin",
         querystring = lambda wildcards, input : ",".join(input.r),
         maxp = config["maxplacements"],

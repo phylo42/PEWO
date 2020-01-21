@@ -8,7 +8,7 @@ __license__ = "MIT"
 
 
 from typing import Any, Dict
-from pewo.software import PlacementSoftware, AlignmentSoftware
+from pewo.software import PlacementSoftware, AlignmentSoftware, CustomScripts
 
 
 def get_work_dir(config: Dict) -> str:
@@ -24,13 +24,9 @@ def is_supported(software: Any) -> bool:
     if the input parameter is PlacementSoftware, AlignmentSoftware or
     a custom script name.
     """
-    custom_scripts = [
-        "psiblast2fasta",
-    ]
-
     return type(software) == PlacementSoftware or \
            type(software) == AlignmentSoftware or \
-           software in custom_scripts
+           type(software) == CustomScripts
 
 
 def software_tested(config: Dict, software: PlacementSoftware) -> bool:

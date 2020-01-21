@@ -1,5 +1,5 @@
 """
-This module contains the definition of a data structure for software supported in PEWO.
+This module contains definitions of data structures for software supported in PEWO.
 """
 
 __author__ = "Nikolai Romashchenko"
@@ -31,7 +31,7 @@ class AlignmentSoftware(Enum):
 
 
 class CustomScripts(Enum):
-    PSIBLAST2_FASTA = "psiblast2fasta"
+    PSIBLAST_2_FASTA = "psiblast2fasta"
 
 
 Software = Union[PlacementSoftware, AlignmentSoftware, CustomScripts]

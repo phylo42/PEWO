@@ -68,8 +68,7 @@ def get_experiment_log_dir_template(config: Dict, software: Software) -> str:
     for scripts (e.g. psiblast2fasta.py).
     """
     _check_software(software)
-
-    software_name = software.value if type(software) in [PlacementSoftware, AlignmentSoftware] else software
+    software_name = software.value
     return os.path.join(cfg.get_work_dir(config), "logs", software_name, "{pruning}")
 
 
@@ -126,7 +125,7 @@ def get_queryname_template(config: Dict, software: PlacementSoftware) -> str:
     _check_software(software)
 
     if software == PlacementSoftware.EPA:
-        return get_common_queryname_template(config,) + "_g{gepa}"
+        return get_common_queryname_template(config) + "_g{gepa}"
     elif software == PlacementSoftware.EPA_NG:
         raise NotImplementedError()
     elif software == PlacementSoftware.PPLACER:

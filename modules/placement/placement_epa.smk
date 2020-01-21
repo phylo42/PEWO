@@ -13,9 +13,11 @@ __author__ = "Benjamin Linard, Nikolai Romashchenko"
 
 import os
 from snakemake.io import Namedlist, temp
+import pewo.config as cfg
 from pewo.software import PlacementSoftware
-from pewo.templates import get_experiment_dir_template, \
-    get_output_template, get_log_template, get_queryname_template
+from pewo.software import AlignmentSoftware
+from pewo.templates import get_experiment_dir_template, get_output_template, \
+    get_log_template, get_queryname_template,  get_common_queryname_template, get_software_dir
 
 
 def _get_epa_placement_output() -> Namedlist:
@@ -45,11 +47,17 @@ def _get_epa_placement_output() -> Namedlist:
 
     # add .jplace name template
     output.append(get_output_template(config, PlacementSoftware.EPA, "jplace"))
-    #output.add_name("jplace")
     return output
 
 
+
+_epa_experiment_dir = get_experiment_dir_template(config, PlacementSoftware.EPA)
+
 rule placement_epa:
+    """
+    Runs placement using EPA.
+    """
+
     input:
         hmm = config["workdir"] + "/HMM/{pruning}_r{length}.fasta",
         t = config["workdir"] + "/T/{pruning}.tree"
@@ -59,17 +67,23 @@ rule placement_epa:
     #    repeat(config["workdir"]+"/benchmarks/{pruning}_r{length}_g{gepa}_epa_benchmark.tsv", config["repeats"])
     version: "1.0"
     params:
-        m=select_model_raxmlstyle(),
-        c=config["phylo_params"]["categories"],
+        m = select_model_raxmlstyle(),
+        c = config["phylo_params"]["categories"],
         #G=config["config_epa"]["G"],
-        name="{pruning}_r{length}_g{gepa}",
-        raxmlname=config["workdir"]+"/EPA/{pruning}/g{gepa}/RAxML_portableTree.{pruning}_r{length}_g{gepa}.jplace",
+        name = "{pruning}_r{length}_g{gepa}",
+        raxmlname = os.path.join(_epa_experiment_dir,
+                                 "RAxML_portableTree." + get_queryname_template(config, PlacementSoftware.EPA) + ".jplace"),
         outname = get_output_template(config, PlacementSoftware.EPA, "jplace"),
-        reduction=config["workdir"]+"/HMM/{pruning}_r{length}.fasta.reduced",
-        info=config["workdir"]+"/EPA/{pruning}/g{gepa}/RAxML_info.{pruning}_r{length}_g{gepa}",
-        outdir= os.path.join(config["workdir"],"EPA/{pruning}/g{gepa}"),
-        maxp=config["maxplacements"],
-        minlwr=config["minlwr"]
+
+        #FIXME:
+        # Unnecessary dependendancy on the alignment software
+        reduction = os.path.join(get_software_dir(config, AlignmentSoftware.HMMER),
+                                 get_common_queryname_template(config) + ".fasta.reduced"),
+        info = os.path.join(_epa_experiment_dir,
+                            "RAxML_info." + get_queryname_template(config, PlacementSoftware.EPA)),
+        outdir = _epa_experiment_dir,
+        maxp = config["maxplacements"],
+        minlwr = config["minlwr"]
     shell:
         """
         rm -f {params.info}

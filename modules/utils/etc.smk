@@ -138,8 +138,7 @@ def get_jplace_outputs() -> List[str]:
     inputs = []
 
     if "epa" in config["test_soft"]:
-        #inputs.extend(_get_jplace_outputs(PlacementSoftware.EPA))
-        raise NotImplementedError()
+        inputs.extend(_get_jplace_outputs(config, PlacementSoftware.EPA))
     if "pplacer" in config["test_soft"]:
         inputs.extend(
             expand(

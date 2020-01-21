@@ -26,8 +26,9 @@ states: 0
 
 #which software to test, at least one of : epa, epang, pplacer, rappas, apples
 
-test_soft: [rappas]
-#test_soft: ["epa"]
+test_soft: [epa]
+#test_soft: [epa, rappas]
+#test_soft: [pplacer]
 
 
 # Indicates if PEWO should generate reads from the input tree or take an input fasta file
@@ -177,7 +178,8 @@ config_rappas:
   #currently, only raxml-ng can use multiple threads
   #
   #!!! warning, be sure to set arsoft VALUES as UPPER CASE !!!
-  arsoft: [PHYML]
+  #arsoft: [PHYML]
+  arsoft: [RAXMLNG]
   arthreads: 2
 
   #maximum amount of memory available to rappas process
