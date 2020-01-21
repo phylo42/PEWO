@@ -45,7 +45,7 @@ def _get_epa_placement_output() -> Namedlist:
 
     # add .jplace name template
     output.append(get_output_template(config, PlacementSoftware.EPA, "jplace"))
-    output.add_name("jplace")
+    #output.add_name("jplace")
     return output
 
 
@@ -64,7 +64,7 @@ rule placement_epa:
         #G=config["config_epa"]["G"],
         name="{pruning}_r{length}_g{gepa}",
         raxmlname=config["workdir"]+"/EPA/{pruning}/g{gepa}/RAxML_portableTree.{pruning}_r{length}_g{gepa}.jplace",
-        outname=config["workdir"]+"/EPA/{pruning}/g{gepa}/{pruning}_r{length}_g{gepa}_epa.jplace",
+        outname = get_output_template(config, PlacementSoftware.EPA, "jplace"),
         reduction=config["workdir"]+"/HMM/{pruning}_r{length}.fasta.reduced",
         info=config["workdir"]+"/EPA/{pruning}/g{gepa}/RAxML_info.{pruning}_r{length}_g{gepa}",
         outdir= os.path.join(config["workdir"],"EPA/{pruning}/g{gepa}"),
