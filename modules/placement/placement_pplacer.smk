@@ -57,6 +57,6 @@ rule placement_pplacer:
         minlwr=config["minlwr"]
     run:
         if config["config_pplacer"]["premask"]==1 :
-            shell("pplacer -o {params.o} --cpus 1 --verbosity 2 --max-strikes {wildcards.msppl} --strike-box {wildcards.sbppl} --max-pitches {wildcards.mpppl} --keep-at-most {params.maxp} --keep-factor {params.minlwr} -c {input.p} {input.a} &> {log}")
+            shell("pplacer -o {params.o} --verbosity 1 --max-strikes {wildcards.msppl} --strike-box {wildcards.sbppl} --max-pitches {wildcards.mpppl} --keep-at-most {params.maxp} --keep-factor {params.minlwr} -c {input.p} {input.a} &> {log}")
         else:
-            shell("pplacer -o {params.o} --cpus 1 --verbosity 2 --max-strikes {wildcards.msppl} --strike-box {wildcards.sbppl} --max-pitches {wildcards.mpppl} --keep-at-most {params.maxp} --keep-factor {params.minlwr} --no-pre-mask -c {input.p} {input.a} &> {log}")
+            shell("pplacer -o {params.o} --verbosity 1 --max-strikes {wildcards.msppl} --strike-box {wildcards.sbppl} --max-pitches {wildcards.mpppl} --keep-at-most {params.maxp} --keep-factor {params.minlwr} --no-pre-mask -c {input.p} {input.a} &> {log}")
