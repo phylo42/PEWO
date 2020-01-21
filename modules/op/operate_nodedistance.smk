@@ -30,7 +30,13 @@ rule compute_nodedistance:
         compute_epang= 1 if "epang" in config["test_soft"] else 0,
         compute_pplacer= 1 if "pplacer" in config["test_soft"] else 0,
         compute_rappas= 1 if "rappas" in config["test_soft"] else 0,
-        compute_apples= 1 if "apples" in config["test_soft"] else 0
+        compute_apples= 1 if "apples" in config["test_soft"] else 0,
+	jar=config["pewo_jar"]
     shell:
-        "java -cp `which RAPPAS.jar`:PEWO.jar DistanceGenerator_LITE2 {params.workdir} "
+#<<<<<<< HEAD
+#        "java -cp `which RAPPAS.jar`:PEWO.jar DistanceGenerator_LITE2 {params.workdir} "
+#        "{params.compute_epa} {params.compute_epang} {params.compute_pplacer} {params.compute_rappas} {params.compute_apples} &> {log}"
+#=======
+        "java -cp  {params.jar} DistanceGenerator_LITE2 {params.workdir} "
         "{params.compute_epa} {params.compute_epang} {params.compute_pplacer} {params.compute_rappas} {params.compute_apples} &> {log}"
+#>>>>>>> f6a896db175bf713248dd66209204de4d5fe20c1

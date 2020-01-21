@@ -61,13 +61,14 @@ rule operate_pruning:
         wd = config["workdir"],
         count = config["pruning_count"],
         states = config["states"],
+        jar = config["pewo_jar"],
         length = get_params_length()
         #length_sd=config["read_length_sd"],
         #bpe=config["bpe"],
     run:
         if cfg.generate_reads(config):
             shell(
-                "java -cp `which RAPPAS.jar`:PEWO.jar PrunedTreeGenerator_LITE "
+                "java -cp {params.jar} PrunedTreeGenerator_LITE "
                 "{params.wd} {input.a} {input.t} "
                 "{params.count} {params.length} 0 1 {params.states} "
                 "&> {log}"
@@ -80,5 +81,3 @@ rule operate_pruning:
                 "cp {input.r} {params.wd}/R/0_r0.fasta;"
                 "touch {params.wd}/G/0.fasta;"
             )
-
-

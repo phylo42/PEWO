@@ -24,6 +24,7 @@ epang_h2<-c("h","bigg")
 epang_h3<-c("h")
 epang_h4<-c("h")
 pplacer<-c("ms","sb","mp")
+rappas<-c("k","o","red","ar")
 rappasdbbuild<-c("k","o","red","ar")
 rappasplacement<-c("k","o","red","ar")
 apples<-c("m","c")
@@ -37,6 +38,7 @@ soft_params<-list(
                     "epang_h3"=epang_h3,
                     "epang_h4"=epang_h4,
                     "pplacer"=pplacer,
+                    "rappas"=rappas,
                     "rappas-dbbuild"=rappasdbbuild,
                     "rappas-placement"=rappasplacement,
                     "apples"=apples,
@@ -156,8 +158,8 @@ if ("epang" %in% op_analyzed) {
 
 results_per_op<-list()
 
-results <- data.frame(fake="", stringsAsFactors=FALSE)
-results <- results[-1,]
+#results <- data.frame(fake="", stringsAsFactors=FALSE)
+#results <- results[-1,]
 
 
 #for each $ressource parameter
@@ -198,7 +200,7 @@ for (opname in op_analyzed) {
                 labels[line]<-label
             }
             data_mean["labels"]<-labels
-            print(data_mean)
+            #print(data_mean)
             #add very first dataframes in list
             results_per_op[[i]]<-data_mean
 
@@ -240,7 +242,7 @@ for (op in 1:length(results_per_op)) {
         #g<-ggplot(data=results_per_op[[op]], aes(x=reorder(labels,formula(stats_to_plot[i])),y=formula(stats_to_plot[i])) ) +
         g<-ggplot(data=results_per_op[[op]], aes_string(x = sprintf("reorder(labels,%s)",stats_to_plot[i]) , y = sprintf("%s",stats_to_plot[i])) ) +
           geom_bar(stat="identity") +
-          theme(axis.text.x = element_text(angle = -90)) +
+          theme(axis.text.x = element_text(angle = -90,hjust=0,vjust=0.5)) +
           labs(x="Parameters", y=human_readable_name[i])
         print(g)
         dev.off()
@@ -266,16 +268,18 @@ for (i in 1:length(stats_to_plot)) {
     #g<-ggplot(data=results_per_op[[op]], aes(x=reorder(labels,formula(stats_to_plot[i])),y=formula(stats_to_plot[i])) ) +
     g<-ggplot(data=merged, aes_string(x = sprintf("reorder(labels,%s)",stats_to_plot[i]) , y = sprintf("%s",stats_to_plot[i])) ) +
       geom_bar(stat="identity") +
-      theme(axis.text.x = element_text(angle = -90)) +
+      theme(axis.text.x = element_text(angle = -90,hjust=0,vjust=0.5)) +
       labs(x="Parameters", y=human_readable_name[i])
     print(g)
     dev.off()
 }
 
 ###########################################
-## PLOTS 3 : time for full analysis
+## time for full analysis
 #  e.g (align + placement)*sample for alignment-based approaches
 #       ansrec + dbbuild + placement*sample for alignment-free approches
+
+#this section NEEDS improvements, it is not dynamic as previous plots
 
 #associate operations to analyses
 analyses<-list()
@@ -286,24 +290,123 @@ analyses["epang_h3"]<-c("hmmbuild","epang_h3")
 analyses["epang_h4"]<-c("hmmbuild","epang_h4")
 analyses["pplacer"]<-c("hmmbuild","pplacer")
 analyses["apples"]<-c("hmmbuild","apples")
-
-
 analyses["rappas"]<-c("ansrec","rappas-dbbuild","rappas-placement")
 
-time_alignment<-function(time_placement,time_alignment,sample_count) {
-    return(sample_count*(time_placement+time_alignment))
-}
-time_placement<-function(time_ar,time_db,time_placement,sample_count) {
-    return(time_ar+time_db+(time_placement*sample_count))
-}
+results<-list()
 
-
+#rappas times in seconds: AR + dbbuild + placement
 ansrec_and_dbbuild<-merge(results_per_op["ansrec"][[1]],results_per_op["rappas-dbbuild"][[1]],by=c("red","ar"))
 all_op<-merge(ansrec_and_dbbuild,results_per_op["rappas-placement"][[1]],by=c("red","ar","o","k"))
 
-#time for 1 analysis
+#time for 1 analysis: AR + dbbuild + placement
 all_op["sample_x1"]<-all_op["s.x"]+all_op["s.y"]+all_op["s"]
 
-#time for 1000 analyses
-all_op["sample_x1"]<-all_op["s.x"]+all_op["s.y"]+all_op["s"]*1000
+#time for 1000 analyses : AR + dbbuild + 100 placements
+all_op["sample_x1000"]<-all_op["s.x"]+all_op["s.y"]+all_op["s"]*1000
+all_op["operation"]<-"rappas"
 
+#results= simplier table
+results[[1]]<-all_op[,c("operation","labels","k","o","red","ar","sample_x1","sample_x1000")]
+op_analyzed<-c("rappas")
+#create label from parameter combination as last column
+results[[1]]["labels_short"]<-rep("",dim(results[[1]])[1])
+for (line in 1:dim(results[[1]])[1]) {
+    label<-""
+    elts<-strsplit(results[[1]][line,"labels"],"_")[[1]]
+    for ( idx in 2:length(elts)) {
+        label<-paste0(label,elts[idx],"_")
+    }
+    results[[1]][line,"labels_short"]<-label
+}
+
+
+#alignment-based times in seconds: align + placement
+i<-2
+for ( op in names(results_per_op)) {
+    if ( op=="ansrec" || op=="rappas-dbbuild" || op=="rappas-placement" || op=="hmmalign") {
+        next
+    }
+    results_per_op[op][[1]]["sample_x1"]<-results_per_op[op][[1]]["s"]
+    for (line in 1:dim(results_per_op[op][[1]])[1]) {
+        results_per_op[op][[1]]["sample_x1"][line,]<-results_per_op[op][[1]]["s"][line,]+results_per_op[op][[1]]["s"][1,]
+    }
+    results_per_op[op][[1]]["sample_x1000"]<-results_per_op[op][[1]]["s"]
+    for (line in 1:dim(results_per_op[op][[1]])[1]) {
+        results_per_op[op][[1]]["sample_x1000"][line,]<-results_per_op[op][[1]]["s"][line,]*1000+results_per_op["hmmalign"][[1]]["s"][1,]*1000
+    }
+    #results= simplier table
+    op_analyzed<-c(op_analyzed,op)
+    results[[i]]<-results_per_op[op][[1]][,c("operation","labels",soft_params[op][[1]],"sample_x1","sample_x1000")]
+    #create label from parameter combination as last column
+    results[[i]]["labels_short"]<-rep("",dim(results[[i]])[1])
+    for (line in 1:dim(results[[i]])[1]) {
+        label<-""
+        elts<-strsplit(results[[i]][line,"labels"],"_")[[1]]
+        for ( idx in 2:length(elts)) {
+            label<-paste0(label,elts[idx],"_")
+        }
+        results[[i]][line,"labels_short"]<-label
+    }
+
+    i<-i+1
+}
+names(results)<-op_analyzed
+
+
+###########################################
+## PLOTS 1 : summary plot per operation
+
+
+for (op in 1:length(results)) {
+    svg_width<-2+(0.2*dim(results[[op]])[1]) #0.5 per column + margins
+    svg_height<-2+(nchar(max(results[[op]]$labels))*0.1)
+    CairoSVG(file =paste0(workdir,"/summary_plot_1sample_",op_analyzed[op],".svg"),width=svg_width,height=svg_height)
+    #g<-ggplot(data=results_per_op[[op]], aes(x=reorder(labels,formula(stats_to_plot[i])),y=formula(stats_to_plot[i])) ) +
+    g<-ggplot( data=results[[op]], aes(x = reorder(labels_short,sample_x1) , y = sample_x1) ) +
+      geom_bar(stat="identity",width=0.5) +
+      theme(axis.text.x = element_text(angle = -90,hjust=0,vjust=0.5)) +
+      labs(x="Parameters", y="Seconds for 1 sample")
+    print(g)
+    dev.off()
+    CairoSVG(file =paste0(workdir,"/summary_plot_1000samples_",op_analyzed[op],".svg"),width=svg_width,height=svg_height)
+    #g<-ggplot(data=results_per_op[[op]], aes(x=reorder(labels,formula(stats_to_plot[i])),y=formula(stats_to_plot[i])) ) +
+    g<-ggplot( data=results[[op]], aes(x = reorder(labels_short,sample_x1000) , y = sample_x1000) ) +
+      geom_bar(stat="identity",width=0.5) +
+      theme(axis.text.x = element_text(angle = -90, hjust=0,vjust=0.5)) +
+      labs(x="Parameters", y="Seconds for 1000 sample")
+    print(g)
+    dev.off()
+}
+
+###########################################
+## PLOTS 2 : summary plot of all operations
+
+#merge dataframes and use only "operation","label","$ressource" columns
+merged<-NULL
+for (op in results) {
+    if (is.null(merged)) {
+        merged<-op[,c("operation","labels","labels_short","sample_x1","sample_x1000")]
+    } else {
+        merged<-rbind(merged,op[,c("operation","labels","labels_short","sample_x1","sample_x1000")])
+    }
+}
+
+svg_width<-2+(0.2*dim(merged)[1]) #0.5 per column + margins
+svg_height<-2+(nchar(max(merged$labels))*0.1)
+CairoSVG(file =paste0(workdir,"/summary_plot_1sample_ALL.svg"),width=svg_width,height=svg_height)
+#g<-ggplot(data=results_per_op[[op]], aes(x=reorder(labels,formula(stats_to_plot[i])),y=formula(stats_to_plot[i])) ) +
+g<-ggplot(data=merged, aes(x = reorder(labels,sample_x1), y = sample_x1 ) ) +
+  geom_bar(stat="identity",width=0.5) +
+  theme(axis.text.x = element_text(angle = -90, hjust=0,vjust=0.5)) +
+  labs(x="Parameters", y="Seconds for 1 sample")
+print(g)
+dev.off()
+CairoSVG(file =paste0(workdir,"/summary_plot_1000sample_ALL.svg"),width=svg_width,height=svg_height)
+#g<-ggplot(data=results_per_op[[op]], aes(x=reorder(labels,formula(stats_to_plot[i])),y=formula(stats_to_plot[i])) ) +
+g<-ggplot(data=merged, aes(x = reorder(labels,sample_x1000), y = sample_x1000 )) +
+  geom_bar(stat="identity",width=0.5) +
+  theme(axis.text.x = element_text(angle = -90, hjust=0,vjust=0.5)) +
+  labs(x="Parameters", y="Seconds for 1000 sample (log10)") +
+  scale_y_continuous(trans='log10')
+print(g)
+dev.off()

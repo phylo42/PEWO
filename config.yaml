@@ -17,7 +17,6 @@
 dataset_align: test/0.align
 dataset_tree: test/0.tree
 
-
 #working directory
 workdir: /home/nikolai/dev/pewo/run
 
@@ -26,7 +25,8 @@ workdir: /home/nikolai/dev/pewo/run
 states: 0
 
 #which software to test, at least one of : epa, epang, pplacer, rappas, apples
-test_soft: ["rappas"]
+
+test_soft: [rappas]
 #test_soft: ["epa"]
 
 
@@ -50,7 +50,6 @@ pruning_count: 10
 ### this section matters only when you run the "eval_accuracy.smk" workflow
 
 
-
 ## IF "RESOURCES" ARE EVALUATED
 ##############################
 
@@ -58,7 +57,7 @@ pruning_count: 10
 
 # number of identical runs to launch when evaluating RAM/CPU consumption
 # final measurements are reported as mean of the the runs.
-repeats: 2
+repeats: 3
 #defines queries source, one of the following:
 # user: query sequences are loaded from a file target by parameter "query_set"
 # simulate: queries are simulated from the input alignment (reserved for future upgrades, currently not implemented)
@@ -90,7 +89,7 @@ config_epa:
 
   #proportion of top scoring branch for which full optimization is computed
   #float in ]0,1]
-  G: [0.01,0.05,0.1]
+  G: [0.01,0.1]
 
 ### PPLACER
 ###############################
@@ -101,9 +100,9 @@ config_pplacer:
   #it uses a 2-step heuristic similar to EPA but called the "baseball" heuristic
   #(Matsen et al, 2012 ; doi: 10.1186/1471-2105-11-538)
 
-  max-strikes: [6,12,24]
-  strike-box: [3,6,12]
-  max-pitches: [40,80,160]
+  max-strikes: [6,24]
+  strike-box: [3,12]
+  max-pitches: [40,160]
 
   #pre-masking, 1=yes, 0=no
   premask: 1
@@ -124,9 +123,9 @@ config_epang:
 
   #heuristic-specific parameters can be setup in following lines
   h1:
-    g: [0.999,0.9999,0.99999]
+    g: [0.999,0.99999]
   h2:
-    G: [0.01,0.05,0.1]
+    G: [0.01,0.1]
   h3:
     options: none    #reserved if any option appears in future versions
   h4:
@@ -185,7 +184,7 @@ config_rappas:
   #this has no influence on placement accuracy but it will impact "resource" evaluation
   #in particular, testing very large trees will be faster with more memory (due to JVM garbage collector behaviour)
   #set as an integer value, which represents the maximum amount of Gb allocatable to the JVM (memory: 8 => 8 Gb of RAM)
-  memory: 32
+  memory: 8
 
 ### APPLES
 ###############################
@@ -203,7 +202,7 @@ config_apples:
   # BE : k=1 (Beyer et al., 1974)
   #methods: ["OLS","FM","BE"]
   #!warning, be sure to set methods VALUES as UPPER CASE
-  methods: [OLS,FM,BE]
+  methods: [OLS,BE]
 
   #List of placement criterion to test.
   #Possible values are:
@@ -261,3 +260,5 @@ phylo_params:
 
 #if 1, prints some debug lines
 debug: 0
+#path to java scripts (compiled at installation)
+pewo_jar: scripts/java/PEWO_java/dist/PEWO.jar
