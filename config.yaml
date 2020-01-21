@@ -32,10 +32,10 @@ test_soft: ["rappas"]
 
 # Indicates if PEWO should generate reads from the input tree or take an input fasta file
 # with sequences.
-generate_reads: False
+generate_reads: True
 
 # If generate_reads is set to False, user must provide an input dataset.
-dataset_reads: test/0_r300.fasta
+#dataset_reads: test/0_r300.fasta
 
 # READ GENERATION
 # Read lengths to generate
