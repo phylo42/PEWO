@@ -20,6 +20,7 @@ dependencies:
   - r-ggplot2=3.2.1=r36h6115d3f_0
   - r-rcolorbrewer=1.1_2=r36h6115d3f_1002
   - snakemake
+  - dendropy
   - pip:
      - psycopg2-binary
      - apples
