@@ -33,8 +33,11 @@ include:
 # phylo-kmer placement, e.g.: rappas
 include:
     "modules/op/operate_ar.smk"
+#include:
+#    "modules/placement/placement_rappas_dbinram.smk"
+
 include:
-    "modules/placement/placement_rappas_dbinram.smk"
+    "modules/placement/placement_rappas_dbondisk.smk"
 
 #alignment (for distance-based and ML approaches)
 include:
@@ -60,8 +63,8 @@ include:
 #    "modules/op/operate_nodedistance.smk"
 include:
     "modules/op/operate_likelihood.smk"
-#include:
-#    "modules/op/operate_plots.smk"
+include:
+    "modules/op/operate_plots.smk"
 
 rule all:
     """

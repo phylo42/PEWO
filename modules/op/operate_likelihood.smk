@@ -53,6 +53,18 @@ rule extend_trees_epa:
          make_extended_tree(input.tree, output.ext_tree, input.jplace)
 
 
+rule extend_trees_pplacer:
+    input:
+        jplace = get_output_template(config, PlacementSoftware.PPLACER, "jplace"),
+        tree = config["dataset_tree"],
+    output:
+        ext_tree = get_output_template(config, PlacementSoftware.PPLACER, "tree")
+    version:
+        "1.00"
+    run:
+         make_extended_tree(input.tree, output.ext_tree, input.jplace)
+
+
 rule extend_trees_rappas:
     input:
         jplace = get_output_template(config, PlacementSoftware.RAPPAS, "jplace"),
@@ -69,6 +81,7 @@ def _calculate_likelihood(input: InputFiles, output: Namedlist, params: Namedlis
         header = [key for key in wildcards.keys()]
         # add the likelihood value
         header.append("likelihood")
+        header.append("software")
 
         # snakemake.NamedList implemented keys(), but not values()... *sigh*
         values = [wildcards[key] for key in wildcards.keys()]
@@ -81,6 +94,8 @@ def _calculate_likelihood(input: InputFiles, output: Namedlist, params: Namedlis
         values.append(
             likelihood
         )
+        values.append(params.software)
+        print(values)
 
         # All the wilcards extracted from the .tree file were input parameters of placement.
         # Print them in the file as a header of two-line .csv file
@@ -116,6 +131,24 @@ rule calculate_likelihood_epa:
         csv = get_output_template(config, PlacementSoftware.EPA, "csv")
     params:
         workdir = cfg.get_work_dir(config),
+        software = PlacementSoftware.EPA.value,
+        model = "GTR+G"
+    run:
+        _calculate_likelihood(input, output, params, wildcards)
+
+
+rule calculate_likelihood_pplacer:
+    """
+    Calculates likelihood values for the placements produced by PPLACER.
+    """
+    input:
+        alignment =_get_aligned_query_template(config),
+        tree = get_output_template(config, PlacementSoftware.PPLACER, "tree")
+    output:
+        csv = get_output_template(config, PlacementSoftware.PPLACER, "csv")
+    params:
+        workdir = cfg.get_work_dir(config),
+        software = PlacementSoftware.PPLACER.value,
         model = "GTR+G"
     run:
         _calculate_likelihood(input, output, params, wildcards)
@@ -132,6 +165,7 @@ rule calculate_likelihood_rappas:
         csv = get_output_template(config, PlacementSoftware.RAPPAS, "csv")
     params:
         workdir = cfg.get_work_dir(config),
+        software = PlacementSoftware.RAPPAS.value,
         model = "GTR+G"
     run:
         _calculate_likelihood(input, output, params, wildcards)

@@ -1,26 +1,35 @@
-'''
-module to operate placements with RAPPAS
-note: this module expect AR to be already computed
+"""
+This module operates placements with RAPPAS.
+Note: It expects ancestral reconstruction to be already computed.
+"""
 
-@author Benjamin Linard
-'''
+
+__author__ = "Benjamin Linard, Nikolai Romashchenko"
+__license__ = "MIT"
+
 
 #TODO: add model parameters support
 
 import os
+import pewo.config as cfg
+from pewo.software import PlacementSoftware
+from pewo.templates import  get_experiment_dir_template
 
-#debug
-if (config["debug"]==1):
-    print("epa: "+os.getcwd())
-#debug
+
+_working_dir = cfg.get_work_dir(config)
+_rappas_experiment_dir = get_experiment_dir_template(config, PlacementSoftware.RAPPAS)
+
 
 rule dbbuild_rappas:
+    """
+    Builds a RAPPAS database.
+    """
     input:
-        a=config["workdir"]+"/A/{pruning}.align",
-        t=config["workdir"]+"/T/{pruning}.tree",
-        ar=lambda wildcards: expected_ar_outputs(wildcards.arsoft)
+        a = os.path.join(_working_dir, "A", "{pruning}.align"),
+        t = os.path.join(_working_dir, "T", "{pruning}.tree"),
+        ar = lambda wildcards: expected_ar_outputs(wildcards.arsoft)
     output:
-        q=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/k{k}_o{omega}/DB.bin"
+        q = config["workdir"] + "/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/k{k}_o{omega}/DB.bin"
     log:
         config["workdir"]+"/logs/dbbuild_rappas/{pruning}_k{k}_o{omega}_red{reduction}_ar{arsoft}.log"
     benchmark:
@@ -43,14 +52,14 @@ rule dbbuild_rappas:
 
 rule placement_rappas:
     input:
-        db=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/k{k}_o{omega}/DB.bin",
-        r=config["workdir"]+"/R/{pruning}_r{length}.fasta",
+        db = config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/k{k}_o{omega}/DB.bin",
+        r = config["workdir"]+"/R/{query}_r{length}.fasta",
     output:
-        config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/k{k}_o{omega}/{pruning}_r{length}_k{k}_o{omega}_red{reduction}_ar{arsoft}_rappas.jplace"
+        config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/k{k}_o{omega}/{query}_r{length}_k{k}_o{omega}_red{reduction}_ar{arsoft}_rappas.jplace"
     log:
-        config["workdir"]+"/logs/placement_rappas/{pruning}/red{reduction}_ar{arsoft}/k{k}_o{omega}/{pruning}_r{length}_k{k}_o{omega}_red{reduction}_ar{arsoft}.log"
+        config["workdir"]+"/logs/placement_rappas/{pruning}/red{reduction}_ar{arsoft}/k{k}_o{omega}/{query}_r{length}_k{k}_o{omega}_red{reduction}_ar{arsoft}.log"
     benchmark:
-        repeat(config["workdir"]+"/benchmarks/{pruning}_r{length}_k{k}_o{omega}_red{reduction}_ar{arsoft}_rappas-placement_benchmark.tsv", config["repeats"])
+        repeat(config["workdir"]+"/benchmarks/{pruning}/{query}_r{length}_k{k}_o{omega}_red{reduction}_ar{arsoft}_rappas-placement_benchmark.tsv", config["repeats"])
     version: "1.00"
     params:
         workdir=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}/k{k}_o{omega}",
@@ -61,5 +70,5 @@ rule placement_rappas:
             "java -Xms2G -Xmx"+str(config["config_rappas"]["memory"])+"G -jar $(which RAPPAS.jar) "
             "--keep-at-most {params.maxp} --keep-factor {params.minlwr} "
             "-v 1 -p p -d {input.db} -q {input.r} -w {params.workdir}  &> {log} ; "
-            "mv {params.workdir}/placements_{wildcards.pruning}_r{wildcards.length}.fasta.jplace {params.workdir}/{wildcards.pruning}_r{wildcards.length}_k{wildcards.k}_o{wildcards.omega}_red{wildcards.reduction}_ar{wildcards.arsoft}_rappas.jplace"
+            "mv {params.workdir}/placements_{wildcards.query}_r{wildcards.length}.fasta.jplace {params.workdir}/{wildcards.query}_r{wildcards.length}_k{wildcards.k}_o{wildcards.omega}_red{wildcards.reduction}_ar{wildcards.arsoft}_rappas.jplace"
          )

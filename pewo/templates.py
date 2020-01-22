@@ -49,7 +49,7 @@ def get_experiment_dir_template(config: Dict, software: PlacementSoftware) -> st
     elif software == PlacementSoftware.EPA_NG:
         raise NotImplementedError()
     elif software == PlacementSoftware.PPLACER:
-        raise NotImplementedError()
+        return os.path.join(software_dir, input_set_dir_template, "ms{msppl}_sb{sbppl}_mp{mpppl}")
     elif software == PlacementSoftware.APPLES:
         raise NotImplementedError()
     elif software == PlacementSoftware.RAPPAS:
@@ -129,7 +129,7 @@ def get_queryname_template(config: Dict, software: PlacementSoftware) -> str:
     elif software == PlacementSoftware.EPA_NG:
         raise NotImplementedError()
     elif software == PlacementSoftware.PPLACER:
-        raise NotImplementedError()
+        return get_common_queryname_template(config) + "_ms{msppl}_sb{sbppl}_mp{mpppl}"
     elif software == PlacementSoftware.APPLES:
         raise NotImplementedError()
     elif software == PlacementSoftware.RAPPAS:
@@ -161,7 +161,9 @@ def get_output_template_args(config: Dict, software: PlacementSoftware) -> Dict[
     elif software == PlacementSoftware.EPA_NG:
         raise NotImplementedError()
     elif software == PlacementSoftware.PPLACER:
-        raise NotImplementedError()
+        template_args["msppl"] = config["config_pplacer"]["max-strikes"]
+        template_args["sbppl"] = config["config_pplacer"]["strike-box"]
+        template_args["mpppl"] = config["config_pplacer"]["max-pitches"]
     elif software == PlacementSoftware.APPLES:
         raise NotImplementedError()
     elif software == PlacementSoftware.RAPPAS:

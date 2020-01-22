@@ -45,8 +45,8 @@ rule db_build_in_ram_rappas:
     Build a RAPPAS database in RAM.
     """
     input:
-        a = config["workdir"]+"/A/{pruning}.align",
-        t = config["workdir"]+"/T/{pruning}.tree",
+        a = os.path.join(_working_dir, "A", "{pruning}.align"),
+        t = os.path.join(_working_dir, "T", "{pruning}.tree"),
         r = lambda wildcards: get_rappas_input_reads(wildcards.pruning),
         ar = lambda wildcards: expected_ar_outputs(wildcards.arsoft)
     output:
@@ -69,7 +69,7 @@ rule db_build_in_ram_rappas:
         arbin = lambda wildcards: select_arbin(wildcards.arsoft)
     run:
         shell(
-            "java -Xms2G -Xmx"+str(config["config_rappas"]["memory"])+"G -jar $(which RAPPAS.jar) -p b "
+            "java -Xms2G -Xmx" + str(config["config_rappas"]["memory"]) + "G -jar $(which RAPPAS.jar) -p b "
             "-b $(which {params.arbin}) "
             "-k {wildcards.k} --omega {wildcards.omega} -t {input.t} -r {input.a} -q {params.querystring} "
             "-w {params.workdir} --ardir {params.ardir} -s {params.states} --ratio-reduction {wildcards.reduction} "

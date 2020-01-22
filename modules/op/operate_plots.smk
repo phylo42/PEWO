@@ -1,19 +1,18 @@
-'''
-using R, compute plots which summarize the workflow results
+"""
+Computes plots which summarize the workflow results
+"""
 
-@author Benjamin Linard
-'''
+__author__ = "Benjamin Linard, Nikolai Romashchenko"
+__license__ = "MIT"
+
 
 import os
+import pewo.config as cfg
 
-#debug
-if (config["debug"]==1):
-    print("exttree: "+os.getcwd())
-#debug
 
 rule plot_accuracy_results:
     input:
-        config["workdir"]+"/results.csv"
+        config["workdir"] + "/results.csv"
     output:
         accuracy_plots_ND_outputs(),
         accuracy_plots_eND_outputs()
@@ -35,3 +34,19 @@ rule plot_accuracy_results:
 #         workdir=config["workdir"]
 #     shell:
 #         "Rscript --vanilla pewo/R/eval_accuracy_plots_v2.R {input} {params.workdir} &> {log}"
+
+
+_working_dir = cfg.get_work_dir(config)
+
+rule plot_likelihood_results:
+    input:
+        os.path.join(_working_dir, "likelihood.csv")
+    output:
+        accuracy_plots_ND_outputs(),
+        accuracy_plots_eND_outputs()
+    log:
+        os.path.join(_working_dir, "logs", "R", "summary_plots.log")
+    params:
+        workdir = _working_dir
+    shell:
+        "Rscript --vanilla pewo/R/eval_accuracy_plots_v2.R {input} {params.workdir} &> {log}"

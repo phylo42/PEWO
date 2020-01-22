@@ -1,61 +1,83 @@
-'''
-module to operate placements with PPLACER
-builds first a pplacer packe with taxtastic, then compute placement using the package
+"""
+This module operates placements with PPLACER.
+It builds first a pplacer package with taxtastic, then computes placement using the package
+"""
 
-@author Benjamin Linard
-'''
+
+__author__ = "Benjamin Linard, Nikolai Romashchenko"
+__license__ = "MIT"
+
 
 import os
+from typing import Dict
+import pewo.config as cfg
+from pewo.software import PlacementSoftware, AlignmentSoftware
+from pewo.templates import get_experiment_dir_template, get_software_dir, get_common_queryname_template, \
+    get_output_template, get_log_template
 
-#debug
-if (config["debug"]==1):
-    print("ppl: "+os.getcwd())
-#debug
 
-#rule all:
-#    input: expand(config["workdir"]+"/PPLACER/{pruning}_r{length}_pplacer.jplace", pruning=range(0,config["pruning_count"],1), length=config["read_length"])
+_working_dir = cfg.get_work_dir(config)
+_pplacer_experiment_dir = get_experiment_dir_template(config, PlacementSoftware.PPLACER)
+#FIXME:
+# Unnecessary dependendancy on the alignment software
+_alignment_dir = get_software_dir(config, AlignmentSoftware.HMMER)
 
-'''
-build pplacer pkgs using taxtastic
-'''
-rule build_package:
+
+def _get_pplacer_refpkg_template(config: Dict) -> str:
+    return os.path.join(get_software_dir(config, PlacementSoftware.PPLACER),
+                        "{pruning}", "{pruning}_refpkg")
+
+
+rule build_pplacer:
+    """
+    Builds pplacer pkgs using taxtastic.
+    """
     input:
-        a=config["workdir"]+"/A/{pruning}.align",
-        t=config["workdir"]+"/T/{pruning}.tree",
-        s=config["workdir"]+"/T/{pruning}_optimised.info"
+        a = os.path.join(_working_dir, "A", "{pruning}.align"),
+        t = os.path.join(_working_dir, "T", "{pruning}.tree"),
+        s = os.path.join(_working_dir, "T", "{pruning}_optimised.info")
     output:
-        directory(config["workdir"]+"/PPLACER/{pruning}/{pruning}_refpkg")
+        directory(_get_pplacer_refpkg_template(config))
     log:
-        config["workdir"]+"/logs/taxtastic/{pruning}.log"
+        os.path.join(_working_dir, "logs", "taxtastic", "{pruning}.log")
     version: "1.00"
     params:
-        dir=config["workdir"]+"/PPLACER/{pruning}/{pruning}_refpkg"
+        refpkg_dir = _get_pplacer_refpkg_template(config)
     shell:
-        "taxit create -P {params.dir} -l locus -f {input.a} -t {input.t} -s {input.s} &> {log}"
+        "taxit create -P {params.refpkg_dir} -l locus -f {input.a} -t {input.t} -s {input.s} &> {log}"
 
 
-'''
-placement itself
-note: pplacer option '--out-dir' is not functional, it writes the jplace in current directory
-which required the addition of the explicit 'cd'
-'''
 rule placement_pplacer:
+    """ 
+    Runs placement using PPLACER.
+    Note: pplacer option '--out-dir' is not functional, it writes the jplace in current directory
+    which required the addition of the explicit 'cd'
+    """
     input:
-        a=config["workdir"]+"/HMM/{pruning}_r{length}.fasta",
-        p=config["workdir"]+"/PPLACER/{pruning}/{pruning}_refpkg"
+        alignment = os.path.join(_alignment_dir,
+                                 "{pruning}",
+                                 get_common_queryname_template(config) + ".fasta"),
+        pkg = _get_pplacer_refpkg_template(config)
     output:
-        config["workdir"]+"/PPLACER/{pruning}/ms{msppl}_sb{sbppl}_mp{mpppl}/{pruning}_r{length}_ms{msppl}_sb{sbppl}_mp{mpppl}_pplacer.jplace"
+        jplace = get_output_template(config, PlacementSoftware.PPLACER, "jplace")
     log:
-        config["workdir"]+"/logs/placement_pplacer/{pruning}_r{length}_ms{msppl}_sb{sbppl}_mp{mpppl}.log"
-    benchmark:
-        repeat(config["workdir"]+"/benchmarks/{pruning}_r{length}_ms{msppl}_sb{sbppl}_mp{mpppl}_pplacer_benchmark.tsv", config["repeats"])
+        get_log_template(config, PlacementSoftware.PPLACER)
+    #FIXME:
+    # Implement templates for benchmarks
+    #benchmark:
+    #    repeat(config["workdir"] + "/benchmarks/{query}_r{length}_ms{msppl}_sb{sbppl}_mp{mpppl}_pplacer_benchmark.tsv",
+    #           config["repeats"])
     version: "1.00"
     params:
-        o=config["workdir"]+"/PPLACER/{pruning}/ms{msppl}_sb{sbppl}_mp{mpppl}/{pruning}_r{length}_ms{msppl}_sb{sbppl}_mp{mpppl}_pplacer.jplace",
-        maxp=config["maxplacements"],
-        minlwr=config["minlwr"]
+        maxp = config["maxplacements"],
+        minlwr = config["minlwr"]
     run:
-        if config["config_pplacer"]["premask"]==1 :
-            shell("pplacer -o {params.o} --verbosity 2 --max-strikes {wildcards.msppl} --strike-box {wildcards.sbppl} --max-pitches {wildcards.mpppl} --keep-at-most {params.maxp} --keep-factor {params.minlwr} -c {input.p} {input.a} &> {log}")
-        else:
-            shell("pplacer -o {params.o} --verbosity 2 --max-strikes {wildcards.msppl} --strike-box {wildcards.sbppl} --max-pitches {wildcards.mpppl} --keep-at-most {params.maxp} --keep-factor {params.minlwr} --no-pre-mask -c {input.p} {input.a} &> {log}")
+        pplacer_command = "pplacer -o {output.jplace} --verbosity 2 --max-strikes {wildcards.msppl}" \
+                          " --strike-box {wildcards.sbppl} --max-pitches {wildcards.mpppl}" \
+                          " --keep-at-most {params.maxp} --keep-factor {params.minlwr}"
+
+        if not config["config_pplacer"]["premask"]:
+            pplacer_command += " --no-pre-mask"
+
+        pplacer_command += " -c {input.pkg} {input.alignment} &> {log}"
+        shell(pplacer_command)

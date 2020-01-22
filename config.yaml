@@ -18,7 +18,7 @@ dataset_align: test/0.align
 dataset_tree: test/0.tree
 
 #working directory
-workdir: /home/nikolai/dev/pewo/run
+workdir: /home/nikolai/dev/pewo/run0
 
 
 #states used in analysis, either '0' for nucleotides or '1' for amino acids
@@ -27,7 +27,7 @@ states: 0
 #which software to test, at least one of : epa, epang, pplacer, rappas, apples
 
 #test_soft: [epa]
-test_soft: [epa, rappas]
+test_soft: [epa, rappas, pplacer]
 #test_soft: [pplacer]
 
 
@@ -42,7 +42,7 @@ dataset_reads: test/0_r300.fasta
 
 # READ GENERATION
 # Read lengths to generate
-read_length: [300, 600]
+read_length: [300]
 # Number of random prunings to compute
 pruning_count: 10
 
@@ -92,7 +92,7 @@ config_epa:
 
   #proportion of top scoring branch for which full optimization is computed
   #float in ]0,1]
-  G: [0.01,0.1]
+  G: [0.01]
 
 ### PPLACER
 ###############################
@@ -149,7 +149,7 @@ config_rappas:
 
   #panel of k that is tested
   #integer in [2,16] (8~10 recommended, >12 often produces too long computations)
-  k: [6, 7]
+  k: [6, 8, 10]
 
   #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
   #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids

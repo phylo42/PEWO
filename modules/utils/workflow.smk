@@ -8,9 +8,12 @@ __license__ = "MIT"
 
 
 import os
+import itertools
 from typing import List
+import pewo.config as cfg
 from pewo.software import AlignmentSoftware
 from pewo.templates import get_software_dir, get_common_queryname_template, get_common_template_args
+
 
 
 '''
@@ -203,6 +206,21 @@ def accuracy_plots_eND_outputs():
     l.append( expand(config["workdir"]+"/summary_plot_eND_{soft}.svg",soft=[x for x in config["test_soft"] if x!="epang"]) )
     l.append( expand(config["workdir"]+"/summary_table_eND_{soft}.csv",soft=[x for x in config["test_soft"] if x!="epang"]) )
     return l
+
+
+def get_likelihood_plots_outputs() -> List[str]:
+    """
+    Define plots that will be computed in the likelihood mode
+    """
+    _working_dir = cfg.get_work_dir(config)
+
+    #FIXME: Add heuristic-based output names for EPA-NG
+    software_list = [software for software in config["test_soft"] if software != "epang"]
+
+    tables = expand("/summary_table_LL_{software}.csv", software = software_list)
+    plots = expand("/summary_plot_LL_{software}.svg", software = software_list)
+
+    return list(itertools.chain(tables, plots))
 
 '''
 define plots that will be computed in 'resources' mode
