@@ -17,23 +17,25 @@ rule plot_accuracy_results:
         accuracy_plots_nd_outputs(),
         accuracy_plots_end_outputs()
     log:
-        config["workdir"]+"/logs/R/summary_plots.log"
+        config["workdir"]+"/logs/R/plots_accuracy.log"
     params:
         workdir=config["workdir"]
     shell:
         "Rscript --vanilla pewo/R/eval_accuracy_plots_v2.R {input} {params.workdir} &> {log}"
 
-# rule plot_resource_results:
-#     input:
-#         directory(config["workdir"]+"/benchmarks")
-#     output:
-#         set_resource_plots_outputs()
-#     log:
-#         config["workdir"]+"/logs/R/summary_plots.log"
-#     params:
-#         workdir=config["workdir"]
-#     shell:
-#         "Rscript --vanilla pewo/R/eval_accuracy_plots_v2.R {input} {params.workdir} &> {log}"
+
+rule plot_resource_results:
+     input:
+         build_benchmarks_workflow()
+     output:
+         resource_plots()
+     log:
+         config["workdir"]+"/logs/R/plots_resources.log"
+     params:
+         workdir=config["workdir"]
+     shell:
+         "Rscript --vanilla scripts/R/eval_resources_plots.R {params.workdir} &> {log}"
+
 
 
 _working_dir = cfg.get_work_dir(config)

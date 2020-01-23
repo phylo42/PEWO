@@ -30,7 +30,8 @@ def _get_pplacer_refpkg_template(config: Dict) -> str:
 
 rule build_pplacer:
     """
-    Builds pplacer pkgs using taxtastic.
+    Build pplacer pkgs using taxtastic.
+    Model parameters are loaded in pplacer via the 'info' file, the output of raxml optimisation
     """
     input:
         a = os.path.join(_working_dir, "A", "{pruning}.align"),
@@ -72,7 +73,7 @@ rule placement_pplacer:
         maxp = config["maxplacements"],
         minlwr = config["minlwr"]
     run:
-        pplacer_command = "pplacer -o {output.jplace} --verbosity 2 --max-strikes {wildcards.msppl}" \
+        pplacer_command = "pplacer -o {output.jplace} --verbosity 1 --max-strikes {wildcards.msppl}" \
                           " --strike-box {wildcards.sbppl} --max-pitches {wildcards.mpppl}" \
                           " --keep-at-most {params.maxp} --keep-factor {params.minlwr}"
 

@@ -4,8 +4,6 @@ This module computes different prunings using the alignment/tree set from the co
 
 __author__ = "Benjamin Linard, Nikolai Romashchenko"
 
-
-# TODO: add trifurcations tests? currently disabled
 # TODO: keep or remove read length sd ?
 
 import os

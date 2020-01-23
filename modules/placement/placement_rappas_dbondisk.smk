@@ -8,8 +8,6 @@ __author__ = "Benjamin Linard, Nikolai Romashchenko"
 __license__ = "MIT"
 
 
-#TODO: add model parameters support
-
 import os
 import pewo.config as cfg
 from pewo.software import PlacementSoftware
@@ -20,6 +18,7 @@ _working_dir = cfg.get_work_dir(config)
 _rappas_experiment_dir = get_experiment_dir_template(config, PlacementSoftware.RAPPAS)
 
 
+# model parameters do not need to be passed, as they are useful only at AR
 rule dbbuild_rappas:
     """
     Builds a RAPPAS database.

@@ -23,11 +23,28 @@ install_dir="."
 
 # INSTALLATION
 
+if [ -d "$install_dir" ]; then 
+  if [ -L "$install_dir" ]; then
+    echo "PEWO installer: '$install_dir' is a symlink !"
+    echo "PEWO installer: Cowardly refusing to delete it."
+    exit 1
+  else
+    echo "PEWO installer: '$install_dir' already exists."
+  fi
+else
+  echo "PEWO installer: Creating directory '$install_dir' ."
+  mkdir $install_dir
+  if [ $? -ne 0 ] ; then
+    echo "PEWO installer: Cannot create directory. Write permissions ?"
+  fi
+fi
+
+
 cd $install_dir
 basedir=$(pwd)
 
 #test if base commands are available
-echo "PEWO installer: Testing is installation requirements are met..."
+echo "PEWO installer: Testing if installation requirements are met..."
 for i in git conda
 do
 	if ! [ -x "$(command -v $i)" ]; then
@@ -64,7 +81,7 @@ eval "$(conda shell.bash hook)"
 conda activate PEWO
 if [ $? -ne 0 ]  ; then
         echo "PEWO installer: PEWO environment cannot be activated, please check your conda installation."
-	echo "PEWO installer: You will find environement definitions in $install_dir/envs/environment.yaml"
+	echo "PEWO installer: You will find environment definitions in $install_dir/envs/environment.yaml"
 	exit 1
 else
 	echo "PEWO installer: PEWO environment loaded."
@@ -78,7 +95,7 @@ for i in javac ant java
 do
 	if ! [ -x "$(command -v $i)" ]; then
 		echo "PEWO installer: Command '$i' not found in PEWO environment."
-                echo "PEWO installer: Please veryfing that Java JDK and Apache Ant were correctly installed in the environment."
+                echo "PEWO installer: Please veryfing that Java JDK and Apache Ant were correctly installed in the PEWO environment."
                 exit 1
         else
                 echo "PEWO installer: Command $i found in $(which $i)"
@@ -92,25 +109,25 @@ cd $basedir
 echo "PEWO installer: Testing java tools..."
 java -jar $basedir/scripts/java/PEWO_java/dist/PEWO.jar &> /dev/null 
 if [ $? -ne 0 ] ; then
-        echo "PEWO installer: PEWO Java tools appear to not have properly compiled."
-        echo "PEWO installer: Report errors encountered during installation to developers."
+        echo "PEWO installer: PEWO Java tools were not properly compiled."
+        echo "PEWO installer: Please, copy/paste installation log and send it to PEWO developers."
 	exit 1
 else
-        echo "PEWO installer: Java tools execution OK."
+        echo "PEWO installer: Java tools can be executed."
 fi
 
 ## rapid test that the snakemake workflow can be launched
-echo "PEWO installer: Testing PEWO workflow via a dry run using demos..."
+echo "PEWO installer: Testing PEWO workflow via a dry run using demo 1 ..."
 demo_dir=$basedir/demos/16SrRNA_resource_test
 snakemake -np --snakefile $basedir/eval_resources.smk --config workdir=$demo_dir/run query_user=$demo_dir/EMP_92_studies_100000.fas --configfile $demo_dir/config.yaml
 if  [ $? -ne 0 ] ; then
-        echo "PEWO installer: The snakemake dry run could not be launched."
-        echo "PEWO installer: Report errors encountered during installation to developers."
+        echo "PEWO installer: The snakemake dry run was not successful."
+	echo "PEWO installer: Please, copy/paste installation log and send it to PEWO developers."
 else
         echo "PEWO installer: PEWO dry run successful."
-	echo "PEWO installer: Have fun with PEWO !  And do not hesitate to contact us to for future extensions !"
+	echo "PEWO installer: Have fun with PEWO !"
 fi
 
 #finish by deactivating environement
 conda deactivate
-echo "bye!"
+echo "PEWO installer: Bye!"

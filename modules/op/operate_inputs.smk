@@ -4,6 +4,8 @@ Basically, it uses same directory structure than a pruning test, but with a uniq
 a full, non-pruned tree and for which repeated placements runs will be launched for a set of reads set
 (set as R/O/O_r0.fasta).
 
+This rule is called once when starting the "resources" workflow.
+
 @author Benjamin Linard
 '''
 

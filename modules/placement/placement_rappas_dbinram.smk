@@ -44,6 +44,7 @@ rule db_build_in_ram_rappas:
     """
     Build a RAPPAS database in RAM.
     """
+    # model parameters do not need to be passed, as they are useful only at AR
     input:
         a = os.path.join(_working_dir, "A", "{pruning}.align"),
         t = os.path.join(_working_dir, "T", "{pruning}.tree"),

@@ -37,7 +37,7 @@ snakemake -np \
 --snakefile eval_resources.smk \
 --config workdir=$(pwd)/demos/16SrRNA_resource_test/run \
 query_user=`pwd`/demos/16SrRNA_resource_test/EMP_92_studies_100000.fas \
---configfile demos/16SrRNA_accuracy_test/config.yaml
+--configfile demos/16SrRNA_resource_test/config.yaml
 ```
 
 Execute workflow, using 4 CPU cores.

@@ -20,6 +20,7 @@ dependencies:
   - r-cairo=1.5_10=r36hcdcec82_1
   - r-ggplot2=3.2.1=r36h6115d3f_0
   - r-rcolorbrewer=1.1_2=r36h6115d3f_1002
+  - r-data.table=1.12.8=r36hcdcec82_0
   - snakemake
   - pip:
      - psycopg2-binary

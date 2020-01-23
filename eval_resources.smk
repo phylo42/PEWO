@@ -52,8 +52,8 @@ include:
 include:
     "modules/placement/placement_apples.smk"
 #results and plots
-#include:
-#    "module/placement/xxx.smk"
+include:
+    "modules/op/operate_plots.smk"
 
 rule all:
      input:
