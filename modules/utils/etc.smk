@@ -6,11 +6,6 @@ __author__ = "Benjamin Linard, Nikolai Romashchenko"
 __license__ = "MIT"
 
 
-from typing import List, Dict
-from pewo.software import PlacementSoftware
-from pewo.templates import get_output_template, get_output_template_args
-
-
 def extract_params(file):
     """
     extract phylo parameters from info file to transfer them to phyml
@@ -121,50 +116,3 @@ def select_epang_heuristics():
                 )
             )
     return l
-
-
-def _get_jplace_outputs(config: Dict, software: PlacementSoftware) -> List[str]:
-    """
-    Creates a list of .jplace output files produced by specific software.
-    """
-    return expand(get_output_template(config, software, "jplace"),
-                  **get_output_template_args(config, software))
-
-
-def get_jplace_outputs() -> List[str]:
-    """
-    Creates a list of all .jplace files that are produced by all placement software
-    """
-    inputs = []
-
-    if "epa" in config["test_soft"]:
-        inputs.extend(_get_jplace_outputs(config, PlacementSoftware.EPA))
-    if "pplacer" in config["test_soft"]:
-        inputs.extend(
-            expand(
-                config["workdir"]+"/PPLACER/{pruning}/ms{msppl}_sb{sbppl}_mp{mpppl}/{pruning}_r{length}_ms{msppl}_sb{sbppl}_mp{mpppl}_pplacer.jplace",
-                pruning=range(0,config["pruning_count"]),
-                length=config["read_length"],
-                msppl=config["config_pplacer"]["max-strikes"],
-                sbppl=config["config_pplacer"]["strike-box"],
-                mpppl=config["config_pplacer"]["max-pitches"]
-            )
-        )
-    if "epang" in config["test_soft"]:
-        inputs.extend(
-            select_epang_heuristics()
-        )
-    if "rappas" in config["test_soft"]:
-        inputs.extend(_get_jplace_outputs(config, PlacementSoftware.RAPPAS))
-    if "apples" in config["test_soft"]:
-        inputs.extend(
-            expand(
-                config["workdir"]+"/APPLES/{pruning}/m{meth}_c{crit}/{pruning}_r{length}_m{meth}_c{crit}_apples.jplace",
-                pruning=range(0,config["pruning_count"]),
-                length=config["read_length"],
-                meth=config["config_apples"]["methods"],
-                crit=config["config_apples"]["criteria"]
-            )
-        )
-    return inputs
-

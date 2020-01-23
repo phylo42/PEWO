@@ -14,8 +14,8 @@ rule plot_accuracy_results:
     input:
         config["workdir"] + "/results.csv"
     output:
-        accuracy_plots_ND_outputs(),
-        accuracy_plots_eND_outputs()
+        accuracy_plots_nd_outputs(),
+        accuracy_plots_end_outputs()
     log:
         config["workdir"]+"/logs/R/summary_plots.log"
     params:
@@ -42,8 +42,8 @@ rule plot_likelihood_results:
     input:
         os.path.join(_working_dir, "likelihood.csv")
     output:
-        accuracy_plots_ND_outputs(),
-        accuracy_plots_eND_outputs()
+        accuracy_plots_nd_outputs(),
+        accuracy_plots_end_outputs()
     log:
         os.path.join(_working_dir, "logs", "R", "summary_plots.log")
     params:
