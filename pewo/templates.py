@@ -31,7 +31,7 @@ def get_software_dir(config: Dict,
     return os.path.join(work_dir, software.value.upper())
 
 
-def get_experiment_dir_template(config: Dict, software: PlacementSoftware) -> str:
+def get_experiment_dir_template(config: Dict, software: PlacementSoftware, **kwargs) -> str:
     """
     Returns a name template of a working directory path for an experiment.
     One experiment is conducted by given software with fixed specific
@@ -47,7 +47,21 @@ def get_experiment_dir_template(config: Dict, software: PlacementSoftware) -> st
     if software == PlacementSoftware.EPA:
         return os.path.join(software_dir, input_set_dir_template, "g{gepa}")
     elif software == PlacementSoftware.EPA_NG:
-        raise NotImplementedError()
+        # Output template depends on the heuristic enabled.
+        # Get the heuristic
+        heuristic = kwargs.get("heuristic", None)
+        valid_heuristics = ("h1", "h2", "h3", "h4")
+        assert heuristic and heuristic in valid_heuristics, f"{heuristic} is not a valid heuristic."
+
+        if heuristic == "h1":
+            return os.path.join(software_dir, input_set_dir_template, "h1", "g{gepang}",
+                                get_common_queryname_template(config))
+        elif heuristic == "h2":
+            return os.path.join(software_dir, input_set_dir_template, "h2", "bigg{biggepang}",
+                                get_common_queryname_template(config))
+        elif heuristic in ("h3", "h4"):
+            return os.path.join(software_dir, input_set_dir_template, heuristic,
+                                get_common_queryname_template(config))
     elif software == PlacementSoftware.PPLACER:
         return os.path.join(software_dir, input_set_dir_template, "ms{msppl}_sb{sbppl}_mp{mpppl}")
     elif software == PlacementSoftware.APPLES:
@@ -111,7 +125,7 @@ def get_common_template_args(config: Dict) -> Dict[str, Any]:
         }
 
 
-def get_queryname_template(config: Dict, software: PlacementSoftware) -> str:
+def get_queryname_template(config: Dict, software: PlacementSoftware, **kwargs) -> str:
     """
     Each placement query has a template name based on two type of inputs:
     1) common arguments: tree and query sequences -- independent of software
@@ -127,7 +141,18 @@ def get_queryname_template(config: Dict, software: PlacementSoftware) -> str:
     if software == PlacementSoftware.EPA:
         return get_common_queryname_template(config) + "_g{gepa}"
     elif software == PlacementSoftware.EPA_NG:
-        raise NotImplementedError()
+        # Output template depends on the heuristic enabled.
+        # Get the heuristic
+        heuristic = kwargs.get("heuristic", None)
+        valid_heuristics = ("h1", "h2", "h3", "h4")
+        assert heuristic and heuristic in valid_heuristics, f"{heuristic} is not a valid heuristic."
+
+        if heuristic == "h1":
+            return get_common_queryname_template(config) + "_h1_g{gepang}"
+        elif heuristic == "h2":
+            return get_common_queryname_template(config) + "_h2_bigg{biggepang}"
+        elif heuristic in ("h3", "h4"):
+            return get_common_queryname_template(config) + "_" + heuristic
     elif software == PlacementSoftware.PPLACER:
         return get_common_queryname_template(config) + "_ms{msppl}_sb{sbppl}_mp{mpppl}"
     elif software == PlacementSoftware.APPLES:
@@ -138,7 +163,7 @@ def get_queryname_template(config: Dict, software: PlacementSoftware) -> str:
         raise NotImplementedError()
 
 
-def get_output_template_args(config: Dict, software: PlacementSoftware) -> Dict[str, Any]:
+def get_output_template_args(config: Dict, software: PlacementSoftware, **kwargs) -> Dict[str, Any]:
     """
     Each placement query has a template name based on two type of inputs:
     1) common arguments: tree and query sequences -- independent of software
@@ -149,7 +174,6 @@ def get_output_template_args(config: Dict, software: PlacementSoftware) -> Dict[
     to resolve the full query name template given by get_queryname_template().
     """
     _check_software(software)
-
     # get common template arguments
     template_args = get_common_template_args(config)
 
@@ -159,7 +183,16 @@ def get_output_template_args(config: Dict, software: PlacementSoftware) -> Dict[
     if software == PlacementSoftware.EPA:
         template_args["gepa"] = config["config_epa"]["G"]
     elif software == PlacementSoftware.EPA_NG:
-        raise NotImplementedError()
+        # Output template depends on the heuristic enabled.
+        # Get the heuristic
+        heuristic = kwargs.get("heuristic", None)
+        valid_heuristics = ("h1", "h2", "h3", "h4")
+        assert heuristic and heuristic in valid_heuristics, f"{heuristic} is not a valid heuristic."
+
+        if heuristic == "h1":
+            template_args["gepang"] = config["config_epang"]["h1"]["g"]
+        elif heuristic == "h2":
+            template_args["biggepang"] = config["config_epang"]["h2"]["G"]
     elif software == PlacementSoftware.PPLACER:
         template_args["msppl"] = config["config_pplacer"]["max-strikes"]
         template_args["sbppl"] = config["config_pplacer"]["strike-box"]
@@ -175,7 +208,8 @@ def get_output_template_args(config: Dict, software: PlacementSoftware) -> Dict[
     return template_args
 
 
-def get_output_filename_template(config: Dict, software: PlacementSoftware, extension: str) -> str:
+def get_output_filename_template(config: Dict, software: PlacementSoftware,
+                                 extension: str, **kwargs) -> str:
     """
     Creates a .{extension} filename template based on software used.
     """
@@ -183,23 +217,24 @@ def get_output_filename_template(config: Dict, software: PlacementSoftware, exte
     _check_software(software)
 
     extension = "." + extension if extension[0] != "." else extension
-    return get_queryname_template(config, software) + "_" + software.value + extension
+    return get_queryname_template(config, software, **kwargs) + "_" + software.value + extension
 
 
-def get_log_template(config: Dict, software: Software) -> str:
+def get_log_template(config: Dict, software: Software, **kwargs) -> str:
     """
     Creates a name template of .log output files produced by specific software.
     """
     return os.path.join(get_experiment_log_dir_template(config, software),
-                        get_output_filename_template(config, software, "log"))
+                        get_output_filename_template(config, software, "log", **kwargs))
 
 
-def get_output_template(config: Dict, software: Union[PlacementSoftware, AlignmentSoftware], extension: str) -> str:
+def get_output_template(config: Dict, software: Union[PlacementSoftware, AlignmentSoftware],
+                        extension: str, **kwargs) -> str:
     """
     Creates a name template of .{extension} output files produced by specific software.
     Used to produce .tree, .align etc. file name templates. Stored in the output
     directory of given software.
     """
     _check_software(software)
-    return os.path.join(get_experiment_dir_template(config, software),
-                        get_output_filename_template(config, software, extension))
+    return os.path.join(get_experiment_dir_template(config, software, **kwargs),
+                        get_output_filename_template(config, software, extension, **kwargs))

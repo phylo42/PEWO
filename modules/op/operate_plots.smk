@@ -28,7 +28,7 @@ rule plot_resource_results:
      input:
          build_benchmarks_workflow()
      output:
-         resource_plots()
+         resource_plots_outputs()
      log:
          config["workdir"]+"/logs/R/plots_resources.log"
      params:
@@ -44,8 +44,7 @@ rule plot_likelihood_results:
     input:
         os.path.join(_working_dir, "likelihood.csv")
     output:
-        accuracy_plots_nd_outputs(),
-        accuracy_plots_end_outputs()
+        get_likelihood_plots_outputs()
     log:
         os.path.join(_working_dir, "logs", "R", "summary_plots.log")
     params:

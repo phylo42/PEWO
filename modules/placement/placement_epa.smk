@@ -7,6 +7,7 @@ managed by using a temp() for the corresponding output, this output may or may n
 """
 
 __author__ = "Benjamin Linard, Nikolai Romashchenko"
+__license__ = "MIT"
 
 
 #TODO: SSE3 version is used as default, there should be a way to test SSE3/AVX availability

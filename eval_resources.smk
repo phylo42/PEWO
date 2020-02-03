@@ -41,13 +41,7 @@ include:
 include:
     "modules/placement/placement_pplacer.smk"
 include:
-    "modules/placement/placement_epang_h1.smk"
-include:
-    "modules/placement/placement_epang_h2.smk"
-include:
-    "modules/placement/placement_epang_h3.smk"
-include:
-    "modules/placement/placement_epang_h4.smk"
+       "modules/placement/placement_epang.smk"
 #distance-based placements, e.g.: apples
 include:
     "modules/placement/placement_apples.smk"

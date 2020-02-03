@@ -85,34 +85,33 @@ def select_epang_heuristics():
     '''
     l=[]
     if "h1" in config["config_epang"]["heuristics"]:
-        l.append(
-            expand(     config["workdir"]+"/EPANG/{pruning}/h1/{pruning}_r{length}_h1_g{gepang}_epang.jplace",
-                        pruning=range(0,config["pruning_count"]),
-                        length=config["read_length"],
-                        gepang=config["config_epang"]["h1"]["g"]
-                   )
+        l.extend(
+            expand(config["workdir"]+"/EPANG/{pruning}/h1/{pruning}_r{length}_h1_g{gepang}_epang.jplace",
+                   pruning=range(0,config["pruning_count"]),
+                   length=config["read_length"],
+                   gepang=config["config_epang"]["h1"]["g"]
+            )
         )
     if "h2" in config["config_epang"]["heuristics"]:
-        l.append(
-             expand(    config["workdir"]+"/EPANG/{pruning}/h2/{pruning}_r{length}_h2_bigg{biggepang}_epang.jplace",
-                        pruning=range(0,config["pruning_count"]),
-                        length=config["read_length"],
-                        biggepang=config["config_epang"]["h2"]["G"]
-                        )
+        l.extend(
+             expand(config["workdir"]+"/EPANG/{pruning}/h2/{pruning}_r{length}_h2_bigg{biggepang}_epang.jplace",
+                    pruning=range(0,config["pruning_count"]),
+                    length=config["read_length"],
+                    biggepang=config["config_epang"]["h2"]["G"]
+             )
         )
     if "h3" in config["config_epang"]["heuristics"]:
-        l.append(
-             expand(    config["workdir"]+"/EPANG/{pruning}/h3/{pruning}_r{length}_h3_epang.jplace",
-                        pruning=range(0,config["pruning_count"]),
-                        length=config["read_length"]
-                        )
+        l.extend(
+             expand(config["workdir"]+"/EPANG/{pruning}/h3/{pruning}_r{length}_h3_epang.jplace",
+                    pruning=range(0,config["pruning_count"]),
+                    length=config["read_length"]
+             )
         )
     if "h4" in config["config_epang"]["heuristics"]:
-        l.append(
-            expand(
-                config["workdir"]+"/EPANG/{pruning}/h4/{pruning}_r{length}_h4_epang.jplace",
-                pruning=range(0,config["pruning_count"]),
-                length=config["read_length"]
-                )
+        l.extend(
+            expand(config["workdir"]+"/EPANG/{pruning}/h4/{pruning}_r{length}_h4_epang.jplace",
+                   pruning=range(0,config["pruning_count"]),
+                   length=config["read_length"]
             )
+        )
     return l

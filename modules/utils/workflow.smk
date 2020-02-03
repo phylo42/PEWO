@@ -9,7 +9,7 @@ __license__ = "MIT"
 
 import os
 import itertools
-from typing import List
+from typing import List, Dict
 import pewo.config as cfg
 from pewo.software import AlignmentSoftware, PlacementSoftware
 from pewo.templates import get_software_dir, get_common_queryname_template, get_common_template_args,\
@@ -174,12 +174,12 @@ def _get_aligned_queries() -> List[str]:
 
 
 
-def _get_jplace_outputs(config: Dict, software: PlacementSoftware) -> List[str]:
+def _get_jplace_outputs(config: Dict, software: PlacementSoftware, **kwargs) -> List[str]:
     """
     Creates a list of .jplace output files produced by specific software.
     """
-    return expand(get_output_template(config, software, "jplace"),
-                  **get_output_template_args(config, software))
+    return expand(get_output_template(config, software, "jplace", **kwargs),
+                  **get_output_template_args(config, software, **kwargs))
 
 
 def get_jplace_outputs() -> List[str]:
@@ -193,20 +193,23 @@ def get_jplace_outputs() -> List[str]:
     if "pplacer" in config["test_soft"]:
         inputs.extend(_get_jplace_outputs(config, PlacementSoftware.PPLACER))
     if "epang" in config["test_soft"]:
-        inputs.extend(select_epang_heuristics())
+        for h in config["config_epang"]["heuristics"]:
+            inputs.extend(_get_jplace_outputs(config, PlacementSoftware.EPA_NG, heuristic=h))
     if "rappas" in config["test_soft"]:
         inputs.extend(_get_jplace_outputs(config, PlacementSoftware.RAPPAS))
     if "apples" in config["test_soft"]:
-        inputs.extend(
-            expand(
-                config["workdir"]+"/APPLES/{pruning}/m{meth}_c{crit}/{pruning}_r{length}_m{meth}_c{crit}_apples.jplace",
-                pruning=range(0,config["pruning_count"]),
-                length=config["read_length"],
-                meth=config["config_apples"]["methods"],
-                crit=config["config_apples"]["criteria"]
-            )
-        )
+        pass
+        #inputs.extend(
+        #    expand(
+        #        config["workdir"]+"/APPLES/{pruning}/m{meth}_c{crit}/{pruning}_r{length}_m{meth}_c{crit}_apples.jplace",
+        #        pruning=range(0,config["pruning_count"]),
+        #        length=config["read_length"],
+        #        meth=config["config_apples"]["methods"],
+        #        crit=config["config_apples"]["criteria"]
+        #    )
+        #)
     return inputs
+
 
 def build_placements_workflow() -> List[str]:
     """

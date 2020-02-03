@@ -89,3 +89,26 @@ rule psiblast_to_fasta:
     shell:
         "pewo/alignment/psiblast2fasta.py {input.psiblast} {output.alignment} &> {log}"
 
+
+rule split_alignment:
+    """
+    Splits hmm alignment results in "query only" and "reference alignment only" sub-alignments.
+    Contrary to other placement software, such input is required by epa-ng
+    """
+    input:
+        align = os.path.join(_alignment_dir,
+                            "{pruning}",
+                             get_common_queryname_template(config) + ".fasta"),
+        reads = os.path.join(_work_dir,
+                            "R",
+                             get_common_queryname_template(config) + ".fasta"),
+    output:
+          os.path.join(_alignment_dir,
+                       "{pruning}",
+                        get_common_queryname_template(config) + ".fasta_queries"),
+          os.path.join(_alignment_dir,
+                       "{pruning}",
+                        get_common_queryname_template(config) + ".fasta_refs"),
+    version: "1.0"
+    shell:
+        "pewo/alignment/split_hmm_alignment.py {input.reads} {input.align}"

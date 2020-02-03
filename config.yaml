@@ -27,18 +27,18 @@ states: 0
 #which software to test, at least one of : epa, epang, pplacer, rappas, apples
 
 #test_soft: [epa]
-test_soft: [epa, rappas, pplacer]
+test_soft: [epa, epang, rappas, pplacer]
 #test_soft: [pplacer]
 
 
 # Indicates if PEWO should generate reads from the input tree or take an input fasta file
 # with sequences.
-#generate_reads: True
-generate_reads: False
+generate_reads: True
+#generate_reads: False
 
 
 # If generate_reads is set to False, user must provide an input dataset.
-dataset_reads: test/0_r300.fasta
+#dataset_reads: test/0_r300.fasta
 
 # READ GENERATION
 # Read lengths to generate
@@ -122,13 +122,13 @@ config_epang:
   # h3: heuristic equivalent to pplacer defaults, fast
   # h4: no heuristic, very very slow but should produce the best accuracy
   #(Barbera et al, 2019 ; doi: 10.1093/sysbio/syy054)
-  heuristics: ["h1","h2"]
+  heuristics: ["h1", "h2", "h3", "h4"]
 
   #heuristic-specific parameters can be setup in following lines
   h1:
     g: [0.999,0.99999]
   h2:
-    G: [0.01,0.1]
+    G: [0.01,]
   h3:
     options: none    #reserved if any option appears in future versions
   h4:
@@ -149,7 +149,7 @@ config_rappas:
 
   #panel of k that is tested
   #integer in [2,16] (8~10 recommended, >12 often produces too long computations)
-  k: [6, 8]
+  k: [6]
 
   #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
   #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids

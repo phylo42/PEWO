@@ -164,27 +164,32 @@ def extend_tree(tree: Phylo.BaseTree, branch_id: int, node_name: str) -> None:
 
 
 def make_extended_tree(input_file: str, output_file: str, jplace_file: str) -> None:
-    # parse the .jplace file
-    parser = JplaceParser(jplace_file)
-    parser.parse()
+    try:
+        # parse the .jplace file
+        parser = JplaceParser(jplace_file)
+        parser.parse()
 
-    # we assume there was only one sequence placed.
-    placement = parser.placements[0]
-    # get the best placement reported
-    best_record = placement.placements[0]
+        # we assume there was only one sequence placed.
+        placement = parser.placements[0]
+        # get the best placement reported
+        best_record = placement.placements[0]
 
-    # get the placed sequence id and the best branch post-order id
-    branch_id = best_record.edge_num
-    seq_name = placement.sequence_name
+        # get the placed sequence id and the best branch post-order id
+        branch_id = best_record.edge_num
+        seq_name = placement.sequence_name
 
-    # read the tree
-    tree = Phylo.read(input_file, "newick")
+        # read the tree
+        tree = Phylo.read(input_file, "newick")
 
-    # extend the tree with the placed sequence
-    extend_tree(tree, branch_id, seq_name)
+        # extend the tree with the placed sequence
+        extend_tree(tree, branch_id, seq_name)
 
-    # output the modified tree
-    Phylo.write(tree, output_file, "newick")
+        # output the modified tree
+        Phylo.write(tree, output_file, "newick")
+
+    except json.JSONDecodeError as e:
+        print("Error: Invalid JSON file ", jplace_file)
+        print(e.msg)
 
 
 if __name__ == "__main__":

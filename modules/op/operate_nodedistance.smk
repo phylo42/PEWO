@@ -4,39 +4,27 @@ Computes the ND (node distance) metric using .jplace output files
 
 __author__ = "Benjamin Linard, Nikolai Romashchenko"
 
-
 import os
+import pewo.config as cfg
 
-#debug;
-if (config["debug"]==1):
-    print("prunings: "+os.getcwd())
-#debug
-
-
-#rule all:
-#    input: config["workdir"]+"/results.csv"
+_working_dir = cfg.get_work_dir(config)
 
 
 rule compute_nodedistance:
     input:
-        jplace_files = get_jplace_outputs()
+        jplace_files=get_jplace_outputs()
     output:
-        config["workdir"]+"/results.csv"
+        os.path.join(_working_dir, "results.csv")
     log:
-        config["workdir"]+"/logs/compute_nd.log"
+        os.path.join(_working_dir, "logs", "compute_nd.log")
     params:
-        workdir=config["workdir"],
-        compute_epa= 1 if "epa" in config["test_soft"] else 0 ,
-        compute_epang= 1 if "epang" in config["test_soft"] else 0,
-        compute_pplacer= 1 if "pplacer" in config["test_soft"] else 0,
-        compute_rappas= 1 if "rappas" in config["test_soft"] else 0,
-        compute_apples= 1 if "apples" in config["test_soft"] else 0,
-	jar=config["pewo_jar"]
+          workdir=_working_dir,
+          compute_epa=1 if "epa" in config["test_soft"] else 0,
+          compute_epang=1 if "epang" in config["test_soft"] else 0,
+          compute_pplacer=1 if "pplacer" in config["test_soft"] else 0,
+          compute_rappas=1 if "rappas" in config["test_soft"] else 0,
+          compute_apples=1 if "apples" in config["test_soft"] else 0,
+          jar=config["pewo_jar"]
     shell:
-#<<<<<<< HEAD
-#        "java -cp `which RAPPAS.jar`:PEWO.jar DistanceGenerator_LITE2 {params.workdir} "
-#        "{params.compute_epa} {params.compute_epang} {params.compute_pplacer} {params.compute_rappas} {params.compute_apples} &> {log}"
-#=======
-        "java -cp  {params.jar} DistanceGenerator_LITE2 {params.workdir} "
-        "{params.compute_epa} {params.compute_epang} {params.compute_pplacer} {params.compute_rappas} {params.compute_apples} &> {log}"
-#>>>>>>> f6a896db175bf713248dd66209204de4d5fe20c1
+         "java -cp {params.jar} DistanceGenerator_LITE2 {params.workdir} "
+         "{params.compute_epa} {params.compute_epang} {params.compute_pplacer} {params.compute_rappas} {params.compute_apples} &> {log}"
