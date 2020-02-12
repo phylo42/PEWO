@@ -1,21 +1,20 @@
-'''
+"""
 WORKFLOW TO EVALUATE RESSOURCES NECESSARY TO PLACEMENTS
 This top snakefile loads all necessary modules and operations.
 CPU/RAM/disk measurements are done via SnakeMake "benchmark" functions.
+"""
 
-@author Benjamin Linard
-'''
+__author__ = "Benjamin Linard, Nikolai Romashchenko"
+__license__ = "MIT"
 
-#this config file is set globally for all subworkflows
+# this config file is set globally for all subworkflows
 configfile: "config.yaml"
 
-'''
-explicitly set config as if there was a single pruning which in fact represents the full (NOT pruned) tree.
-this allow to use the same config file for both 'accuracy' and 'resources' modes of PEWO worflow
-NOTE: this statement MUST be set BEFORE the "includes"
-'''
-config["pruning_count"]=1
-config["read_length"]=[0]
+# explicitly set config as if there was a single pruning which in fact represents the full (NOT pruned) tree.
+# this allow to use the same config file for both 'accuracy' and 'resources' modes of PEWO worflow
+# NOTE: this statement MUST be set BEFORE the "includes"
+config["pruning_count"] = 1
+config["read_length"] = [0]
 
 #utils
 include:
@@ -29,26 +28,26 @@ include:
     "modules/op/operate_optimisation.smk"
 #phylo-kmer placement, e.g.: rappas
 include:
-    "modules/op/operate_ar.smk"
+    "modules/op/ar.smk"
 include:
-    "modules/placement/placement_rappas_dbondisk.smk"
+    "modules/placement/rappas.smk"
 #alignment (for distance-based and ML approaches)
 include:
-    "modules/alignment/alignment_hmm.smk"
+    "modules/alignment/hmmer.smk"
 #ML-based placements, e.g.: epa, epang, pplacer
 include:
-    "modules/placement/placement_epa.smk"
+    "modules/placement/epa.smk"
 include:
-    "modules/placement/placement_pplacer.smk"
+    "modules/placement/pplacer.smk"
 include:
-       "modules/placement/placement_epang.smk"
+    "modules/placement/epang.smk"
 #distance-based placements, e.g.: apples
 include:
-    "modules/placement/placement_apples.smk"
+    "modules/placement/apples.smk"
 #results and plots
 include:
     "modules/op/operate_plots.smk"
 
 rule all:
-     input:
-         build_resources_workflow()
+    input:
+        build_resources_workflow()

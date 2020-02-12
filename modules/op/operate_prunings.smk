@@ -8,6 +8,7 @@ __author__ = "Benjamin Linard, Nikolai Romashchenko"
 
 import os
 import pewo.config as cfg
+from typing import Dict
 
 
 _work_dir = cfg.get_work_dir(config)
@@ -31,6 +32,10 @@ def get_pruning_output_read_files():
             for length in config["read_length"]]
 
 
+def _generate_reads(config: Dict) -> bool:
+    return cfg.get_mode(config) == cfg.Mode.ACCURACY
+
+
 def get_params_length():
     """
     Creates {params.length} parameter.
@@ -50,7 +55,7 @@ rule operate_pruning:
         a = expand(config["workdir"] + "/A/{pruning}.align", pruning=range(config["pruning_count"])),
         t = expand(config["workdir"] + "/T/{pruning}.tree", pruning=range(config["pruning_count"])),
         g = expand(config["workdir"] + "/G/{pruning}.fasta", pruning=range(config["pruning_count"])),
-        r = get_pruning_output_read_files() if cfg.generate_reads(config) else []
+        r = get_pruning_output_read_files() if _generate_reads(config) else []
     log:
         config["workdir"] + "/logs/operate_pruning.log"
     version:
@@ -64,7 +69,7 @@ rule operate_pruning:
         #length_sd=config["read_length_sd"],
         #bpe=config["bpe"],
     run:
-        if cfg.generate_reads(config):
+        if _generate_reads(config):
             shell(
                 "java -cp {params.jar} PrunedTreeGenerator_LITE "
                 "{params.wd} {input.a} {input.t} "

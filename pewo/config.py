@@ -7,8 +7,15 @@ __author__ = "Nikolai Romashchenko"
 __license__ = "MIT"
 
 
+from enum import Enum
 from typing import Any, Dict
 from pewo.software import PlacementSoftware, AlignmentSoftware, CustomScripts
+
+
+class Mode(Enum):
+    ACCURACY = 0,
+    LIKELIHOOD = 1,
+    RESOURCES = 2
 
 
 def get_work_dir(config: Dict) -> str:
@@ -36,8 +43,18 @@ def software_tested(config: Dict, software: PlacementSoftware) -> bool:
     return software.value in config["test_soft"]
 
 
-def generate_reads(config: Dict) -> bool:
+def get_mode(config: Dict) -> Mode:
+    if "mode" in config:
+        mode_dict = dict((m.name.lower(), m) for m in Mode)
+        mode_name = config["mode"].lower()
+        assert mode_name in mode_dict, f"Wrong mode value: {mode_name}"
+        return mode_dict[mode_name]
+
+    raise RuntimeError(f"PEWO mode not specified in the config file. See config.yaml for details")
+
+
+def query_user(config: Dict) -> bool:
     """
     Returns if PEWO should generate reads from the input tree.
     """
-    return "generate_reads" in config and config["generate_reads"]
+    return "query_user" in config and config["query_user"]

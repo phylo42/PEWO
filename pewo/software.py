@@ -7,7 +7,7 @@ __license__ = "MIT"
 
 
 from enum import Enum
-from typing import Union
+from typing import Union, Dict
 
 
 class PlacementSoftware(Enum):
@@ -35,3 +35,18 @@ class CustomScripts(Enum):
 
 
 Software = Union[PlacementSoftware, AlignmentSoftware, CustomScripts]
+
+
+def get_ar_binary(config: Dict, arsoft: str) -> str:
+    """
+    Selects correct ancestral reconstruction binary depending on the value set in the config.
+    """
+    # FIXME: Make a software class for every AR software
+    if arsoft == "PHYML":
+        return "phyml"
+    elif arsoft == "RAXMLNG":
+        return "raxml-ng"
+    elif (arsoft == "PAML") and (config["states"]==0):
+        return "baseml"
+    elif (arsoft == "PAML") and (config["states"]==1):
+        return "codeml"

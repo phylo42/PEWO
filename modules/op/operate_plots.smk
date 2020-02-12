@@ -1,5 +1,5 @@
 """
-Computes plots which summarize the workflow results
+Creates plots which summarize the workflow results
 """
 
 __author__ = "Benjamin Linard, Nikolai Romashchenko"
@@ -10,44 +10,53 @@ import os
 import pewo.config as cfg
 
 
+_working_dir = cfg.get_work_dir(config)
+
+
 rule plot_accuracy_results:
+    """
+    Makes plots for the accuracy workflow.
+    """
     input:
-        config["workdir"] + "/results.csv"
+        os.path.join(_working_dir, "results.csv")
     output:
-        accuracy_plots_nd_outputs(),
-        accuracy_plots_end_outputs()
+        nd_plots=get_accuracy_nd_plots(),
+        end_plots=get_accuracy_end_plots()
     log:
-        config["workdir"]+"/logs/R/plots_accuracy.log"
+        os.path.join(_working_dir, "logs", "R", "accuracy_plots.log")
     params:
         workdir=config["workdir"]
     shell:
-        "Rscript --vanilla pewo/R/eval_accuracy_plots_v2.R {input} {params.workdir} &> {log}"
+        "Rscript --vanilla scripts/R/eval_accuracy_plots_v2.R {input} {params.workdir} &> {log}"
 
 
-rule plot_resource_results:
-     input:
-         build_benchmarks_workflow()
-     output:
-         resource_plots_outputs()
-     log:
-         config["workdir"]+"/logs/R/plots_resources.log"
-     params:
-         workdir=config["workdir"]
-     shell:
-         "Rscript --vanilla scripts/R/eval_resources_plots.R {params.workdir} &> {log}"
+rule plot_resources_results:
+    """
+    Makes plots for the resources workflow.
+    """
+    input:
+        tsv=get_resources_outputs()
+    output:
+        plots=get_resources_plots()
+    log:
+       os.path.join(_working_dir, "logs", "R", "resources_plots.log")
+    params:
+        workdir=_working_dir
+    shell:
+        "Rscript --vanilla scripts/R/eval_resources_plots.R {params.workdir} &> {log}"
 
-
-
-_working_dir = cfg.get_work_dir(config)
 
 rule plot_likelihood_results:
+    """
+    Makes plots for the likelihood workflow.
+    """
     input:
-        os.path.join(_working_dir, "likelihood.csv")
+        csv=os.path.join(_working_dir, "likelihood.csv")
     output:
-        get_likelihood_plots_outputs()
+        plots=get_likelihood_plots()
     log:
-        os.path.join(_working_dir, "logs", "R", "summary_plots.log")
+        os.path.join(_working_dir, "logs", "R", "likelihood_plots.log")
     params:
-        workdir = _working_dir
+        workdir=_working_dir
     shell:
-        "Rscript --vanilla pewo/R/eval_accuracy_plots_v2.R {input} {params.workdir} &> {log}"
+        "Rscript --vanilla scripts/R/eval_likelihood_plots.R {input.csv} {params.workdir} &> {log}"

@@ -5,20 +5,19 @@ module to operate placements with EPA-ng
 __author__ = "Benjamin Linard, Nikolai Romashchenko"
 __license__ = "MIT"
 
-#TODO: Add support of model parameters once the module for pruned tree optimisation is done
-#TODO: Use optimised tree version
+# TODO: Add support of model parameters once the module for pruned tree optimisation is done
+# TODO: Use optimised tree version
 
 import os
 import pewo.config as cfg
 from pewo.software import PlacementSoftware, AlignmentSoftware
 from pewo.templates import get_output_template, get_log_template, get_software_dir, \
-    get_common_queryname_template, get_experiment_dir_template
+    get_common_queryname_template, get_experiment_dir_template, get_benchmark_template
 
 _working_dir = cfg.get_work_dir(config)
 _epang_soft_dir = get_software_dir(config, PlacementSoftware.EPA_NG)
 
-#FIXME:
-# Unnecessary dependendancy on the alignment software
+# FIXME: Unnecessary dependendancy on the alignment software
 _alignment_dir = get_software_dir(config, AlignmentSoftware.HMMER)
 
 
@@ -70,14 +69,18 @@ def _make_epang_command(**kwargs) -> str:
                                   ]
                       )
 
+
 def _get_epang_input_reads(config) -> str:
     return os.path.join(_alignment_dir, "{pruning}", get_common_queryname_template(config) + ".fasta_refs")
+
 
 def _get_epang_input_queries(config) -> str:
     return os.path.join(_alignment_dir, "{pruning}", get_common_queryname_template(config) + ".fasta_queries")
 
+
 def _get_epang_input_tree() -> str:
     return os.path.join(_working_dir, "T", "{pruning}.tree")
+
 
 def _get_epang_input_info() -> str:
     return os.path.join(_working_dir, "T", "{pruning}_optimised.info")
@@ -101,8 +104,7 @@ rule placement_epang_h1:
     log:
         logfile=get_log_template(config, PlacementSoftware.EPA_NG, heuristic="h1")
     #benchmark:
-    #    repeat(config["workdir"] + "/benchmarks/{pruning}_r{length}_h1_g{gepang}_epang_benchmark.tsv",
-    #           config["repeats"])
+    #    repeat(get_benchmark_template(config, PlacementSoftware.EPA_NG, heuristic="h1"), config["repeats"])
     version: "1.0"
     params:
         tmpdir=get_experiment_dir_template(config, PlacementSoftware.EPA_NG, heuristic="h1"),
@@ -130,8 +132,7 @@ rule placement_epang_h2:
     log:
         logfile=get_log_template(config, PlacementSoftware.EPA_NG, heuristic="h2")
     #benchmark:
-    #    repeat(config["workdir"] + "/benchmarks/{pruning}_r{length}_h2_bigg{biggepang}_epang_benchmark.tsv",
-    #           config["repeats"])
+    #    repeat(get_benchmark_template(config, PlacementSoftware.EPA_NG, heuristic="h2"),config["repeats"])
     version: "1.0"
     params:
         tmpdir=get_experiment_dir_template(config, PlacementSoftware.EPA_NG, heuristic="h2"),
@@ -159,7 +160,7 @@ rule placement_epang_h3:
     log:
         logfile=get_log_template(config, PlacementSoftware.EPA_NG, heuristic="h3")
     #benchmark:
-    #         repeat(config["workdir"] + "/benchmarks/{pruning}_r{length}_h3_epang_benchmark.tsv", config["repeats"])
+    #    repeat(get_benchmark_template(config, PlacementSoftware.EPA_NG, heuristic="h3"), config["repeats"])
     version: "1.0"
     params:
         tmpdir=get_experiment_dir_template(config, PlacementSoftware.EPA_NG, heuristic="h3"),
@@ -187,7 +188,7 @@ rule placement_epang_h4:
     log:
         logfile=get_log_template(config, PlacementSoftware.EPA_NG, heuristic="h4")
     #benchmark:
-    #    repeat(config["workdir"] + "/benchmarks/{pruning}_r{length}_h4_epang_benchmark.tsv", config["repeats"])
+    #    repeat(get_benchmark_template(config, PlacementSoftware.EPA_NG, heuristic="h4"), config["repeats"])
     version: "1.0"
     params:
         tmpdir=get_experiment_dir_template(config, PlacementSoftware.EPA_NG, heuristic="h4"),

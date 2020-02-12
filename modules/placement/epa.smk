@@ -20,7 +20,7 @@ from pewo.software import PlacementSoftware
 from pewo.software import AlignmentSoftware
 from pewo.templates import get_experiment_dir_template, get_output_template, \
     get_log_template, get_queryname_template,  get_common_queryname_template, \
-    get_software_dir
+    get_software_dir, get_benchmark_template
 
 
 def _get_epa_placement_output() -> Namedlist:
@@ -79,12 +79,11 @@ rule placement_epa:
     log:
         get_log_template(config, PlacementSoftware.EPA)
     #benchmark:
-    #    repeat(config["workdir"]+"/benchmarks/{pruning}_r{length}_g{gepa}_epa_benchmark.tsv", config["repeats"])
+    #    repeat(get_benchmark_template(config, PlacementSoftware.EPA), config["repeats"])
     version: "1.0"
     params:
         m = select_model_raxmlstyle(),
         c = config["phylo_params"]["categories"],
-        #G=config["config_epa"]["G"],
         name = get_queryname_template(config, PlacementSoftware.EPA),
         raxmlname = os.path.join(_epa_experiment_dir,
                                  "RAxML_portableTree." + get_queryname_template(config, PlacementSoftware.EPA) + ".jplace"),
@@ -100,7 +99,7 @@ rule placement_epa:
     shell:
         """
         rm -f {params.info}
-        raxmlHPC-SSE3 -f v --epa-keep-placements={params.maxp} --epa-prob-threshold={params.minlwr} -w {params.outdir} -G {wildcards.gepa} -m {params.m} -c {params.c} -n {params.name} -s {input.hmm} -t {input.t} &> {log}
+        raxmlHPC-SSE3 -f v --epa-keep-placements={params.maxp} --epa-prob-threshold={params.minlwr} -w {params.outdir} -G {wildcards.g} -m {params.m} -c {params.c} -n {params.name} -s {input.hmm} -t {input.t} &> {log}
         mv {params.raxmlname} {params.outname}
         rm -f {params.reduction}
         """

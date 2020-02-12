@@ -2,6 +2,10 @@
 # WORKFLOW CONFIGURATION
 ########################################################################################################################
 
+
+# Can be accuracy, likelihood or resources
+mode: likelihood
+
 # INPUT DATASET
 ##############################
 #alignment in fasta format and tree in newick format
@@ -18,44 +22,34 @@ dataset_align: test/0.align
 dataset_tree: test/0.tree
 
 #working directory
-workdir: /home/nikolai/dev/pewo/run0
+workdir: /home/nikolai/dev/pewo/run_likelihood0
 
 
 #states used in analysis, either '0' for nucleotides or '1' for amino acids
 states: 0
 
 #which software to test, at least one of : epa, epang, pplacer, rappas, apples
-
-#test_soft: [epa]
 test_soft: [epa, epang, rappas, pplacer]
-#test_soft: [pplacer]
-
 
 # Indicates if PEWO should generate reads from the input tree or take an input fasta file
 # with sequences.
-generate_reads: True
-#generate_reads: False
-
-
-# If generate_reads is set to False, user must provide an input dataset.
-#dataset_reads: test/0_r300.fasta
+#generate_reads: True
+generate_reads: False
 
 # READ GENERATION
 # Read lengths to generate
 read_length: [300]
 # Number of random prunings to compute
-pruning_count: 10
+pruning_count: 0
 
 
 ## IF "ACCURACY" IS EVALUATED
 #############################
-
 ### this section matters only when you run the "eval_accuracy.smk" workflow
 
 
 ## IF "RESOURCES" ARE EVALUATED
 ##############################
-
 ### this section matters only when you run the "eval_ressources.smk" workflow
 
 # number of identical runs to launch when evaluating RAM/CPU consumption
@@ -65,9 +59,10 @@ repeats: 3
 # user: query sequences are loaded from a file target by parameter "query_set"
 # simulate: queries are simulated from the input alignment (reserved for future upgrades, currently not implemented)
 query_type: user
+
 # queries used in resource evaluation, >10000 sequences recommended
 #query_user: test/EMP_92_studies_100000.fas
-query_user: test/EMP_92_studies_10000.fas
+query_user: test/0_r300.fasta
 
 
 
@@ -92,7 +87,7 @@ config_epa:
 
   #proportion of top scoring branch for which full optimization is computed
   #float in ]0,1]
-  G: [0.01]
+  G: [0.1]
 
 ### PPLACER
 ###############################
@@ -149,7 +144,7 @@ config_rappas:
 
   #panel of k that is tested
   #integer in [2,16] (8~10 recommended, >12 often produces too long computations)
-  k: [6]
+  k: [6, 8]
 
   #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
   #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids

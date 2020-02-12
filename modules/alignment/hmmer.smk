@@ -36,7 +36,9 @@ rule hmm_build:
     shell:
         "hmmbuild --cpu {threads} --{params.states} {output.hmm} {input.alignment} &> {log}"
 
-
+print(
+            os.path.join(_work_dir, "benchmarks", "{pruning}",
+                         get_common_queryname_template(config) + "_hmmbuild_benchmark.tsv"),)
 rule hmm_align:
     """
     Aligns a query to a profile.

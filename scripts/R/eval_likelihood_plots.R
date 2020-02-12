@@ -54,7 +54,7 @@ allplots<-list()
 
 for ( i in 1:length(soft_analyzed) ) {
 	softname<-soft_analyzed[[i]]
-	#epang is treated separatly for each heuristic
+	#epang is treated separatly for each heuristic3
 	softname_short<-strsplit(softname, "_")[[1]][1]
 	print(paste("ND heatmap for ",softname,sep=""))
 	#select data for current software
@@ -64,25 +64,29 @@ for ( i in 1:length(soft_analyzed) ) {
 		heur<-substr(strsplit(softname, "_")[[1]][2],2,10)
 		current_soft_data<-data[data$software==softname_short & data$h==as.numeric(heur),]
 	}
+
 	#remove columns with only NA, meaning this parameter was not linked to current soft
 	current_soft_data<-current_soft_data[, colSums(is.na(current_soft_data)) != nrow(current_soft_data)]
+	
 	#build formulas dynamically fro parameters
-	formula_mean<-"nd ~ pruning + r"
-	formula_meanofmean<-"nd ~ r"
+	formula_mean<-"likelihood ~ pruning + query"
+	formula_meanofmean<-"likelihood ~ query"
 	if (length(soft_params[softname][[1]])>0) {  #is ==0 when no params
 		for ( j in 1:length(soft_params[softname][[1]] ) ) {
 			formula_mean<-paste(formula_mean, " + ",soft_params[softname][[1]][j], sep="")
 			formula_meanofmean<-paste(formula_meanofmean, " + ",soft_params[softname][[1]][j], sep="")
 		}
 	}
+	
 	#aggregate as mean per pruning
 	data_mean<-aggregate(as.formula(formula_mean), current_soft_data, mean)
-	write.table(data_mean,file=paste(workdir,"/mean_per_pruning_ND_",softname,".csv",sep=""),quote=TRUE,sep=";",dec=".",row.names=FALSE,col.names=TRUE)
+	#write.table(data_mean,file=paste(workdir,"/mean_per_pruning_ND_",softname,".csv",sep=""),quote=TRUE,sep=";",dec=".",row.names=FALSE,col.names=TRUE)
 	#aggregate as mean of means
 	data_meanofmean<-NULL;
 	data_meanofmean<-aggregate(as.formula(formula_meanofmean), data_mean, mean)
+	
 	#order from best to wort parameters combination
-	data_meanofmean<-data_meanofmean[order(data_meanofmean$nd),]
+	data_meanofmean<-data_meanofmean[order(data_meanofmean$likelihood),]
 	data_meanofmean["software"]<-softname
 	#register results
 	alltables[[i]]<-data_meanofmean

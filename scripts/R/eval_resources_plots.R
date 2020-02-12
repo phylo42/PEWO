@@ -53,8 +53,6 @@ soft_params<-list(
 files = list.files(path=paste0(workdir,"/benchmarks"),pattern="^0_.*_benchmark.tsv")
 
 
-
-
 # extract parameter combination and software, file per file
 # aggregate everything in a dataframe
 

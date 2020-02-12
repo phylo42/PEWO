@@ -13,12 +13,13 @@ from typing import Dict
 import pewo.config as cfg
 from pewo.software import PlacementSoftware, AlignmentSoftware
 from pewo.templates import get_experiment_dir_template, get_software_dir, get_common_queryname_template, \
-    get_output_template, get_log_template
+    get_output_template, get_log_template, get_benchmark_template
 
 
 _working_dir = cfg.get_work_dir(config)
 _pplacer_experiment_dir = get_experiment_dir_template(config, PlacementSoftware.PPLACER)
-#FIXME:
+
+# FIXME:
 # Unnecessary dependendancy on the alignment software
 _alignment_dir = get_software_dir(config, AlignmentSoftware.HMMER)
 
@@ -63,18 +64,15 @@ rule placement_pplacer:
         jplace = get_output_template(config, PlacementSoftware.PPLACER, "jplace")
     log:
         get_log_template(config, PlacementSoftware.PPLACER)
-    #FIXME:
-    # Implement templates for benchmarks
     #benchmark:
-    #    repeat(config["workdir"] + "/benchmarks/{query}_r{length}_ms{msppl}_sb{sbppl}_mp{mpppl}_pplacer_benchmark.tsv",
-    #           config["repeats"])
+    #    repeat(get_benchmark_template(config, PlacementSoftware.PPLACER), config["repeats"])
     version: "1.00"
     params:
         maxp = config["maxplacements"],
         minlwr = config["minlwr"]
     run:
-        pplacer_command = "pplacer -o {output.jplace} --verbosity 1 --max-strikes {wildcards.msppl}" \
-                          " --strike-box {wildcards.sbppl} --max-pitches {wildcards.mpppl}" \
+        pplacer_command = "pplacer -o {output.jplace} --verbosity 1 --max-strikes {wildcards.ms}" \
+                          " --strike-box {wildcards.sb} --max-pitches {wildcards.mp}" \
                           " --keep-at-most {params.maxp} --keep-factor {params.minlwr}"
 
         if not config["config_pplacer"]["premask"]:

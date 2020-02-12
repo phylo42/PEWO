@@ -7,7 +7,7 @@ __license__ = "MIT"
 
 
 import os
-from typing import Union, Any, Dict
+from typing import Union, Any, Dict, List
 import pewo.config as cfg
 from pewo.software import Software, PlacementSoftware, AlignmentSoftware
 from pewo.io import fasta
@@ -45,7 +45,7 @@ def get_experiment_dir_template(config: Dict, software: PlacementSoftware, **kwa
     input_set_dir_template = "{pruning}"
 
     if software == PlacementSoftware.EPA:
-        return os.path.join(software_dir, input_set_dir_template, "g{gepa}")
+        return os.path.join(software_dir, input_set_dir_template, "g{g}")
     elif software == PlacementSoftware.EPA_NG:
         # Output template depends on the heuristic enabled.
         # Get the heuristic
@@ -63,11 +63,11 @@ def get_experiment_dir_template(config: Dict, software: PlacementSoftware, **kwa
             return os.path.join(software_dir, input_set_dir_template, heuristic,
                                 get_common_queryname_template(config))
     elif software == PlacementSoftware.PPLACER:
-        return os.path.join(software_dir, input_set_dir_template, "ms{msppl}_sb{sbppl}_mp{mpppl}")
+        return os.path.join(software_dir, input_set_dir_template, "ms{ms}_sb{sb}_mp{mp}")
     elif software == PlacementSoftware.APPLES:
         raise NotImplementedError()
     elif software == PlacementSoftware.RAPPAS:
-        return os.path.join(software_dir, input_set_dir_template, "red{reduction}_ar{arsoft}", "k{k}_o{omega}")
+        return os.path.join(software_dir, input_set_dir_template, "red{red}_ar{ar}", "k{k}_o{o}")
     elif software == PlacementSoftware.RAPPAS2:
         raise NotImplementedError()
 
@@ -77,13 +77,18 @@ def get_experiment_log_dir_template(config: Dict, software: Software) -> str:
     Returns a name template of a log directory path for an experiment.
     One experiment is conducted by given software with fixed specific
     software parameters and a fixed input set (i.e. phylogenetic tree and alignment).
-
-    Software can be a value of a type from pewo.software, or a string
-    for scripts (e.g. psiblast2fasta.py).
     """
     _check_software(software)
     software_name = software.value
     return os.path.join(cfg.get_work_dir(config), "logs", software_name, "{pruning}")
+
+
+def get_experiment_benchmark_dir_template(config: Dict) -> str:
+    """
+    Returns a name template of a benchmark output directory path for an experiment.
+    They are stored in the same directory.
+    """
+    return os.path.join(cfg.get_work_dir(config), "benchmarks")
 
 
 def get_common_queryname_template(config: Dict) -> str:
@@ -98,7 +103,7 @@ def get_common_queryname_template(config: Dict) -> str:
 
     # For generated queries take the pruning and read length as an output template name.
     # For user queries take query file name as a template
-    return "{pruning}_r{length}" if cfg.generate_reads(config) else "{query}_r{length}"
+    return "{query}_r{length}" if cfg.get_mode(config) == cfg.Mode.LIKELIHOOD else "{pruning}_r{length}"
 
 
 def get_common_template_args(config: Dict) -> Dict[str, Any]:
@@ -112,16 +117,16 @@ def get_common_template_args(config: Dict) -> Dict[str, Any]:
     by get_common_queryname_template().
     """
 
-    if cfg.generate_reads(config):
-        return {
-            "pruning": range(config["pruning_count"]),
-            "length": config["read_length"]
-        }
-    else:
+    if cfg.get_mode(config) == cfg.Mode.LIKELIHOOD:
         return {
             "pruning": ["0"],
             "length": ["0"],
-            "query": fasta.get_sequence_ids(config["dataset_reads"])
+            "query": fasta.get_sequence_ids(config["query_user"])
+        }
+    else:
+        return {
+            "pruning": range(config["pruning_count"]),
+            "length": config["read_length"]
         }
 
 
@@ -139,7 +144,7 @@ def get_queryname_template(config: Dict, software: PlacementSoftware, **kwargs) 
     _check_software(software)
 
     if software == PlacementSoftware.EPA:
-        return get_common_queryname_template(config) + "_g{gepa}"
+        return get_common_queryname_template(config) + "_g{g}"
     elif software == PlacementSoftware.EPA_NG:
         # Output template depends on the heuristic enabled.
         # Get the heuristic
@@ -154,11 +159,11 @@ def get_queryname_template(config: Dict, software: PlacementSoftware, **kwargs) 
         elif heuristic in ("h3", "h4"):
             return get_common_queryname_template(config) + "_" + heuristic
     elif software == PlacementSoftware.PPLACER:
-        return get_common_queryname_template(config) + "_ms{msppl}_sb{sbppl}_mp{mpppl}"
+        return get_common_queryname_template(config) + "_ms{ms}_sb{sb}_mp{mp}"
     elif software == PlacementSoftware.APPLES:
         raise NotImplementedError()
     elif software == PlacementSoftware.RAPPAS:
-        return get_common_queryname_template(config) + "_k{k}_o{omega}_red{reduction}_ar{arsoft}"
+        return get_common_queryname_template(config) + "_k{k}_o{o}_red{red}_ar{ar}"
     elif software == PlacementSoftware.RAPPAS2:
         raise NotImplementedError()
 
@@ -181,7 +186,7 @@ def get_output_template_args(config: Dict, software: PlacementSoftware, **kwargs
 
     # specify template arguments based on software
     if software == PlacementSoftware.EPA:
-        template_args["gepa"] = config["config_epa"]["G"]
+        template_args["g"] = config["config_epa"]["G"]
     elif software == PlacementSoftware.EPA_NG:
         # Output template depends on the heuristic enabled.
         # Get the heuristic
@@ -194,13 +199,16 @@ def get_output_template_args(config: Dict, software: PlacementSoftware, **kwargs
         elif heuristic == "h2":
             template_args["biggepang"] = config["config_epang"]["h2"]["G"]
     elif software == PlacementSoftware.PPLACER:
-        template_args["msppl"] = config["config_pplacer"]["max-strikes"]
-        template_args["sbppl"] = config["config_pplacer"]["strike-box"]
-        template_args["mpppl"] = config["config_pplacer"]["max-pitches"]
+        template_args["ms"] = config["config_pplacer"]["max-strikes"]
+        template_args["sb"] = config["config_pplacer"]["strike-box"]
+        template_args["mp"] = config["config_pplacer"]["max-pitches"]
     elif software == PlacementSoftware.APPLES:
         raise NotImplementedError()
     elif software == PlacementSoftware.RAPPAS:
-        template_args.update(config["config_rappas"])
+        template_args["k"] = config["config_rappas"]["k"]
+        template_args["o"] = config["config_rappas"]["omega"]
+        template_args["red"] = config["config_rappas"]["reduction"]
+        template_args["ar"] = config["config_rappas"]["arsoft"]
     elif software == PlacementSoftware.RAPPAS2:
         raise NotImplementedError()
     else:
@@ -228,6 +236,14 @@ def get_log_template(config: Dict, software: Software, **kwargs) -> str:
                         get_output_filename_template(config, software, "log", **kwargs))
 
 
+def get_benchmark_template(config: Dict, software: Software, **kwargs) -> str:
+    """
+    Creates a name template of .tsv output files produced by specific software.
+    """
+    return os.path.join(get_experiment_benchmark_dir_template(config),
+                        get_output_filename_template(config, software, "benchmark.tsv", **kwargs))
+
+
 def get_output_template(config: Dict, software: Union[PlacementSoftware, AlignmentSoftware],
                         extension: str, **kwargs) -> str:
     """
@@ -238,3 +254,38 @@ def get_output_template(config: Dict, software: Union[PlacementSoftware, Alignme
     _check_software(software)
     return os.path.join(get_experiment_dir_template(config, software, **kwargs),
                         get_output_filename_template(config, software, extension, **kwargs))
+
+
+def get_ar_output_templates(config: Dict, arsoft: str) -> List[str]:
+    """
+    Returns a list of resulting files of the ancestral reconstruction stage.
+    """
+
+    # FIXME: Make a software class for every AR software, and make output directories
+    # for every AR software
+    output_dir = os.path.join(cfg.get_work_dir(config), "RAPPAS", "{pruning}", "red{red}_ar" + arsoft.upper(), "AR")
+
+    if arsoft == "PHYML":
+        output_filenames = [
+            "extended_align.phylip_phyml_ancestral_seq.txt",
+            "extended_align.phylip_phyml_ancestral_tree.txt",
+            "extended_align.phylip_phyml_stats.txt",
+            "extended_align.phylip_phyml_tree.txt"
+        ]
+    elif arsoft == "RAXMLNG":
+        output_filenames = [
+            "extended_align.phylip.raxml.log",
+            "extended_align.phylip.raxml.ancestralTree",
+            "extended_align.phylip.raxml.ancestralProbs",
+            "extended_align.phylip.raxml.startTree",
+            "extended_align.phylip.raxml.ancestralStates",
+            "extended_align.phylip.raxml.rba"
+        ]
+    elif arsoft == "PAML":
+        output_filenames = [
+            "rst"
+        ]
+    else:
+        raise RuntimeError(f"Unknown ancestral reconstruction soft: {arsoft}")
+
+    return [os.path.join(output_dir, filename) for filename in output_filenames]

@@ -6,106 +6,115 @@ e.g. define snakemake outputs depending on tested software
 __author__ = "Benjamin Linard, Nikolai Romashchenko"
 __license__ = "MIT"
 
-
 import os
 import itertools
 from typing import List, Dict
 import pewo.config as cfg
 from pewo.software import AlignmentSoftware, PlacementSoftware
-from pewo.templates import get_software_dir, get_common_queryname_template, get_common_template_args,\
+from pewo.templates import get_software_dir, get_common_queryname_template, get_common_template_args, \
     get_output_template, get_output_template_args
 
 
-
-def accuracy_plots_nd_outputs() -> List[str]:
+def get_accuracy_nd_plots() -> List[str]:
     """
     Creates a list of plot files that will be computed in the accuracy mode.
     """
-    l=list()
+    l = list()
     #epa-ng
-    if "epang" in config["test_soft"] :
-        l.append( expand(config["workdir"]+"/summary_plot_ND_epang_{heuristic}.svg",heuristic=config["config_epang"]["heuristics"]) )
-        l.append( expand(config["workdir"]+"/summary_table_ND_epang_{heuristic}.csv",heuristic=config["config_epang"]["heuristics"]) )
+    if "epang" in config["test_soft"]:
+        l.append(expand(config["workdir"] + "/summary_plot_ND_epang_{heuristic}.svg",
+                        heuristic=config["config_epang"]["heuristics"]))
+        l.append(expand(config["workdir"] + "/summary_table_ND_epang_{heuristic}.csv",
+                        heuristic=config["config_epang"]["heuristics"]))
     #all other software
-    l.append( expand(config["workdir"]+"/summary_plot_ND_{soft}.svg",soft=[x for x in config["test_soft"] if x!="epang"]) )
-    l.append( expand(config["workdir"]+"/summary_table_ND_{soft}.csv",soft=[x for x in config["test_soft"] if x!="epang"]) )
+    l.append(expand(config["workdir"] + "/summary_plot_ND_{soft}.svg",
+                    soft=[x for x in config["test_soft"] if x != "epang"]))
+    l.append(expand(config["workdir"] + "/summary_table_ND_{soft}.csv",
+                    soft=[x for x in config["test_soft"] if x != "epang"]))
     return l
 
 
-def accuracy_plots_end_outputs() -> List[str]:
+def get_accuracy_end_plots() -> List[str]:
     """
     Creates a list of plot files that will be computed in the accuracy mode
     """
-    l=list()
+    l = list()
     #epa-ng
-    if "epang" in config["test_soft"] :
-        l.append( expand(config["workdir"]+"/summary_plot_eND_epang_{heuristic}.svg",heuristic=config["config_epang"]["heuristics"]) )
-        l.append( expand(config["workdir"]+"/summary_table_eND_epang_{heuristic}.csv",heuristic=config["config_epang"]["heuristics"]) )
+    if "epang" in config["test_soft"]:
+        l.append(expand(config["workdir"] + "/summary_plot_eND_epang_{heuristic}.svg",
+                        heuristic=config["config_epang"]["heuristics"]))
+        l.append(expand(config["workdir"] + "/summary_table_eND_epang_{heuristic}.csv",
+                        heuristic=config["config_epang"]["heuristics"]))
     #all other software
-    l.append( expand(config["workdir"]+"/summary_plot_eND_{soft}.svg",soft=[x for x in config["test_soft"] if x!="epang"]) )
-    l.append( expand(config["workdir"]+"/summary_table_eND_{soft}.csv",soft=[x for x in config["test_soft"] if x!="epang"]) )
+    l.append(expand(config["workdir"] + "/summary_plot_eND_{soft}.svg",
+                    soft=[x for x in config["test_soft"] if x != "epang"]))
+    l.append(expand(config["workdir"] + "/summary_table_eND_{soft}.csv",
+                    soft=[x for x in config["test_soft"] if x != "epang"]))
     return l
 
 
-def get_likelihood_plots_outputs() -> List[str]:
+def get_likelihood_plots() -> List[str]:
     """
-    Define plots that will be computed in the likelihood mode
+    Returns a list of plots that will be computed in the likelihood mode
     """
     _working_dir = cfg.get_work_dir(config)
 
     #FIXME: Add heuristic-based output names for EPA-NG
     software_list = [software for software in config["test_soft"] if software != "epang"]
 
-    tables = expand("/summary_table_LL_{software}.csv", software = software_list)
-    plots = expand("/summary_plot_LL_{software}.svg", software = software_list)
+    tables = expand(config["workdir"] + "/summary_table_LL_{software}.csv", software=software_list)
+    plots = expand(config["workdir"] + "/summary_plot_LL_{software}.svg", software=software_list)
 
     return list(itertools.chain(tables, plots))
 
 
+def get_resources_outputs() -> List[str]:
+    return [os.path.join(config["workdir"], "resources.tsv")]
 
-def resource_plots_outputs() -> List[str]:
+
+def get_resources_plots() -> List[str]:
     """
-    Creates a list of plot files that will be computed in the resources mode
+    Returns a list of plots files that will be computed in the resources mode
     """
-    return [config["workdir"]+"/ressource_results.tsv"]
+    return []
 
-
-'''
-accessory function to correctly set which epa-ng heuristics are tested and with which parameters
-'''
 def select_epang_heuristics_benchmarks():
-    l=[]
+    """
+    An accessory function to correctly set which epa-ng heuristics are tested and with which parameters
+    """
+    l = []
     if "h1" in config["config_epang"]["heuristics"]:
         l.append(
-            expand(     config["workdir"]+"/benchmarks/{pruning}_r{length}_h1_g{gepang}_epang_benchmark.tsv",
-                        pruning=range(0,config["pruning_count"]),
-                        length=config["read_length"],
-                        gepang=config["config_epang"]["h1"]["g"]
-                   )
+            expand(
+                config["workdir"] + "/benchmarks/{pruning}_r{length}_h1_g{gepang}_epang_benchmark.tsv",
+                pruning=range(0, config["pruning_count"]),
+                length=config["read_length"],
+                gepang=config["config_epang"]["h1"]["g"]
+            )
         )
     if "h2" in config["config_epang"]["heuristics"]:
         l.append(
-             expand(    config["workdir"]+"/benchmarks/{pruning}_r{length}_h2_bigg{biggepang}_epang_benchmark.tsv",
-                        pruning=range(0,config["pruning_count"]),
-                        length=config["read_length"],
-                        biggepang=config["config_epang"]["h2"]["G"]
-                        )
+            expand(config["workdir"] + "/benchmarks/{pruning}_r{length}_h2_bigg{biggepang}_epang_benchmark.tsv",
+                   pruning=range(0, config["pruning_count"]),
+                   length=config["read_length"],
+                   biggepang=config["config_epang"]["h2"]["G"]
+                   )
         )
     if "h3" in config["config_epang"]["heuristics"]:
         l.append(
-             expand(    config["workdir"]+"/benchmarks/{pruning}_r{length}_h3_epang_benchmark.tsv",
-                        pruning=range(0,config["pruning_count"]),
-                        length=config["read_length"]
-                        )
+            expand(config["workdir"] + "/benchmarks/{pruning}_r{length}_h3_epang_benchmark.tsv",
+                   pruning=range(0, config["pruning_count"]),
+                   length=config["read_length"]
+                   )
         )
     if "h4" in config["config_epang"]["heuristics"]:
         l.append(
             expand(
-                config["workdir"]+"/benchmarks/{pruning}_r{length}_h4_epang_benchmark.tsv",
-                pruning=range(0,config["pruning_count"]),
+                config["workdir"] + "/benchmarks/{pruning}_r{length}_h4_epang_benchmark.tsv",
+                pruning=range(0, config["pruning_count"]),
                 length=config["read_length"]
-                )
             )
+        )
     return l
 
 
@@ -120,17 +129,17 @@ def build_accuracy_workflow() -> List[str]:
     csv = [config["workdir"] + "/results.csv"]
 
     # collection of results and generation of summary plots
-    node_distance_reports = accuracy_plots_nd_outputs()
-    expected_node_distance_reports = accuracy_plots_end_outputs()
+    node_distance_reports = get_accuracy_nd_plots()
+    expected_node_distance_reports = get_accuracy_end_plots()
 
     return list(itertools.chain(placements, csv, node_distance_reports, expected_node_distance_reports))
 
 
 def build_resources_workflow() -> List[str]:
     """
-    builds the list of outputs,for a "resources" workflow
+    builds the list of outputs, for a "resources" workflow
     """
-    l=list()
+    l = list()
     #call outputs from operate_inputs module to build input reads as pruning=0 and r=0
     l.append(config["workdir"] + "/A/0.align")
     l.append(config["workdir"] + "/T/0.tree")
@@ -144,7 +153,7 @@ def build_resources_workflow() -> List[str]:
     #benchmarks
     l.append(build_benchmarks_workflow())
     #collection of results and generation of summary plots
-    l.append(resource_plots_outputs())
+    l.append(get_resources_plots())
     return l
 
 
@@ -156,9 +165,12 @@ def build_likelihood_workflow() -> List[str]:
     placements = build_placements_workflow()
 
     # likelihood values from jplace outputs
-    csvs = [config["workdir"] + "/likelihood.csv"]
+    csv = [os.path.join(config["workdir"], "likelihood.csv")]
 
-    return list(itertools.chain(placements, csvs))
+    # plots
+    likelihood_reports = get_likelihood_plots()
+
+    return list(itertools.chain(placements, csv, likelihood_reports))
 
 
 def _get_aligned_queries() -> List[str]:
@@ -173,7 +185,6 @@ def _get_aligned_queries() -> List[str]:
     return expand(query_alignment_template, **get_common_template_args(config))
 
 
-
 def _get_jplace_outputs(config: Dict, software: PlacementSoftware, **kwargs) -> List[str]:
     """
     Creates a list of .jplace output files produced by specific software.
@@ -182,33 +193,24 @@ def _get_jplace_outputs(config: Dict, software: PlacementSoftware, **kwargs) -> 
                   **get_output_template_args(config, software, **kwargs))
 
 
-def get_jplace_outputs() -> List[str]:
+def get_jplace_outputs(config) -> List[str]:
     """
     Creates a list of all .jplace files that are produced by all placement software
     """
-    inputs = []
+    output_files = []
 
     if "epa" in config["test_soft"]:
-        inputs.extend(_get_jplace_outputs(config, PlacementSoftware.EPA))
+        output_files.extend(_get_jplace_outputs(config, PlacementSoftware.EPA))
     if "pplacer" in config["test_soft"]:
-        inputs.extend(_get_jplace_outputs(config, PlacementSoftware.PPLACER))
+        output_files.extend(_get_jplace_outputs(config, PlacementSoftware.PPLACER))
     if "epang" in config["test_soft"]:
         for h in config["config_epang"]["heuristics"]:
-            inputs.extend(_get_jplace_outputs(config, PlacementSoftware.EPA_NG, heuristic=h))
+            output_files.extend(_get_jplace_outputs(config, PlacementSoftware.EPA_NG, heuristic=h))
     if "rappas" in config["test_soft"]:
-        inputs.extend(_get_jplace_outputs(config, PlacementSoftware.RAPPAS))
+        output_files.extend(_get_jplace_outputs(config, PlacementSoftware.RAPPAS))
     if "apples" in config["test_soft"]:
-        pass
-        #inputs.extend(
-        #    expand(
-        #        config["workdir"]+"/APPLES/{pruning}/m{meth}_c{crit}/{pruning}_r{length}_m{meth}_c{crit}_apples.jplace",
-        #        pruning=range(0,config["pruning_count"]),
-        #        length=config["read_length"],
-        #        meth=config["config_apples"]["methods"],
-        #        crit=config["config_apples"]["criteria"]
-        #    )
-        #)
-    return inputs
+        output_files.extend(_get_jplace_outputs(config, PlacementSoftware.APPLES))
+    return output_files
 
 
 def build_placements_workflow() -> List[str]:
@@ -217,7 +219,7 @@ def build_placements_workflow() -> List[str]:
     """
     # list of optimized trees
     trees = expand(config["workdir"] + "/T/{pruning}_optimised.tree",
-                   pruning = range(config["pruning_count"]))
+                   pruning=range(config["pruning_count"]))
 
     # hmm alignments for alignment-based methods
     # TODO: implement it with pewo.software types
@@ -228,97 +230,44 @@ def build_placements_workflow() -> List[str]:
         alignments = _get_aligned_queries()
 
     # get .jplace files produced by all tested software
-    placements = get_jplace_outputs()
+    placements = get_jplace_outputs(config)
 
     return list(itertools.chain(trees, alignments, placements))
 
 
-'''
-define expected benchmark outputs, which are written by snakemake in workdir/benchmarks 
-'''
+def _get_benchmark_outputs(config: Dict, software: PlacementSoftware, **kwargs) -> List[str]:
+    """
+    Creates a list of .tsv output files containing benchmark results of given software.
+    """
+    templates = [get_output_template(config, software, "benchmark.tsv", **kwargs)]
+    if software == PlacementSoftware.RAPPAS:
+        templates = [
+            get_output_template(config, PlacementSoftware.RAPPAS, "build_benchmark.tsv"), config["repeats"],
+            get_output_template(config, PlacementSoftware.RAPPAS, "placement_benchmark.tsv"), config["repeats"]
+        ]
+    return [expand(t, **get_output_template_args(config, software, **kwargs)) for t in templates]
+
+
+def get_benchmark_outputs(config) -> List[str]:
+    """F
+    Creates a list of all .tsv files that are produced while benchmarking
+    """
+    output_files = []
+    for software_name in config["test_soft"]:
+        software = PlacementSoftware.get_by_value(software_name)
+        # FIXME
+        if software == PlacementSoftware.EPA_NG:
+            for h in config["config_epang"]["heuristics"]:
+                output_files.extend(_get_benchmark_outputs(config, PlacementSoftware.EPA_NG, heuristic=h))
+        else:
+            output_files.extend(_get_benchmark_outputs(config, software))
+    return output_files
+
+
 def build_benchmarks_workflow() -> List[str]:
-    l=list()
-    #hmm alignments for alignment-based methods
-    if ("epa" in config["test_soft"]) or ("epang" in config["test_soft"]) or ("pplacer" in config["test_soft"]) or ("apples" in config["test_soft"]) :
-        l.append(
-            expand(
-                config["workdir"]+"/benchmarks/{pruning}_r{length}_hmmalign_benchmark.tsv",
-                pruning=range(0,config["pruning_count"],1),
-                length=config["read_length"]
-            )
-        )
-    #pplacer placements
-    if "pplacer" in config["test_soft"] :
-        l.append(
-            expand(
-                config["workdir"]+"/benchmarks/{pruning}_r{length}_ms{msppl}_sb{sbppl}_mp{mpppl}_pplacer_benchmark.tsv",
-                pruning=range(0,config["pruning_count"]),
-                length=config["read_length"],
-                msppl=config["config_pplacer"]["max-strikes"],
-                sbppl=config["config_pplacer"]["strike-box"],
-                mpppl=config["config_pplacer"]["max-pitches"]
-            )
-        )
-    #epa placements
-    if "epa" in config["test_soft"] :
-        l.append(
-            expand(
-                config["workdir"]+"/benchmarks/{pruning}_r{length}_g{gepa}_epa_benchmark.tsv",
-                pruning=range(0,config["pruning_count"]),
-                length=config["read_length"],
-                gepa=config["config_epa"]["G"]
-            )
-        )
-    #epa-ng placements
-    if "epang" in config["test_soft"] :
-        l.append(
-            #different heuristics can be called, leading to different results and completely different runtimes
-            select_epang_heuristics_benchmarks()
-        )
-    #apples placements
-    if "apples" in config["test_soft"] :
-        l.append(
-            expand(
-                config["workdir"]+"/benchmarks/{pruning}_r{length}_m{meth}_c{crit}_apples_benchmark.tsv",
-                pruning=range(0,config["pruning_count"]),
-                length=config["read_length"],
-                meth=config["config_apples"]["methods"],
-                crit=config["config_apples"]["criteria"]
-            )
-        )
-    #rappas
-    #for resource evaluation, AR, dbbuild and placement are split for independent measures
-    if "rappas" in config["test_soft"] :
-        #ar
-        l.append(
-            expand(
-                config["workdir"]+"/benchmarks/{pruning}_red{reduction}_ar{arsoft}_ansrec_benchmark.tsv",
-                pruning=range(0,config["pruning_count"]),
-                reduction=config["config_rappas"]["reduction"],
-                arsoft=config["config_rappas"]["arsoft"]
-            )
-        )
-        #dbbuild
-        l.append(
-            expand(
-                config["workdir"]+"/benchmarks/{pruning}_k{k}_o{omega}_red{reduction}_ar{arsoft}_rappas-dbbuild_benchmark.tsv",
-                pruning=range(0,config["pruning_count"]),
-                k=config["config_rappas"]["k"],
-                omega=config["config_rappas"]["omega"],
-                reduction=config["config_rappas"]["reduction"],
-                arsoft=config["config_rappas"]["arsoft"]
-            )
-        )
-        #placement
-        l.append(
-            expand(
-                config["workdir"]+"/benchmarks/{pruning}_r{length}_k{k}_o{omega}_red{reduction}_ar{arsoft}_rappas-placement_benchmark.tsv",
-                pruning=range(0,config["pruning_count"]),
-                k=config["config_rappas"]["k"],
-                omega=config["config_rappas"]["omega"],
-                length=config["read_length"],
-                reduction=config["config_rappas"]["reduction"],
-                arsoft=config["config_rappas"]["arsoft"]
-            )
-        )
-    return l
+    """
+    Defines expected benchmark outputs, which are written by snakemake in workdir/benchmarks
+    """
+    tsv_files = get_benchmark_outputs(config)
+    final_file = get_resources_plots()
+    return list(itertools.chain(tsv_files, final_file))

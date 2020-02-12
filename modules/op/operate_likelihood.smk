@@ -5,8 +5,8 @@ This module computes the likelihood of a tree.
 __author__ = "Nikolai Romashchenko"
 
 import os
-from typing import Dict, List
-from snakemake.io import InputFiles, Namedlist
+from typing import Dict, List, Type
+from snakemake.io import InputFiles, OutputFiles, Params, Wildcards
 import pewo.config as cfg
 from pewo.likelihood.likelihood import combine_csv
 from pewo.likelihood.extend_tree import make_extended_tree
@@ -17,8 +17,13 @@ from pewo.templates import get_output_template, get_common_queryname_template, \
 
 _work_dir = cfg.get_work_dir(config)
 
+RuleInputs = str, Type[InputFiles]
+RuleOutputs = Type[OutputFiles]
+RuleParams = Type[Params]
+RuleWildcards = Type[Wildcards]
 
-def _calculate_likelihood(input: InputFiles, output: Namedlist, params: Namedlist, wildcards: Namedlist) -> None:
+
+def _calculate_likelihood(input: RuleInputs, output: RuleOutputs, params: RuleParams, wildcards: RuleWildcards) -> None:
     with open(output.csv, "w") as f_out:
         # make .csv header: placement parameters
         header = [key for key in wildcards.keys()]
@@ -31,7 +36,13 @@ def _calculate_likelihood(input: InputFiles, output: Namedlist, params: Namedlis
 
         # run raxml-ng, parse the output to get the likelihood value and put it in the variable
         likelihood = shell(
-            'raxml-ng --evaluate --msa {input.alignment} --tree {input.tree} --model {params.model} --redo'
+            'raxml-ng '
+            '--evaluate '
+            '--msa {input.alignment} '
+            '--tree {input.tree} '
+            '--model {params.model} '
+            '--redo '
+            '--threads 1'
             '| grep "Final LogLikelihood" | cut -d" " -f3', read=True
         ).decode("utf-8").strip()
         values.append(
@@ -52,26 +63,25 @@ def _get_aligned_query_template(config: Dict) -> str:
                         "{pruning}",
                         get_common_queryname_template(config) + ".fasta")
 
-
 rule split_queries:
     """
     Splits input .fasta file into multiple fasta files.
     """
     input:
-         reads=config["dataset_reads"]
+        reads=config["query_user"]
     output:
-          queries=expand(
-              os.path.join(_work_dir, "R",
-                           get_common_queryname_template(config) + ".fasta"),
-              **get_common_template_args(config)
-          )
+        queries=expand(
+            os.path.join(_work_dir, "R",
+                         get_common_queryname_template(config) + ".fasta"),
+            **get_common_template_args(config)
+        )
     log:
-       config["workdir"] + "/logs/split_queries.log"
+        config["workdir"] + "/logs/split_queries.log"
     version:
-           "1.00"
+        "1.00"
     run:
         output_directory = os.path.join(_work_dir, "R")
-        fasta.split_fasta(config["dataset_reads"], output_directory)
+        fasta.split_fasta(config["query_user"], output_directory)
 
 # WARNING!
 #
@@ -277,6 +287,8 @@ def _get_csv_output(config: Dict) -> List[str]:
     Generates a full list of output .csv file names for all software tested.
     """
     outputs = []
+
+
 
     for software in PlacementSoftware:
         if cfg.software_tested(config, software):

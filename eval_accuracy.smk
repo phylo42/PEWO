@@ -17,42 +17,43 @@ config["repeats"] = 1
 
 #utils
 include:
-       "modules/utils/workflow.smk"
+    "modules/utils/workflow.smk"
 include:
-       "modules/utils/etc.smk"
+    "modules/utils/etc.smk"
 #prunings
 include:
-       "modules/op/operate_prunings.smk"
+    "modules/op/operate_prunings.smk"
 #tree optimisation
 include:
-       "modules/op/operate_optimisation.smk"
+    "modules/op/operate_optimisation.smk"
 #phylo-kmer placement, e.g.: rappas
 include:
-       "modules/op/operate_ar.smk"
+    "modules/op/ar.smk"
 include:
-       "modules/placement/placement_rappas_dbinram.smk"
+    "modules/placement/rappas.smk"
 #alignment (for distance-based and ML approaches)
 include:
-       "modules/alignment/alignment_hmm_ll.smk"
+    "modules/alignment/hmmer.smk"
 #ML-based placements, e.g.: epa, epang, pplacer
 include:
-       "modules/placement/placement_epa.smk"
+    "modules/placement/epa.smk"
 include:
-       "modules/placement/placement_pplacer.smk"
+    "modules/placement/pplacer.smk"
 include:
-       "modules/placement/placement_epang.smk"
+    "modules/placement/epang.smk"
 #distance-based placements, e.g.: apples
-#include:
-#    "modules/placement/placement_apples.smk"
+include:
+    "modules/placement/apples.smk"
 #results evaluation and plots
 include:
-       "modules/op/operate_nodedistance.smk"
+    "modules/op/operate_nodedistance.smk"
 include:
-       "modules/op/operate_plots.smk"
+    "modules/op/operate_plots.smk"
 
-'''
-top snakemake rule, necessary to launch the workflow
-'''
+
 rule all:
+    '''
+    top snakemake rule, necessary to launch the workflow
+    '''
     input:
-         build_accuracy_workflow()
+        build_accuracy_workflow()
