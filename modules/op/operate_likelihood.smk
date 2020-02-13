@@ -3,6 +3,7 @@ This module computes the likelihood of a tree.
 """
 
 __author__ = "Nikolai Romashchenko"
+__license__ = "MIT"
 
 import os
 from typing import Dict, List, Type

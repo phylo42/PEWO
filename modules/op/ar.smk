@@ -5,6 +5,7 @@ which may generate ressource-consuming ARs (e.g., phyml requiring lots of RAM)
 """
 
 __author__ = "Benjamin Linard, Nikolai Romashchenko"
+__license__ = "MIT"
 
 from pewo.software import get_ar_binary
 from pewo.templates import get_ar_output_templates

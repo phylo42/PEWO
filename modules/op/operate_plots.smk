@@ -9,7 +9,6 @@ __license__ = "MIT"
 import os
 import pewo.config as cfg
 
-
 _working_dir = cfg.get_work_dir(config)
 
 

@@ -1,24 +1,18 @@
-'''
+"""
 module to operate muscle alignments between pruned leaves and pruned alignments
 1) build hmm profile from pruned alignment
 2) align reads to profile
 3) convert psiblast output alignment to fasta alignment
+"""
 
-@author Benjamin Linard
-'''
-
-import os
-
-#debug
-if (config["debug"]==1):
-    print("clustalo: "+os.getcwd())
-#debug
+__author__ = "Benjamin Linard, Nikolai Romashchenko"
+__license__ = "MIT"
 
 
-'''
-align to profile
-'''
 rule clustalo_profile_alignment:
+    '''
+    align to profile
+    '''
     input:
         align=config["workdir"]+"/A/{pruning}.align",
         reads=config["workdir"]+"/R/{pruning}_r{length}.fasta"
@@ -46,12 +40,11 @@ rule clustalo_profile_alignment:
         fi
         """
 
-
-'''
-split hmm alignment results in "query only" and "reference alignment only" sub-alignments
-contrary to other placement software, such input is required by epa-ng
-'''
 rule clustalo_split_alignment:
+    '''
+    split hmm alignment results in "query only" and "reference alignment only" sub-alignments
+    contrary to other placement software, such input is required by epa-ng
+    '''
     input:
         align=config["workdir"]+"/HMM/{pruning}_r{length}.clustalo.fasta",
         reads=config["workdir"]+"/R/{pruning}_r{length}.fasta"

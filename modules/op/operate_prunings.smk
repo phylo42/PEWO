@@ -3,6 +3,7 @@ This module computes different prunings using the alignment/tree set from the co
 """
 
 __author__ = "Benjamin Linard, Nikolai Romashchenko"
+__license__ = "MIT"
 
 # TODO: keep or remove read length sd ?
 

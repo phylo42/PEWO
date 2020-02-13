@@ -18,11 +18,11 @@
 #dataset_align: demos/16SrRNA_resource_test/alignment_150.fasta
 #dataset_tree: demos/16SrRNA_resource_test/RAxML_bipartitions.150.BEST.WITH
 
-dataset_align: test/1.align
-dataset_tree: test/1.tree
+dataset_align: test/2.align
+dataset_tree: test/2.tree
 
 #working directory
-workdir: /home/nikolai/dev/pewo/run_likelihood1
+workdir: /home/nikolai/dev/pewo/run_likelihood2
 
 
 #states used in analysis, either '0' for nucleotides or '1' for amino acids
@@ -57,7 +57,7 @@ query_type: user
 
 # queries used in resource evaluation, >10000 sequences recommended
 #query_user: test/EMP_92_studies_100000.fas
-query_user: test/1_r300.fasta
+query_user: test/2_r300.fasta
 #query_user: demos/16SrRNA_resource_test/EMP_92_studies_1000.fas
 
 

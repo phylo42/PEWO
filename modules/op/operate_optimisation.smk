@@ -3,16 +3,12 @@ This module optimises pruned trees.
 """
 
 __author__ = "Benjamin Linard, Nikolai Romashchenko"
+__license__ = "MIT"
 
 
 # TODO: add model/parameters selection in the config file, this config needs to be propagated to all placement software
 
 import os
-
-#debug
-if config["debug"] == 1:
-    print("prunings: " + os.getcwd())
-#debug
 
 rule optimise:
     input:

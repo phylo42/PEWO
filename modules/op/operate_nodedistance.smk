@@ -3,6 +3,7 @@ Computes the ND (node distance) metric using .jplace output files
 """
 
 __author__ = "Benjamin Linard, Nikolai Romashchenko"
+__license__ = "MIT"
 
 import os
 import pewo.config as cfg

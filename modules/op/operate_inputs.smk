@@ -1,13 +1,15 @@
-'''
+"""
 Prepare directories to run a resource test.
 Basically, it uses same directory structure than a pruning test, but with a unique run '0', which represents
 a full, non-pruned tree and for which repeated placements runs will be launched for a set of reads set
 (set as R/O/O_r0.fasta).
 
 This rule is called once when starting the "resources" workflow.
+"""
 
-@author Benjamin Linard
-'''
+
+__author__ = "Benjamin Linard, Nikolai Romashchenko"
+__license__ = "MIT"
 
 import os
 
