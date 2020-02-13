@@ -10,6 +10,8 @@ __license__ = "MIT"
 # this config file is set globally for all subworkflows
 configfile: "config.yaml"
 
+config["mode"] = "resources"
+
 # explicitly set config as if there was a single pruning which in fact represents the full (NOT pruned) tree.
 # this allow to use the same config file for both 'accuracy' and 'resources' modes of PEWO worflow
 # NOTE: this statement MUST be set BEFORE the "includes"

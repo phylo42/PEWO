@@ -2,10 +2,6 @@
 # WORKFLOW CONFIGURATION
 ########################################################################################################################
 
-
-# Can be accuracy, likelihood or resources
-mode: likelihood
-
 # INPUT DATASET
 ##############################
 #alignment in fasta format and tree in newick format
@@ -18,23 +14,20 @@ mode: likelihood
 #dataset_align: /media/ben/STOCK/DATA/PEWO/jphmm_inputs/HBV_alignment.fas
 #dataset_tree: /media/ben/STOCK/DATA/PEWO/jphmm_inputs/RAxML_bipartitions.HBV.REROOTED
 
-dataset_align: test/0.align
-dataset_tree: test/0.tree
+
+dataset_align: demos/16SrRNA_resource_test/alignment_150.fasta
+dataset_tree: demos/16SrRNA_resource_test/RAxML_bipartitions.150.BEST.WITH
+
 
 #working directory
-workdir: /home/nikolai/dev/pewo/run_likelihood0
+workdir: /home/nikolai/dev/pewo/run_benchmark_16s
 
 
 #states used in analysis, either '0' for nucleotides or '1' for amino acids
 states: 0
 
 #which software to test, at least one of : epa, epang, pplacer, rappas, apples
-test_soft: [epa, epang, rappas, pplacer]
-
-# Indicates if PEWO should generate reads from the input tree or take an input fasta file
-# with sequences.
-#generate_reads: True
-generate_reads: False
+test_soft: [epa, rappas, pplacer]
 
 # READ GENERATION
 # Read lengths to generate
@@ -62,8 +55,8 @@ query_type: user
 
 # queries used in resource evaluation, >10000 sequences recommended
 #query_user: test/EMP_92_studies_100000.fas
-query_user: test/0_r300.fasta
-
+#query_user: test/1_r300.fasta
+query_user: demos/16SrRNA_resource_test/EMP_92_studies_1000.fas
 
 
 

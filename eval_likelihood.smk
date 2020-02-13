@@ -10,9 +10,12 @@ __license__ = "MIT"
 configfile: "config.yaml"
 
 config["mode"] = "likelihood"
+
+# Explicitly set config as if there was a single pruning which in fact represents the full (NOT pruned) tree.
+# This allow to use the same config file for both 'accuracy' and 'resources' modes of PEWO worflow
+# NOTE: this statement MUST be set BEFORE the "includes"
 config["pruning_count"] = 1
 config["read_length"] = [0]
-config["generate_reads"] = False
 
 # Explicitly set config to not repeat binary executions,
 # which is an option that should be considered only in 'resource' evaluation mode.

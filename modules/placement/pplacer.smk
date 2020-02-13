@@ -64,8 +64,8 @@ rule placement_pplacer:
         jplace = get_output_template(config, PlacementSoftware.PPLACER, "jplace")
     log:
         get_log_template(config, PlacementSoftware.PPLACER)
-    #benchmark:
-    #    repeat(get_benchmark_template(config, PlacementSoftware.PPLACER), config["repeats"])
+    benchmark:
+        repeat(get_benchmark_template(config, PlacementSoftware.PPLACER), config["repeats"])
     version: "1.00"
     params:
         maxp = config["maxplacements"],

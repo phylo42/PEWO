@@ -100,12 +100,6 @@ rule db_build_in_ram_rappas:
                 )
 
 
-def make_log_name(wildcards) -> str:
-    x = "_".join(w + f"{w}" for w in wildcards)
-    print(x)
-    return x
-
-
 # model parameters do not need to be passed, as they are useful only at AR
 rule db_build_rappas:
     """
@@ -119,8 +113,10 @@ rule db_build_rappas:
         database = os.path.join(_rappas_experiment_dir, "DB.bin")
     #log:
     #    get_log_template(config, PlacementSoftware.RAPPAS)
-    #benchmark:
-    #    repeat(get_benchmark_template(config, PlacementSoftware.RAPPAS), config["repeats"])
+    benchmark:
+        repeat(config["workdir"]+
+               "/benchmarks/{pruning}_k{k}_o{o}_red{red}_ar{ar}_rappas-dbbuild_benchmark.tsv", config["repeats"])
+        #repeat(get_benchmark_template(config, PlacementSoftware.RAPPAS), config["repeats"])
     version: "1.00"
     params:
         states=["nucl"] if config["states"]==0 else ["amino"],
@@ -145,15 +141,16 @@ rule placement_rappas:
         jplace = get_output_template(config, PlacementSoftware.RAPPAS, "jplace")
     log:
         get_log_template(config, PlacementSoftware.RAPPAS)
-    #benchmark:
-    #    repeat(get_output_template(config, PlacementSoftware.RAPPAS, "placement_benchmark.tsv"), config["repeats"])
+    benchmark:
+        repeat(config["workdir"]+
+               "/benchmarks/{pruning}_k{k}_o{o}_red{red}_ar{ar}_rappas-placement_benchmark.tsv", config["repeats"])
+        #repeat(get_benchmark_template(config, PlacementSoftware.RAPPAS), config["repeats"])
     version: "1.00"
     params:
         workdir = _rappas_experiment_dir,
         maxp = config["maxplacements"],
         minlwr = config["minlwr"]
     run:
-        make_log_name(wildcards)
         memory = config['config_rappas']['memory']
         rappas_command = "java -Xms2G " + \
                          f"-Xmx{memory}G " + \

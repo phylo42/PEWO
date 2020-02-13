@@ -103,8 +103,8 @@ rule placement_epang_h1:
         jplace=get_output_template(config, PlacementSoftware.EPA_NG, "jplace", heuristic="h1")
     log:
         logfile=get_log_template(config, PlacementSoftware.EPA_NG, heuristic="h1")
-    #benchmark:
-    #    repeat(get_benchmark_template(config, PlacementSoftware.EPA_NG, heuristic="h1"), config["repeats"])
+    benchmark:
+        repeat(get_benchmark_template(config, PlacementSoftware.EPA_NG, heuristic="h1"), config["repeats"])
     version: "1.0"
     params:
         tmpdir=get_experiment_dir_template(config, PlacementSoftware.EPA_NG, heuristic="h1"),
@@ -131,8 +131,8 @@ rule placement_epang_h2:
         jplace=get_output_template(config, PlacementSoftware.EPA_NG, "jplace", heuristic="h2")
     log:
         logfile=get_log_template(config, PlacementSoftware.EPA_NG, heuristic="h2")
-    #benchmark:
-    #    repeat(get_benchmark_template(config, PlacementSoftware.EPA_NG, heuristic="h2"),config["repeats"])
+    benchmark:
+        repeat(get_benchmark_template(config, PlacementSoftware.EPA_NG, heuristic="h2"),config["repeats"])
     version: "1.0"
     params:
         tmpdir=get_experiment_dir_template(config, PlacementSoftware.EPA_NG, heuristic="h2"),

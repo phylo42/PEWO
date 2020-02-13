@@ -239,13 +239,17 @@ def _get_benchmark_outputs(config: Dict, software: PlacementSoftware, **kwargs) 
     """
     Creates a list of .tsv output files containing benchmark results of given software.
     """
-    templates = [get_output_template(config, software, "benchmark.tsv", **kwargs)]
-    if software == PlacementSoftware.RAPPAS:
-        templates = [
-            get_output_template(config, PlacementSoftware.RAPPAS, "build_benchmark.tsv"), config["repeats"],
-            get_output_template(config, PlacementSoftware.RAPPAS, "placement_benchmark.tsv"), config["repeats"]
-        ]
-    return [expand(t, **get_output_template_args(config, software, **kwargs)) for t in templates]
+
+    return expand(config["workdir"]+
+               "/benchmarks/{pruning}_k{k}_o{o}_red{red}_ar{ar}_rappas-dbbuild_benchmark.tsv",
+                  **get_output_template_args(config, PlacementSoftware.RAPPAS))
+    #templates = [get_output_template(config, software, "benchmark.tsv", **kwargs)]
+    #if software == PlacementSoftware.RAPPAS:
+    #    templates = [
+    #        get_output_template(config, PlacementSoftware.RAPPAS, "build_benchmark.tsv"), config["repeats"],
+    #        get_output_template(config, PlacementSoftware.RAPPAS, "placement_benchmark.tsv"), config["repeats"]
+    #    ]
+    #return [expand(t, **get_output_template_args(config, software, **kwargs)) for t in templates]
 
 
 def get_benchmark_outputs(config) -> List[str]:

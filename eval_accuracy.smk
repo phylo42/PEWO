@@ -9,6 +9,9 @@ __license__ = "MIT"
 
 configfile: "config.yaml"
 
+
+config["mode"] = "accuracy"
+
 # Explicitly set config to not repeat binary executions,
 # which is an option that should be considered only in 'resource' evaluation mode.
 # this allow to use the same config file for both 'accuracy' and 'resources' modes of PEWO worflow
