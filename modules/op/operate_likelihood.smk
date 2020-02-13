@@ -169,6 +169,15 @@ rule extend_trees_rappas:
     run:
         make_extended_tree(input.tree, output.ext_tree, input.jplace)
 
+rule extend_trees_apples:
+    input:
+         jplace=get_output_template(config, PlacementSoftware.APPLES, "jplace"),
+         tree=config["dataset_tree"],
+    output:
+          ext_tree=get_output_template(config, PlacementSoftware.APPLES, "tree")
+    run:
+        make_extended_tree(input.tree, output.ext_tree, input.jplace)
+
 rule calculate_likelihood_epa:
     """
     Calculates likelihood values for the placements produced by EPA.
@@ -281,14 +290,28 @@ rule calculate_likelihood_rappas:
     run:
         _calculate_likelihood(input, output, params, wildcards)
 
+rule calculate_likelihood_apples:
+    """
+    Calculates likelihood values for the placements produced by APPLES.
+    """
+    input:
+         alignment=_get_aligned_query_template(config),
+         tree=get_output_template(config, PlacementSoftware.APPLES, "tree")
+    output:
+          csv=get_output_template(config, PlacementSoftware.APPLES, "csv")
+    params:
+          workdir=cfg.get_work_dir(config),
+          software=PlacementSoftware.APPLES.value,
+          model="GTR+G"
+    run:
+        _calculate_likelihood(input, output, params, wildcards)
+
 
 def _get_csv_output(config: Dict) -> List[str]:
     """
     Generates a full list of output .csv file names for all software tested.
     """
     outputs = []
-
-
 
     for software in PlacementSoftware:
         if cfg.software_tested(config, software):

@@ -1,34 +1,48 @@
-'''
-module to operate placements with APPLES
+"""
+Module to operate placements with APPLES
+"""
 
-@author Benjamin Linard
-'''
 
+__author__ = "Benjamin Linard, Nikolai Romashchenko"
+__license__ = "MIT"
 
 import os
+import pewo.config as cfg
+from pewo.software import PlacementSoftware, AlignmentSoftware
+from pewo.templates import get_output_template, get_log_template, get_software_dir, \
+    get_common_queryname_template
 
-#debug
-if (config["debug"]==1):
-    print("epa: "+os.getcwd())
 
-#rule all:
-#    input: expand(config["workdir"]+"/EPA/{pruning}/g{gepa}/{pruning}_r{length}_g{gepa}_epa.jplace", pruning=range(0,config["pruning_count"],1), length=config["read_length"], gepa=config["config_epa"]["G"])
+_working_dir = cfg.get_work_dir(config)
+_alignment_dir = get_software_dir(config, AlignmentSoftware.HMMER)
+
+
+# FIXME: These are the same methods as in the epang.smk
+def _get_apples_input_reads(config) -> str:
+    return os.path.join(_alignment_dir, "{pruning}", get_common_queryname_template(config) + ".fasta_refs")
+
+
+def _get_apples_input_queries(config) -> str:
+    return os.path.join(_alignment_dir, "{pruning}", get_common_queryname_template(config) + ".fasta_queries")
+
+
+def _get_apples_input_tree() -> str:
+    return os.path.join(_working_dir, "T", "{pruning}.tree")
+
 
 rule placement_apples:
     input:
-        r=config["workdir"]+"/HMM/{pruning}_r{length}.fasta_refs",
-        q=config["workdir"]+"/HMM/{pruning}_r{length}.fasta_queries",
-        t=config["workdir"]+"/T/{pruning}.tree",
+        r=_get_apples_input_reads(config),
+        q=_get_apples_input_queries(config),
+        t=_get_apples_input_tree(),
     output:
-        out=config["workdir"]+"/APPLES/{pruning}/m{meth}_c{crit}/{pruning}_r{length}_m{meth}_c{crit}_apples.jplace"
+        jplace=get_output_template(config, PlacementSoftware.APPLES, "jplace")
     log:
-        config["workdir"]+"/logs/placement_apples/{pruning}_r{length}_m{meth}_c{crit}_apples.log"
-    benchmark:
-        repeat(config["workdir"]+"/benchmarks/{pruning}_r{length}_m{meth}_c{crit}_apples_benchmark.tsv", config["repeats"])
+        get_log_template(config, PlacementSoftware.APPLES)
+    #benchmark:
+    #    repeat(get_benchmark_template(config, PlacementSoftware.APPLES), config["repeats"])
     version: "1.0"
-    params:
-        outname=config["workdir"]+"/APPLES/{pruning}/m{meth}_c{crit}/{pruning}_r{length}_m{meth}_c{crit}_apples.jplace"
     shell:
         """
-        run_apples.py -s {input.r} -q {input.q} -t {input.t} -T 1 -m {wildcards.meth} -c {wildcards.crit} -o {params.outname}
+        run_apples.py -s {input.r} -q {input.q} -t {input.t} -T 1 -m {wildcards.meth} -c {wildcards.crit} -o {output.jplace}
         """

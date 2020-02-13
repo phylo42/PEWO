@@ -78,45 +78,6 @@ def get_resources_plots() -> List[str]:
     """
     return []
 
-def select_epang_heuristics_benchmarks():
-    """
-    An accessory function to correctly set which epa-ng heuristics are tested and with which parameters
-    """
-    l = []
-    if "h1" in config["config_epang"]["heuristics"]:
-        l.append(
-            expand(
-                config["workdir"] + "/benchmarks/{pruning}_r{length}_h1_g{gepang}_epang_benchmark.tsv",
-                pruning=range(0, config["pruning_count"]),
-                length=config["read_length"],
-                gepang=config["config_epang"]["h1"]["g"]
-            )
-        )
-    if "h2" in config["config_epang"]["heuristics"]:
-        l.append(
-            expand(config["workdir"] + "/benchmarks/{pruning}_r{length}_h2_bigg{biggepang}_epang_benchmark.tsv",
-                   pruning=range(0, config["pruning_count"]),
-                   length=config["read_length"],
-                   biggepang=config["config_epang"]["h2"]["G"]
-                   )
-        )
-    if "h3" in config["config_epang"]["heuristics"]:
-        l.append(
-            expand(config["workdir"] + "/benchmarks/{pruning}_r{length}_h3_epang_benchmark.tsv",
-                   pruning=range(0, config["pruning_count"]),
-                   length=config["read_length"]
-                   )
-        )
-    if "h4" in config["config_epang"]["heuristics"]:
-        l.append(
-            expand(
-                config["workdir"] + "/benchmarks/{pruning}_r{length}_h4_epang_benchmark.tsv",
-                pruning=range(0, config["pruning_count"]),
-                length=config["read_length"]
-            )
-        )
-    return l
-
 
 def build_accuracy_workflow() -> List[str]:
     """
@@ -199,17 +160,14 @@ def get_jplace_outputs(config) -> List[str]:
     """
     output_files = []
 
-    if "epa" in config["test_soft"]:
-        output_files.extend(_get_jplace_outputs(config, PlacementSoftware.EPA))
-    if "pplacer" in config["test_soft"]:
-        output_files.extend(_get_jplace_outputs(config, PlacementSoftware.PPLACER))
-    if "epang" in config["test_soft"]:
-        for h in config["config_epang"]["heuristics"]:
-            output_files.extend(_get_jplace_outputs(config, PlacementSoftware.EPA_NG, heuristic=h))
-    if "rappas" in config["test_soft"]:
-        output_files.extend(_get_jplace_outputs(config, PlacementSoftware.RAPPAS))
-    if "apples" in config["test_soft"]:
-        output_files.extend(_get_jplace_outputs(config, PlacementSoftware.APPLES))
+    for software_name in config["test_soft"]:
+        software = PlacementSoftware.get_by_value(software_name)
+        # FIXME
+        if software == PlacementSoftware.EPA_NG:
+            for h in config["config_epang"]["heuristics"]:
+                output_files.extend(_get_jplace_outputs(config, software, heuristic=h))
+        else:
+            output_files.extend(_get_jplace_outputs(config, software))
     return output_files
 
 

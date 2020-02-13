@@ -65,11 +65,9 @@ def get_experiment_dir_template(config: Dict, software: PlacementSoftware, **kwa
     elif software == PlacementSoftware.PPLACER:
         return os.path.join(software_dir, input_set_dir_template, "ms{ms}_sb{sb}_mp{mp}")
     elif software == PlacementSoftware.APPLES:
-        raise NotImplementedError()
+        return os.path.join(software_dir, input_set_dir_template, "m{meth}_c{crit}")
     elif software == PlacementSoftware.RAPPAS:
         return os.path.join(software_dir, input_set_dir_template, "red{red}_ar{ar}", "k{k}_o{o}")
-    elif software == PlacementSoftware.RAPPAS2:
-        raise NotImplementedError()
 
 
 def get_experiment_log_dir_template(config: Dict, software: Software) -> str:
@@ -161,11 +159,9 @@ def get_queryname_template(config: Dict, software: PlacementSoftware, **kwargs) 
     elif software == PlacementSoftware.PPLACER:
         return get_common_queryname_template(config) + "_ms{ms}_sb{sb}_mp{mp}"
     elif software == PlacementSoftware.APPLES:
-        raise NotImplementedError()
+        return get_common_queryname_template(config) + "_m{meth}_c{crit}"
     elif software == PlacementSoftware.RAPPAS:
         return get_common_queryname_template(config) + "_k{k}_o{o}_red{red}_ar{ar}"
-    elif software == PlacementSoftware.RAPPAS2:
-        raise NotImplementedError()
 
 
 def get_output_template_args(config: Dict, software: PlacementSoftware, **kwargs) -> Dict[str, Any]:
@@ -183,6 +179,10 @@ def get_output_template_args(config: Dict, software: PlacementSoftware, **kwargs
     template_args = get_common_template_args(config)
 
     template_args["software"] = software.value
+
+    # FIXME: These template arguments should be named in the same way as the input config
+    # parameters. Change the name convention so that the config dictionary content
+    # is actually the output of this function.
 
     # specify template arguments based on software
     if software == PlacementSoftware.EPA:
@@ -203,14 +203,13 @@ def get_output_template_args(config: Dict, software: PlacementSoftware, **kwargs
         template_args["sb"] = config["config_pplacer"]["strike-box"]
         template_args["mp"] = config["config_pplacer"]["max-pitches"]
     elif software == PlacementSoftware.APPLES:
-        raise NotImplementedError()
+        template_args["meth"] = config["config_apples"]["methods"]
+        template_args["crit"] = config["config_apples"]["criteria"]
     elif software == PlacementSoftware.RAPPAS:
         template_args["k"] = config["config_rappas"]["k"]
         template_args["o"] = config["config_rappas"]["omega"]
         template_args["red"] = config["config_rappas"]["reduction"]
         template_args["ar"] = config["config_rappas"]["arsoft"]
-    elif software == PlacementSoftware.RAPPAS2:
-        raise NotImplementedError()
     else:
         raise RuntimeError("Unsupported software: " + software.value)
     return template_args

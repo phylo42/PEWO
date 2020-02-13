@@ -78,8 +78,8 @@ rule placement_epa:
         _get_epa_placement_output()
     log:
         get_log_template(config, PlacementSoftware.EPA)
-    benchmark:
-        repeat(get_benchmark_template(config, PlacementSoftware.EPA), config["repeats"])
+    #benchmark:
+    #    repeat(get_benchmark_template(config, PlacementSoftware.EPA), config["repeats"])
     version: "1.0"
     params:
         m = select_model_raxmlstyle(),

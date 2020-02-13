@@ -133,6 +133,8 @@ rule db_build_rappas:
             #" &> {log} "
          )
 
+
+#print(get_output_template(config, PlacementSoftware.RAPPAS, "jplace"))
 rule placement_rappas:
     input:
         database = os.path.join(_rappas_experiment_dir, "DB.bin"),
@@ -143,7 +145,7 @@ rule placement_rappas:
         get_log_template(config, PlacementSoftware.RAPPAS)
     benchmark:
         repeat(config["workdir"]+
-               "/benchmarks/{pruning}_k{k}_o{o}_red{red}_ar{ar}_rappas-placement_benchmark.tsv", config["repeats"])
+               "/benchmarks/{pruning}_r{length}_q{query}_k{k}_o{o}_red{red}_ar{ar}_rappas-placement_benchmark.tsv", config["repeats"])
         #repeat(get_benchmark_template(config, PlacementSoftware.RAPPAS), config["repeats"])
     version: "1.00"
     params:
@@ -161,8 +163,8 @@ rule placement_rappas:
                          "-p p " + \
                          "-d {input.database} " + \
                          "-q {input.r} " + \
-                         "-w {params.workdir} " + \
-                         "&> {log}"
+                         "-w {params.workdir} " #+ \
+                         #"&> {log}"
         query_wildcard = "{wildcards.query}" if cfg.get_mode(config) == cfg.Mode.LIKELIHOOD else "{wildcards.pruning}"
         move_command = "mv {params.workdir}/placements_" + query_wildcard + "_r{wildcards.length}.fasta.jplace " + \
                        "{params.workdir}/" + \

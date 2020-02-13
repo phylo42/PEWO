@@ -15,12 +15,14 @@
 #dataset_tree: /media/ben/STOCK/DATA/PEWO/jphmm_inputs/RAxML_bipartitions.HBV.REROOTED
 
 
-dataset_align: demos/16SrRNA_resource_test/alignment_150.fasta
-dataset_tree: demos/16SrRNA_resource_test/RAxML_bipartitions.150.BEST.WITH
+#dataset_align: demos/16SrRNA_resource_test/alignment_150.fasta
+#dataset_tree: demos/16SrRNA_resource_test/RAxML_bipartitions.150.BEST.WITH
 
+dataset_align: test/1.align
+dataset_tree: test/1.tree
 
 #working directory
-workdir: /home/nikolai/dev/pewo/run_benchmark_16s
+workdir: /home/nikolai/dev/pewo/run_likelihood1
 
 
 #states used in analysis, either '0' for nucleotides or '1' for amino acids
@@ -55,8 +57,8 @@ query_type: user
 
 # queries used in resource evaluation, >10000 sequences recommended
 #query_user: test/EMP_92_studies_100000.fas
-#query_user: test/1_r300.fasta
-query_user: demos/16SrRNA_resource_test/EMP_92_studies_1000.fas
+query_user: test/1_r300.fasta
+#query_user: demos/16SrRNA_resource_test/EMP_92_studies_1000.fas
 
 
 
@@ -137,7 +139,7 @@ config_rappas:
 
   #panel of k that is tested
   #integer in [2,16] (8~10 recommended, >12 often produces too long computations)
-  k: [6, 8]
+  k: [6, 8, 10]
 
   #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
   #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids
