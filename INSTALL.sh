@@ -27,7 +27,7 @@ cd $install_dir
 basedir=$(pwd)
 
 #test if base commands are available
-echo "PEWO installer: Testing is installation requirements are met..."
+echo "PEWO installer: Testing if installation requirements are met..."
 for i in git conda
 do
 	if ! [ -x "$(command -v $i)" ]; then
