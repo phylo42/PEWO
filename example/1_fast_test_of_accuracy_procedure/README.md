@@ -6,8 +6,8 @@ This demo measures placement accuracy in terms of Node Distance (ND)
 and expected Node Distance (eND)for a reference dataset
 of 150 16S-rRNA barcodes.
 
-EPA-ng, PPlacer and RAPPAS are tested using only their default parameters.
-Only 3 pruning are launched, to produce results rapidly.
+EPA-ng, PPlacer and RAPPAS are run using only their default parameters.
+Only 3 pruning are launched, to produce results rapidly in ~20 minutes.
 
 A better analysis would ask for >50 prunings; to generate a wide
 range of topologies (1 leaf pruned, large clades pruned, ...).
@@ -40,9 +40,9 @@ snakemake -np \
 --configfile demos/16SrRNA_accuracy_test/config.yaml
 ```
 
-Execute workflow, using 4 CPU cores.
+Execute workflow, using 2 CPU cores.
 ```
-snakemake -p --cores 4 \
+snakemake -p --cores 2 \
 --snakefile eval_accuracy.smk \
 --config workdir=`pwd`/demos/16SrRNA_accuracy_test/run \
 --configfile demos/16SrRNA_accuracy_test/config.yaml
@@ -62,4 +62,4 @@ Results summaries and plots will be written in
 'demos/16SrRNA_accuracy_test/run'.
 
 See PEWO wiki for a more detailed explanation of the results:
-github.com/blinard-BIOINFO/PEWO_workflow/wiki
+https://github.com/blinard-BIOINFO/PEWO_workflow/wiki/Tutorials-and-results-interpretation
