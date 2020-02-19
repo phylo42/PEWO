@@ -72,11 +72,11 @@ def get_resources_outputs() -> List[str]:
     return [os.path.join(config["workdir"], "resources.tsv")]
 
 
-def get_resources_plots() -> List[str]:
-    """
-    Returns a list of plots files that will be computed in the resources mode
-    """
-    return []
+#def get_resources_plots() -> List[str]:
+#    """
+#    Returns a list of plots files that will be computed in the resources mode
+#    """
+#    return ["resources_results.tsv"]
 
 
 def build_accuracy_workflow() -> List[str]:
@@ -98,23 +98,24 @@ def build_accuracy_workflow() -> List[str]:
 
 def build_resources_workflow() -> List[str]:
     """
-    builds the list of outputs, for a "resources" workflow
+    builds the list of outputs, for the resources workflow
     """
-    l = list()
-    #call outputs from operate_inputs module to build input reads as pruning=0 and r=0
+    l = []
+
+    # call outputs from operate_inputs module to build input reads as pruning=0 and r=0
     l.append(config["workdir"] + "/A/0.align")
     l.append(config["workdir"] + "/T/0.tree")
     l.append(config["workdir"] + "/G/0.fasta")
     l.append(config["workdir"] + "/R/0_r0.fasta")
 
-    #placements
-    l.append(
-        build_placements_workflow()
-    )
-    #benchmarks
-    l.append(build_benchmarks_workflow())
-    #collection of results and generation of summary plots
-    l.append(get_resources_plots())
+    # placements
+    l.extend(build_placements_workflow())
+
+    # benchmarks
+    l.extend(build_benchmarks_workflow())
+
+    # collection of results and generation of summary plots
+    l.extend(get_resources_outputs())
     return l
 
 
@@ -193,25 +194,51 @@ def build_placements_workflow() -> List[str]:
     return list(itertools.chain(trees, alignments, placements))
 
 
-def _get_benchmark_outputs(config: Dict, software: PlacementSoftware, **kwargs) -> List[str]:
+def _get_resources_tsv(config: Dict, software: PlacementSoftware, **kwargs) -> List[str]:
     """
     Creates a list of .tsv output files containing benchmark results of given software.
     """
+    result = []
+    software_templates = []
+    software_template_args = []
+    if software == PlacementSoftware.RAPPAS:
+        software_templates = rappas_benchmark_templates
+        software_template_args = rappas_benchmark_template_args
+    elif software == PlacementSoftware.EPA:
+        software_templates = epa_benchmark_templates + hmmer_benchmark_templates
+        software_template_args = epa_benchmark_template_args + hmmer_benchmark_template_args
+    elif software == PlacementSoftware.EPA_NG:
+        heuristics = ["h1", "h2", "h3", "h4"]
 
-    return expand(config["workdir"]+
-               "/benchmarks/{pruning}_k{k}_o{o}_red{red}_ar{ar}_rappas-dbbuild_benchmark.tsv",
-                  **get_output_template_args(config, PlacementSoftware.RAPPAS))
-    #templates = [get_output_template(config, software, "benchmark.tsv", **kwargs)]
-    #if software == PlacementSoftware.RAPPAS:
-    #    templates = [
-    #        get_output_template(config, PlacementSoftware.RAPPAS, "build_benchmark.tsv"), config["repeats"],
-    #        get_output_template(config, PlacementSoftware.RAPPAS, "placement_benchmark.tsv"), config["repeats"]
-    #    ]
-    #return [expand(t, **get_output_template_args(config, software, **kwargs)) for t in templates]
+        software_templates = []
+        software_template_args = []
+        for h in config["config_epang"]["heuristics"]:
+            h_index = heuristics.index(h)
+            print("GET:")
+            print(epang_benchmark_template_args)
+            print(epang_benchmark_template_args[h_index])
+            software_templates.append(epang_benchmark_templates[h_index])
+            software_template_args.append(epang_benchmark_template_args[h_index])
+
+    elif software == PlacementSoftware.PPLACER:
+        software_templates = pplacer_benchmark_templates + hmmer_benchmark_templates
+        software_template_args = pplacer_benchmark_template_args + hmmer_benchmark_template_args
+    elif software == PlacementSoftware.APPLES:
+        software_templates = apples_benchmark_templates + hmmer_benchmark_templates
+        software_template_args = apples_benchmark_template_args + hmmer_benchmark_template_args
+    else:
+        raise RuntimeError("Unsupported software: " + software.value)
+
+    print(software)
+    print(software_templates)
+    print(software_template_args)
+    for template, template_args in zip(software_templates, software_template_args):
+        result.extend(expand(template, **template_args))
+    return result
 
 
-def get_benchmark_outputs(config) -> List[str]:
-    """F
+def get_resources_tsv(config) -> List[str]:
+    """
     Creates a list of all .tsv files that are produced while benchmarking
     """
     output_files = []
@@ -220,9 +247,9 @@ def get_benchmark_outputs(config) -> List[str]:
         # FIXME
         if software == PlacementSoftware.EPA_NG:
             for h in config["config_epang"]["heuristics"]:
-                output_files.extend(_get_benchmark_outputs(config, PlacementSoftware.EPA_NG, heuristic=h))
+                output_files.extend(_get_resources_tsv(config, PlacementSoftware.EPA_NG, heuristic=h))
         else:
-            output_files.extend(_get_benchmark_outputs(config, software))
+            output_files.extend(_get_resources_tsv(config, software))
     return output_files
 
 
@@ -230,6 +257,4 @@ def build_benchmarks_workflow() -> List[str]:
     """
     Defines expected benchmark outputs, which are written by snakemake in workdir/benchmarks
     """
-    tsv_files = get_benchmark_outputs(config)
-    final_file = get_resources_plots()
-    return list(itertools.chain(tsv_files, final_file))
+    return get_resources_tsv(config)

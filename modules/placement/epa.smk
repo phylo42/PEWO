@@ -20,7 +20,21 @@ from pewo.software import PlacementSoftware
 from pewo.software import AlignmentSoftware
 from pewo.templates import get_experiment_dir_template, get_output_template, \
     get_log_template, get_queryname_template,  get_common_queryname_template, \
-    get_software_dir, get_benchmark_template
+    get_software_dir, get_benchmark_template, get_output_template_args
+
+
+_working_dir = cfg.get_work_dir(config)
+_epa_experiment_dir = get_experiment_dir_template(config, PlacementSoftware.EPA)
+
+#FIXME:
+# Unnecessary dependendancy on the alignment software
+_alignment_dir = get_software_dir(config, AlignmentSoftware.HMMER)
+
+_epa_place_benchmark_template = get_benchmark_template(config, PlacementSoftware.EPA,
+                                                       p="pruning", length="length", g="g", rule_name="placement")
+
+epa_benchmark_templates = [_epa_place_benchmark_template]
+epa_benchmark_template_args = [get_output_template_args(config, PlacementSoftware.EPA)]
 
 
 def _get_epa_placement_output() -> Namedlist:
@@ -53,15 +67,6 @@ def _get_epa_placement_output() -> Namedlist:
     return output
 
 
-
-_working_dir = cfg.get_work_dir(config)
-_epa_experiment_dir = get_experiment_dir_template(config, PlacementSoftware.EPA)
-
-#FIXME:
-# Unnecessary dependendancy on the alignment software
-_alignment_dir = get_software_dir(config, AlignmentSoftware.HMMER)
-
-
 rule placement_epa:
     """
     Runs placement using EPA.
@@ -78,8 +83,8 @@ rule placement_epa:
         _get_epa_placement_output()
     log:
         get_log_template(config, PlacementSoftware.EPA)
-    #benchmark:
-    #    repeat(get_benchmark_template(config, PlacementSoftware.EPA), config["repeats"])
+    benchmark:
+        repeat(_epa_place_benchmark_template, config["repeats"])
     version: "1.0"
     params:
         m = select_model_raxmlstyle(),

@@ -34,9 +34,9 @@ rule plot_resources_results:
     Makes plots for the resources workflow.
     """
     input:
-        tsv=get_resources_outputs()
+        tsv=get_resources_tsv(config)
     output:
-        plots=get_resources_plots()
+        plots=get_resources_outputs()
     log:
        os.path.join(_working_dir, "logs", "R", "resources_plots.log")
     params:

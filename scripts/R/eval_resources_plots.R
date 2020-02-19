@@ -86,6 +86,10 @@ for ( i in 1:length(files)) {
     print(paste0("Parsing: ",files[i]))
     split=strsplit(files[i], "_")
     op=split[[1]][length(split[[1]])-1]
+
+    print(split)
+    print(paste0("OP:", op))
+
     #extract params list from filename
     current_params=c()
     current_vals=c()
@@ -128,6 +132,7 @@ for ( i in 1:length(files)) {
         df[nrow(df) + 1,]= line
     }
 }
+
 #convert numeric columns from string to numeric
 df["s"]<-as.numeric(df$s)
 df["max_rss"]<-as.numeric(df$max_rss)
@@ -138,7 +143,7 @@ df["io_in"]<-as.numeric(df$io_in)
 df["io_out"]<-as.numeric(df$io_out)
 df["mean_load"]<-as.numeric(df$mean_load)
 
-write.table(df,file=paste0(workdir,"/ressource_results.tsv"),row.names=FALSE, na="",col.names=TRUE, sep="\t",quote=TRUE)
+write.table(df,file=paste0(workdir,"/resources.tsv"),row.names=FALSE, na="",col.names=TRUE, sep="\t",quote=TRUE)
 
 #define list of operations that were actually tested and remove them from soft_list and soft_param accordingly
 op_analyzed<-unique(df$operation)
@@ -215,8 +220,6 @@ for (opname in op_analyzed) {
 }#end of op_analyzed loop
 names(results_per_op)<-op_analyzed
 
-
-
 ###################################################
 ###################################################
 ###################################################
@@ -281,14 +284,14 @@ for (i in 1:length(stats_to_plot)) {
 
 #associate operations to analyses
 analyses<-list()
-analyses["epa"]<-c("hmmbuild","epa")
-analyses["epang_h1"]<-c("hmmbuild","epang_h1")
-analyses["epang_h2"]<-c("hmmbuild","epang_h2")
-analyses["epang_h3"]<-c("hmmbuild","epang_h3")
-analyses["epang_h4"]<-c("hmmbuild","epang_h4")
-analyses["pplacer"]<-c("hmmbuild","pplacer")
-analyses["apples"]<-c("hmmbuild","apples")
-analyses["rappas"]<-c("ansrec","rappas-dbbuild","rappas-placement")
+analyses["epa"]<-c("hmmer-align", "epa-placement")
+analyses["epang_h1"]<-c("hmmer-align", "epang_h1")
+analyses["epang_h2"]<-c("hmmer-align", "epang_h2")
+analyses["epang_h3"]<-c("hmmer-align", "epang_h3")
+analyses["epang_h4"]<-c("hmmer-align", "epang_h4")
+analyses["pplacer"]<-c("hmmer-align", "pplacer-placement")
+analyses["apples"]<-c("hmmer-align", "apples-placement")
+analyses["rappas"]<-c("ansrec", "rappas-dbbuild","rappas-placement")
 
 results<-list()
 
@@ -317,11 +320,10 @@ for (line in 1:dim(results[[1]])[1]) {
     results[[1]][line,"labels_short"]<-label
 }
 
-
 #alignment-based times in seconds: align + placement
 i<-2
 for ( op in names(results_per_op)) {
-    if ( op=="ansrec" || op=="rappas-dbbuild" || op=="rappas-placement" || op=="hmmalign") {
+    if ( op=="ansrec" || op=="rappas-dbbuild" || op=="rappas-placement" || op=="hmmer-align") {
         next
     }
     results_per_op[op][[1]]["sample_x1"]<-results_per_op[op][[1]]["s"]
@@ -330,7 +332,7 @@ for ( op in names(results_per_op)) {
     }
     results_per_op[op][[1]]["sample_x1000"]<-results_per_op[op][[1]]["s"]
     for (line in 1:dim(results_per_op[op][[1]])[1]) {
-        results_per_op[op][[1]]["sample_x1000"][line,]<-results_per_op[op][[1]]["s"][line,]*1000+results_per_op["hmmalign"][[1]]["s"][1,]*1000
+        results_per_op[op][[1]]["sample_x1000"][line,]<-results_per_op[op][[1]]["s"][line,]*1000+results_per_op["hmmer-align"][[1]]["s"][1,]*1000
     }
     #results= simplier table
     op_analyzed<-c(op_analyzed,op)
@@ -349,7 +351,6 @@ for ( op in names(results_per_op)) {
     i<-i+1
 }
 names(results)<-op_analyzed
-
 
 ###########################################
 ## PLOTS 1 : summary plot per operation

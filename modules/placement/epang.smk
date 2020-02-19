@@ -12,13 +12,40 @@ import os
 import pewo.config as cfg
 from pewo.software import PlacementSoftware, AlignmentSoftware
 from pewo.templates import get_output_template, get_log_template, get_software_dir, \
-    get_common_queryname_template, get_experiment_dir_template, get_benchmark_template
+    get_common_queryname_template, get_experiment_dir_template, get_benchmark_template, get_output_template_args
 
 _working_dir = cfg.get_work_dir(config)
 _epang_soft_dir = get_software_dir(config, PlacementSoftware.EPA_NG)
 
 # FIXME: Unnecessary dependendancy on the alignment software
 _alignment_dir = get_software_dir(config, AlignmentSoftware.HMMER)
+
+_epang_h1_place_benchmark_template = get_benchmark_template(config, PlacementSoftware.EPA_NG,
+                                                            p="pruning", length="length", g="g", heuristic="h1",
+                                                            rule_name="placement")
+_epang_h2_place_benchmark_template = get_benchmark_template(config, PlacementSoftware.EPA_NG,
+                                                            p="pruning", length="length", bigg="bigg", heuristic="h2",
+                                                            rule_name="placement")
+_epang_h3_place_benchmark_template = get_benchmark_template(config, PlacementSoftware.EPA_NG,
+                                                            p="pruning", length="length", heuristic="h3",
+                                                            rule_name="placement")
+_epang_h4_place_benchmark_template = get_benchmark_template(config, PlacementSoftware.EPA_NG,
+                                                            p="pruning", length="length", heuristic="h4",
+                                                            rule_name="placement")
+
+epang_benchmark_templates = [
+    _epang_h1_place_benchmark_template,
+    _epang_h2_place_benchmark_template,
+    _epang_h3_place_benchmark_template,
+    _epang_h4_place_benchmark_template
+]
+
+epang_benchmark_template_args = [
+    get_output_template_args(config, PlacementSoftware.EPA_NG, heuristic="h1"),
+    get_output_template_args(config, PlacementSoftware.EPA_NG, heuristic="h2"),
+    get_output_template_args(config, PlacementSoftware.EPA_NG, heuristic="h3"),
+    get_output_template_args(config, PlacementSoftware.EPA_NG, heuristic="h4")
+]
 
 
 def _make_epang_command(**kwargs) -> str:
@@ -36,9 +63,9 @@ def _make_epang_command(**kwargs) -> str:
 
     # add the heuristic option
     if heuristic == "h1":
-        heuristic_option = "-g {wildcards.gepang} "
+        heuristic_option = "-g {wildcards.g} "
     elif heuristic == "h2":
-        heuristic_option = "-G {wildcards.biggepang} "
+        heuristic_option = "-G {wildcards.bigg} "
     elif heuristic == "h3":
         heuristic_option = "--baseball-heur "
     else:
@@ -103,8 +130,8 @@ rule placement_epang_h1:
         jplace=get_output_template(config, PlacementSoftware.EPA_NG, "jplace", heuristic="h1")
     log:
         logfile=get_log_template(config, PlacementSoftware.EPA_NG, heuristic="h1")
-    #benchmark:
-    #    repeat(get_benchmark_template(config, PlacementSoftware.EPA_NG, heuristic="h1"), config["repeats"])
+    benchmark:
+        repeat(_epang_h1_place_benchmark_template, config["repeats"])
     version: "1.0"
     params:
         tmpdir=get_experiment_dir_template(config, PlacementSoftware.EPA_NG, heuristic="h1"),
@@ -131,8 +158,8 @@ rule placement_epang_h2:
         jplace=get_output_template(config, PlacementSoftware.EPA_NG, "jplace", heuristic="h2")
     log:
         logfile=get_log_template(config, PlacementSoftware.EPA_NG, heuristic="h2")
-    #benchmark:
-    #    repeat(get_benchmark_template(config, PlacementSoftware.EPA_NG, heuristic="h2"),config["repeats"])
+    benchmark:
+        repeat(_epang_h2_place_benchmark_template, config["repeats"])
     version: "1.0"
     params:
         tmpdir=get_experiment_dir_template(config, PlacementSoftware.EPA_NG, heuristic="h2"),
@@ -159,8 +186,8 @@ rule placement_epang_h3:
         jplace=get_output_template(config, PlacementSoftware.EPA_NG, "jplace", heuristic="h3")
     log:
         logfile=get_log_template(config, PlacementSoftware.EPA_NG, heuristic="h3")
-    #benchmark:
-    #    repeat(get_benchmark_template(config, PlacementSoftware.EPA_NG, heuristic="h3"), config["repeats"])
+    benchmark:
+        repeat(_epang_h3_place_benchmark_template, config["repeats"])
     version: "1.0"
     params:
         tmpdir=get_experiment_dir_template(config, PlacementSoftware.EPA_NG, heuristic="h3"),
@@ -187,8 +214,8 @@ rule placement_epang_h4:
         jplace=get_output_template(config, PlacementSoftware.EPA_NG, "jplace", heuristic="h4")
     log:
         logfile=get_log_template(config, PlacementSoftware.EPA_NG, heuristic="h4")
-    #benchmark:
-    #    repeat(get_benchmark_template(config, PlacementSoftware.EPA_NG, heuristic="h4"), config["repeats"])
+    benchmark:
+        repeat(_epang_h4_place_benchmark_template, config["repeats"])
     version: "1.0"
     params:
         tmpdir=get_experiment_dir_template(config, PlacementSoftware.EPA_NG, heuristic="h4"),

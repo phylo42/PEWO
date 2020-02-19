@@ -10,11 +10,18 @@ import os
 import pewo.config as cfg
 from pewo.software import AlignmentSoftware, CustomScripts
 from pewo.templates import get_software_dir, get_experiment_log_dir_template, \
-    get_common_queryname_template
+    get_common_queryname_template, get_benchmark_template, get_common_template_args
 
 
 _work_dir = cfg.get_work_dir(config)
 _alignment_dir = get_software_dir(config, AlignmentSoftware.HMMER)
+
+
+_hmmer_benchmark_align_template = get_benchmark_template(config, AlignmentSoftware.HMMER,
+                                                         p="pruning", length="length",
+                                                         rule_name="align")
+hmmer_benchmark_templates = [_hmmer_benchmark_align_template]
+hmmer_benchmark_template_args = [get_common_template_args(config)]
 
 
 rule hmm_build:
@@ -57,11 +64,7 @@ rule hmm_align:
         os.path.join(get_experiment_log_dir_template(config, AlignmentSoftware.HMMER),
                      get_common_queryname_template(config) + ".log")
     benchmark:
-        repeat(
-            os.path.join(_work_dir, "benchmarks", "{pruning}",
-                         get_common_queryname_template(config) + "_hmmbuild_benchmark.tsv"),
-            config["repeats"]
-        )
+        repeat(_hmmer_benchmark_align_template, config["repeats"])
     params:
         states = ["dna"] if config["states"] == 0 else ["amino"],
     shell:

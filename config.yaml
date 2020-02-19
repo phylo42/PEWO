@@ -18,18 +18,18 @@
 #dataset_align: demos/16SrRNA_resource_test/alignment_150.fasta
 #dataset_tree: demos/16SrRNA_resource_test/RAxML_bipartitions.150.BEST.WITH
 
-dataset_align: test/2.align
-dataset_tree: test/2.tree
+dataset_align: test/0.align
+dataset_tree: test/0.tree
 
 #working directory
-workdir: /home/nikolai/dev/pewo/run_likelihood2
+workdir: /home/nikolai/dev/pewo/run_resources
 
 
 #states used in analysis, either '0' for nucleotides or '1' for amino acids
 states: 0
 
 #which software to test, at least one of : epa, epang, pplacer, rappas, apples
-test_soft: [epa, rappas, pplacer]
+test_soft: [epa, epang, rappas, pplacer]
 
 # READ GENERATION
 # Read lengths to generate
@@ -57,7 +57,7 @@ query_type: user
 
 # queries used in resource evaluation, >10000 sequences recommended
 #query_user: test/EMP_92_studies_100000.fas
-query_user: test/2_r300.fasta
+query_user: test/0_r300.fasta
 #query_user: demos/16SrRNA_resource_test/EMP_92_studies_1000.fas
 
 
@@ -139,7 +139,7 @@ config_rappas:
 
   #panel of k that is tested
   #integer in [2,16] (8~10 recommended, >12 often produces too long computations)
-  k: [6, 8, 10]
+  k: [6]
 
   #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
   #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids

@@ -12,11 +12,31 @@ from pathlib import Path
 import pewo.config as cfg
 from pewo.software import PlacementSoftware, get_ar_binary
 from pewo.templates import get_output_template, get_log_template, get_experiment_dir_template, \
-    get_ar_output_templates, get_benchmark_template
+    get_ar_output_templates, get_benchmark_template, get_output_template_args
 
 
 _working_dir = cfg.get_work_dir(config)
 _rappas_experiment_dir = get_experiment_dir_template(config, PlacementSoftware.RAPPAS)
+
+# Benchmark templates
+_rappas_build_benchmark_template = get_benchmark_template(config, PlacementSoftware.RAPPAS,
+                                                          p="pruning", k="k", o="o", red="red", ar="ar",
+                                                          rule_name="dbbuild")
+_rappas_place_benchmark_template = get_benchmark_template(config, PlacementSoftware.RAPPAS,
+                                                          p="pruning", length="length", k="k", o="o", red="red", ar="ar",
+                                                          rule_name="placement")
+
+rappas_benchmark_templates = [_rappas_build_benchmark_template, _rappas_place_benchmark_template]
+
+# Benchmark template args
+_rappas_build_benchmark_template_args = get_output_template_args(config, PlacementSoftware.RAPPAS)
+_rappas_build_benchmark_template_args.pop("length")
+_rappas_place_benchmark_template_args = get_output_template_args(config, PlacementSoftware.RAPPAS)
+
+rappas_benchmark_template_args = [
+    _rappas_build_benchmark_template_args,
+    _rappas_place_benchmark_template_args
+]
 
 
 def get_rappas_input_reads(pruning):
@@ -111,12 +131,8 @@ rule db_build_rappas:
         ar = lambda wildcards: get_ar_output_templates(config, wildcards.ar)
     output:
         database = os.path.join(_rappas_experiment_dir, "DB.bin")
-    #log:
-    #    get_log_template(config, PlacementSoftware.RAPPAS)
     benchmark:
-        repeat(config["workdir"]+
-               "/benchmarks/{pruning}_k{k}_o{o}_red{red}_ar{ar}_rappas-dbbuild_benchmark.tsv", config["repeats"])
-        #repeat(get_benchmark_template(config, PlacementSoftware.RAPPAS), config["repeats"])
+        repeat(_rappas_build_benchmark_template, config["repeats"])
     version: "1.00"
     params:
         states=["nucl"] if config["states"]==0 else ["amino"],
@@ -130,11 +146,8 @@ rule db_build_rappas:
             "-k {wildcards.k} --omega {wildcards.o} -t {input.t} -r {input.a} "
             "-w {params.workdir} --ardir {params.ardir} -s {params.states} --ratio-reduction {wildcards.red} "
             "--use_unrooted --dbfilename {params.dbfilename} "
-            #" &> {log} "
          )
 
-
-#print(get_output_template(config, PlacementSoftware.RAPPAS, "jplace"))
 rule placement_rappas:
     input:
         database = os.path.join(_rappas_experiment_dir, "DB.bin"),
@@ -144,9 +157,7 @@ rule placement_rappas:
     log:
         get_log_template(config, PlacementSoftware.RAPPAS)
     benchmark:
-        repeat(config["workdir"]+
-               "/benchmarks/{pruning}_r{length}_q{query}_k{k}_o{o}_red{red}_ar{ar}_rappas-placement_benchmark.tsv", config["repeats"])
-        #repeat(get_benchmark_template(config, PlacementSoftware.RAPPAS), config["repeats"])
+        repeat(_rappas_place_benchmark_template, config["repeats"])
     version: "1.00"
     params:
         workdir = _rappas_experiment_dir,
@@ -163,8 +174,8 @@ rule placement_rappas:
                          "-p p " + \
                          "-d {input.database} " + \
                          "-q {input.r} " + \
-                         "-w {params.workdir} " #+ \
-                         #"&> {log}"
+                         "-w {params.workdir} " + \
+                         "&> {log}"
         query_wildcard = "{wildcards.query}" if cfg.get_mode(config) == cfg.Mode.LIKELIHOOD else "{wildcards.pruning}"
         move_command = "mv {params.workdir}/placements_" + query_wildcard + "_r{wildcards.length}.fasta.jplace " + \
                        "{params.workdir}/" + \
@@ -172,4 +183,3 @@ rule placement_rappas:
                        "_r{wildcards.length}_k{wildcards.k}_o{wildcards.o}_red{wildcards.red}_ar{wildcards.ar}_rappas.jplace"
         pipeline = ";".join(_ for _ in [rappas_command, move_command])
         shell(pipeline)
-

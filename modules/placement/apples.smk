@@ -10,11 +10,18 @@ import os
 import pewo.config as cfg
 from pewo.software import PlacementSoftware, AlignmentSoftware
 from pewo.templates import get_output_template, get_log_template, get_software_dir, \
-    get_common_queryname_template
+    get_common_queryname_template, get_benchmark_template, get_output_template_args
 
 
 _working_dir = cfg.get_work_dir(config)
 _alignment_dir = get_software_dir(config, AlignmentSoftware.HMMER)
+
+_apples_place_benchmark_template = get_benchmark_template(config, PlacementSoftware.APPLES,
+                                                          p="pruning", length="length", meth="meth", crit="crit",
+                                                          rule_name="placement")
+
+apples_benchmark_templates = [_apples_place_benchmark_template]
+apples_benchmark_template_args = [get_output_template_args(config, PlacementSoftware.APPLES),]
 
 
 # FIXME: These are the same methods as in the epang.smk
@@ -39,8 +46,8 @@ rule placement_apples:
         jplace=get_output_template(config, PlacementSoftware.APPLES, "jplace")
     log:
         get_log_template(config, PlacementSoftware.APPLES)
-    #benchmark:
-    #    repeat(get_benchmark_template(config, PlacementSoftware.APPLES), config["repeats"])
+    benchmark:
+        repeat(_apples_place_benchmark_template, config["repeats"])
     version: "1.0"
     shell:
         """

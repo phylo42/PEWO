@@ -13,7 +13,7 @@ from typing import Dict
 import pewo.config as cfg
 from pewo.software import PlacementSoftware, AlignmentSoftware
 from pewo.templates import get_experiment_dir_template, get_software_dir, get_common_queryname_template, \
-    get_output_template, get_log_template, get_benchmark_template
+    get_output_template, get_log_template, get_benchmark_template, get_output_template_args
 
 
 _working_dir = cfg.get_work_dir(config)
@@ -22,6 +22,14 @@ _pplacer_experiment_dir = get_experiment_dir_template(config, PlacementSoftware.
 # FIXME:
 # Unnecessary dependendancy on the alignment software
 _alignment_dir = get_software_dir(config, AlignmentSoftware.HMMER)
+
+
+_pplacer_place_benchmark_template = get_benchmark_template(config, PlacementSoftware.PPLACER,
+                                                           p="pruning", length="length", ms="ms",
+                                                           sb="sb", mp="mp", rule_name="placement")
+
+pplacer_benchmark_templates = [_pplacer_place_benchmark_template]
+pplacer_benchmark_template_args = [get_output_template_args(config, PlacementSoftware.PPLACER)]
 
 
 def _get_pplacer_refpkg_template(config: Dict) -> str:
@@ -64,8 +72,8 @@ rule placement_pplacer:
         jplace = get_output_template(config, PlacementSoftware.PPLACER, "jplace")
     log:
         get_log_template(config, PlacementSoftware.PPLACER)
-    #benchmark:
-    #    repeat(get_benchmark_template(config, PlacementSoftware.PPLACER), config["repeats"])
+    benchmark:
+        repeat(_pplacer_place_benchmark_template, config["repeats"])
     version: "1.00"
     params:
         maxp = config["maxplacements"],

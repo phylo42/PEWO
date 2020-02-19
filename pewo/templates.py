@@ -54,10 +54,10 @@ def get_experiment_dir_template(config: Dict, software: PlacementSoftware, **kwa
         assert heuristic and heuristic in valid_heuristics, f"{heuristic} is not a valid heuristic."
 
         if heuristic == "h1":
-            return os.path.join(software_dir, input_set_dir_template, "h1", "g{gepang}",
+            return os.path.join(software_dir, input_set_dir_template, "h1", "g{g}",
                                 get_common_queryname_template(config))
         elif heuristic == "h2":
-            return os.path.join(software_dir, input_set_dir_template, "h2", "bigg{biggepang}",
+            return os.path.join(software_dir, input_set_dir_template, "h2", "bigg{bigg}",
                                 get_common_queryname_template(config))
         elif heuristic in ("h3", "h4"):
             return os.path.join(software_dir, input_set_dir_template, heuristic,
@@ -65,7 +65,7 @@ def get_experiment_dir_template(config: Dict, software: PlacementSoftware, **kwa
     elif software == PlacementSoftware.PPLACER:
         return os.path.join(software_dir, input_set_dir_template, "ms{ms}_sb{sb}_mp{mp}")
     elif software == PlacementSoftware.APPLES:
-        return os.path.join(software_dir, input_set_dir_template, "m{meth}_c{crit}")
+        return os.path.join(software_dir, input_set_dir_template, "meth{meth}_crit{crit}")
     elif software == PlacementSoftware.RAPPAS:
         return os.path.join(software_dir, input_set_dir_template, "red{red}_ar{ar}", "k{k}_o{o}")
 
@@ -79,14 +79,6 @@ def get_experiment_log_dir_template(config: Dict, software: Software) -> str:
     _check_software(software)
     software_name = software.value
     return os.path.join(cfg.get_work_dir(config), "logs", software_name, "{pruning}")
-
-
-def get_experiment_benchmark_dir_template(config: Dict) -> str:
-    """
-    Returns a name template of a benchmark output directory path for an experiment.
-    They are stored in the same directory.
-    """
-    return os.path.join(cfg.get_work_dir(config), "benchmarks")
 
 
 def get_common_queryname_template(config: Dict) -> str:
@@ -151,15 +143,15 @@ def get_queryname_template(config: Dict, software: PlacementSoftware, **kwargs) 
         assert heuristic and heuristic in valid_heuristics, f"{heuristic} is not a valid heuristic."
 
         if heuristic == "h1":
-            return get_common_queryname_template(config) + "_h1_g{gepang}"
+            return get_common_queryname_template(config) + "_h1_g{g}"
         elif heuristic == "h2":
-            return get_common_queryname_template(config) + "_h2_bigg{biggepang}"
+            return get_common_queryname_template(config) + "_h2_bigg{bigg}"
         elif heuristic in ("h3", "h4"):
             return get_common_queryname_template(config) + "_" + heuristic
     elif software == PlacementSoftware.PPLACER:
         return get_common_queryname_template(config) + "_ms{ms}_sb{sb}_mp{mp}"
     elif software == PlacementSoftware.APPLES:
-        return get_common_queryname_template(config) + "_m{meth}_c{crit}"
+        return get_common_queryname_template(config) + "_meth{meth}_crit{crit}"
     elif software == PlacementSoftware.RAPPAS:
         return get_common_queryname_template(config) + "_k{k}_o{o}_red{red}_ar{ar}"
 
@@ -195,9 +187,9 @@ def get_output_template_args(config: Dict, software: PlacementSoftware, **kwargs
         assert heuristic and heuristic in valid_heuristics, f"{heuristic} is not a valid heuristic."
 
         if heuristic == "h1":
-            template_args["gepang"] = config["config_epang"]["h1"]["g"]
+            template_args["g"] = config["config_epang"]["h1"]["g"]
         elif heuristic == "h2":
-            template_args["biggepang"] = config["config_epang"]["h2"]["G"]
+            template_args["bigg"] = config["config_epang"]["h2"]["G"]
     elif software == PlacementSoftware.PPLACER:
         template_args["ms"] = config["config_pplacer"]["max-strikes"]
         template_args["sb"] = config["config_pplacer"]["strike-box"]
@@ -235,12 +227,40 @@ def get_log_template(config: Dict, software: Software, **kwargs) -> str:
                         get_output_filename_template(config, software, "log", **kwargs))
 
 
+def join_kwargs(**kwargs) -> str:
+    """
+    Joins keyword arguments and their values in parenthesis.
+    Example: key1{value1}_key2{value2}
+    """
+    return "_".join(key + "{" + value + "}" for key, value in kwargs.items())
+
+
 def get_benchmark_template(config: Dict, software: Software, **kwargs) -> str:
     """
     Creates a name template of .tsv output files produced by specific software.
     """
-    return os.path.join(get_experiment_benchmark_dir_template(config),
-                        get_output_filename_template(config, software, "benchmark.tsv", **kwargs))
+    rule_name = kwargs.get("rule_name", "rule_name keyword argument must be provided")
+    assert rule_name
+
+    template_args = kwargs.copy()
+    template_args.pop("rule_name")
+
+    heuristic = kwargs.get("heuristic", None)
+    if heuristic:
+        template_args.pop("heuristic")
+
+    # Skip the first character assuming to keep the name convention as
+    # {pruning}_arg1{arg1}_arg2{arg2}, not p{pruning}_arg1{arg1}...
+    filename_template = join_kwargs(**template_args)[1:]
+
+    software_name = software.name.lower()
+    if software == PlacementSoftware.EPA_NG:
+        valid_heuristics = ("h1", "h2", "h3", "h4")
+        assert heuristic and heuristic in valid_heuristics, f"{heuristic} is not a valid heuristic."
+        software_name = software.name.lower() + f"-h{heuristic}"
+
+    return os.path.join(cfg.get_work_dir(config), "benchmarks",
+                        filename_template + "_" + software_name + "-" + rule_name + "_benchmark.tsv")
 
 
 def get_output_template(config: Dict, software: Union[PlacementSoftware, AlignmentSoftware],
