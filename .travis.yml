@@ -25,6 +25,7 @@ install:
   - conda env create -f "$TRAVIS_BUILD_DIR"/envs/environment.yaml
 
   # Build java tools
+  - source activate PEWO
   - ant -f "$TRAVIS_BUILD_DIR"/scripts/java/PEWO_java/build-cli.xml
 
 script:
