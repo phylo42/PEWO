@@ -51,32 +51,50 @@ Currently, (october 2019) there are no other implementations of phylogenetic pla
 
 ### Requirements
 
-Python 3 and Miniconda3 needs to be installed on your system. Please choose the installer corresponding to your OS : [Miniconda dowloads](https://docs.conda.io/en/latest/miniconda.html)
+Prior to installation, the following packages should be available on your system must be installed on your system:
 
-If installation was successfull, the following command should a description of your conda setup:
+* Python >=3.5
+* Miniconda3. Please choose the installer corresponding to your OS : [Miniconda dowloads](https://docs.conda.io/en/latest/miniconda.html)
+* GIT
 
+PEWO will basically look for the commands 'git' and 'conda'. Not finding these commands will cancel PEWO installation.
+
+### Installation
+
+Download PEWO:
 ```
-conda info
-```
-
-### Rapid installation
-
-```
-# download pipeline
-git clone https://github.com/phylo42/PEWO.git; cd PEWO
-
-# install PEWO environment
-conda env create -f envs/environement.yaml
+git clone --recursive https://github.com/blinard-BIOINFO/PEWO_workflow.git 
+cd PEWO_workflow
 ```
 
-### Rapid test
+Execute installation script:
+```
+chmod u+x INSTALL.sh
+./INSTALL.sh
+```
 
-A rapid PEWO test can be launched with the following command:
+After installation, load environement:
+```
+conda activate PEWO
+```
+
+You can launch a dry-run, if no error is throwed, PEWO is correctly installed:
+```
+snakemake -np \
+--snakefile eval_accuracy.smk \
+--config workdir=`pwd`/examples/1_fast_test_of_accuracy_procedure/run \
+--configfile examples/1_fast_test_of_accuracy_procedure/config.yaml
+```
+
+You can launch a 20 minutes test, using 2 CPU cores.
 
 ```
-cd PEWO
-snakemake -np --snakefile eval_accuracy.smk --configfile config.yaml
+snakemake -p --cores 2 \
+--snakefile eval_accuracy.smk \
+--config workdir=`pwd`/examples/1_fast_test_of_accuracy_procedure/run \
+--configfile examples/1_fast_test_of_accuracy_procedure/config.yaml
 ```
+
 If the test is successful, you should produce the following statistics and image files in the PEWO_workflow directory:
 * results.csv
 * summary_plot_eND_epang_h1.svg
@@ -84,9 +102,9 @@ If the test is successful, you should produce the following statistics and image
 * summary_plot_eND_rappas.svg
 
 The content and interpretation of these files is detailed in the wiki documentation. 
+Please read the [dedicated wiki page](https://github.com/phylo42/PEWO/tree/master/examples/1_fast_test_of_accuracy_procedure).
 
-
-## Launch your own PEWO analysis
+## Setup your own PEWO analyses
 
 **1. Activate PEWO environement :**
 
