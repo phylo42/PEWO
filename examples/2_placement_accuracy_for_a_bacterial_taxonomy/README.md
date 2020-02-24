@@ -1,4 +1,4 @@
-# PEWO demo n°1
+# PEWO demo n°2
 
 ## Overview
 
@@ -8,10 +8,10 @@ of 150 16S-rRNA barcodes.
 
 EPA-ng, PPlacer, RAPPAS and Apples are tested.
 
-Only 10 pruning are launched and a limited set of parameters is tested.
+Only 10 pruning are launched and for a set of parameters in each program.
 This analysis will require around 2 hours of computation.
 
-A better analysis would ask for >50 prunings; to generate a wide
+A better analysis would require for >50 prunings to generate a wide
 range of topologies (1 leaf pruned, large clades pruned, ...).
 
 
@@ -19,7 +19,7 @@ range of topologies (1 leaf pruned, large clades pruned, ...).
 
 Download pipeline.
 ```
-git clone --recursive https://github.com/blinard-BIOINFO/PEWO_workflow.git 
+git clone --recursive https://github.com/blinard-BIOINFO/PEWO.git 
 cd PEWO_workflow
 ```
 
@@ -38,16 +38,16 @@ Test workflow before launch.
 ```
 snakemake -np \
 --snakefile eval_accuracy.smk \
---config workdir=`pwd`/demos/16SrRNA_accuracy_test/run \
---configfile demos/16SrRNA_accuracy_test/config.yaml
+--config workdir=`pwd`/examples/2_placement_accuracy_for_a_bacterial_taxonomy/run \
+--configfile examples/2_placement_accuracy_for_a_bacterial_taxonomy/config.yaml
 ```
 
-Execute workflow, using 4 CPU cores.
+Execute workflow, using 2 CPU cores.
 ```
-snakemake -p --cores 4 \
+snakemake -p --cores 2 \
 --snakefile eval_accuracy.smk \
---config workdir=`pwd`/demos/16SrRNA_accuracy_test/run \
---configfile demos/16SrRNA_accuracy_test/config.yaml
+--config workdir=`pwd`/examples/2_placement_accuracy_for_a_bacterial_taxonomy/run \
+--configfile examples/2_placement_accuracy_for_a_bacterial_taxonomy/config.yaml
 ```
 
 ## Comments
@@ -58,10 +58,10 @@ You could also set them manually by editing the config.yaml file
 before launch.
 
 Raw results will be written in
-'demos/16SrRNA_accuray_test/run/benchmark'.
+'examples/2_placement_accuracy_for_a_bacterial_taxonomy/run'.
 
 Results summaries and plots will be written in
-'demos/16SrRNA_accuracy_test/run'.
+'examples/2_placement_accuracy_for_a_bacterial_taxonomy/run'.
 
 See PEWO wiki for a more detailed explanation of the results:
-github.com/blinard-BIOINFO/PEWO_workflow/wiki
+https://github.com/blinard-BIOINFO/PEWO/wiki/Tutorials-and-results-interpretation
