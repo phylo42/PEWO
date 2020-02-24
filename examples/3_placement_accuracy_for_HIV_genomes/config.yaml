@@ -5,8 +5,8 @@
 # INPUT DATASET
 ##############################
 # alignment in fasta format and tree in newick format
-dataset_align: demos/HIV_accuracy_test/compendium-norec-exp.fasta
-dataset_tree: demos/HIV_accuracy_test/compendium-norec-exp-tree.newick
+dataset_align: examples/HIV_accuracy_test/compendium-norec-exp.fasta
+dataset_tree: examples/HIV_accuracy_test/compendium-norec-exp-tree.newick
 
 # working directory
 #MUST be an absolute path (some software do not accept relative path)

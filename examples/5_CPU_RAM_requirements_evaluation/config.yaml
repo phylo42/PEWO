@@ -5,8 +5,8 @@
 # INPUT DATASET
 ##############################
 # alignment in fasta format and tree in newick format
-dataset_align: demos/16SrRNA_resource_test/alignment_150.fasta
-dataset_tree: demos/16SrRNA_resource_test/RAxML_bipartitions.150.BEST.WITH
+dataset_align: examples/16SrRNA_resource_test/alignment_150.fasta
+dataset_tree: examples/16SrRNA_resource_test/RAxML_bipartitions.150.BEST.WITH
 
 # working directory
 #MUST be an absolute path (some software do not accept relative path)
