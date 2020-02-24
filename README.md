@@ -62,10 +62,10 @@ conda info
 ### Rapid installation
 
 ```
-#download pipeline
-git clone https://github.com/blinard-BIOINFO/PEWO_workflow.git 
-cd PEWO_workflow
-#install PEWO environment (may take dozens of minutes)
+# download pipeline
+git clone https://github.com/phylo42/PEWO.git; cd PEWO
+
+# install PEWO environment
 conda env create -f envs/environement.yaml
 ```
 
@@ -74,8 +74,8 @@ conda env create -f envs/environement.yaml
 A rapid PEWO test can be launched with the following command:
 
 ```
-cd PEWO_workflow
-snakemake --snakefile eval_accuracy --configfile test/config.yaml
+cd PEWO
+snakemake -np --snakefile eval_accuracy.smk --configfile config.yaml
 ```
 If the test is successful, you should produce the following statistics and image files in the PEWO_workflow directory:
 * results.csv
