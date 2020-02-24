@@ -1,7 +1,6 @@
 # PEWO: "Placement Evaluation WOrkflows"
 
-## Contacts
-*B Linard, N Romashchenko, F Pardi, E Rivals*
+**Benchmark existing placement software and compare placement accuracy on different reference trees.**
 
 ## Overview
 
@@ -155,6 +154,9 @@ snakemake --snakefile [snakefile].smk -p --core [#cores]
 ```
 Note that the workflow can be launched on a grid environement such as qsub.
 Refer to the snakemake documentation to learn how to configure the snakemake workflow for such environement.
+
+## Contacts
+*B Linard, N Romashchenko, F Pardi, E Rivals*
 
 ## Licence
 
