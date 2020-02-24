@@ -21,10 +21,4 @@ install:
   - conda env create -f "$TRAVIS_BUILD_DIR"/envs/environment.yaml
 
 script:
-  - source activate PEWO
-  
-  # dry-run of the accuracy pipeline
-  - snakemake -np --snakefile eval_accuracy.smk --config workdir=`pwd`/examples/1_fast_test_of_accuracy_procedure/run --configfile examples/1_fast_test_of_accuracy_procedure/config.yaml
-
-  # dry-run of the resourses pipeline
-  - snakemake -np --snakefile eval_resources.smk --config workdir=$(pwd)/examples/5_CPU_RAM_requirements_evaluation/run query_user=`pwd`/examples/5_CPU_RAM_requirements_evaluation/EMP_92_studies_100000.fas --configfile examples/5_CPU_RAM_requirements_evaluation/config.yaml
+  .travis/build.sh
