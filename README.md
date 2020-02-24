@@ -1,5 +1,7 @@
 # PEWO: "Placement Evaluation WOrkflows"
 
+[![Build Status](https://travis-ci.com/phylo42/PEWO.svg?branch=master)](https://travis-ci.com/phylo42/PEWO)
+
 **Benchmark existing placement software and compare placement accuracy on different reference trees.**
 
 ## Overview
