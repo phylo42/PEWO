@@ -15,14 +15,14 @@
 #dataset_tree: /media/ben/STOCK/DATA/PEWO/jphmm_inputs/RAxML_bipartitions.HBV.REROOTED
 
 
-dataset_align: demos/16SrRNA_resource_test/alignment_150.fasta
-dataset_tree: demos/16SrRNA_resource_test/RAxML_bipartitions.150.BEST.WITH
+dataset_align: examples/1_fast_test_of_accuracy_procedure/alignment_150.fasta
+dataset_tree: examples/1_fast_test_of_accuracy_procedure/RAxML_bipartitions.150.BEST.WITH
 
 #dataset_align: test/1.align
 #dataset_tree: test/1.tree
 
 #working directory
-workdir: /home/nikolai/dev/pewo/run_accuracy
+workdir: /home/nikolai/dev/pewo/run_accuracy1
 
 
 #states used in analysis, either '0' for nucleotides or '1' for amino acids
