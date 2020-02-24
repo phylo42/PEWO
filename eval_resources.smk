@@ -20,35 +20,35 @@ config["read_length"] = [0]
 
 #utils
 include:
-    "modules/utils/workflow.smk"
+    "rules/utils/workflow.smk"
 include:
-    "modules/utils/etc.smk"
+    "rules/utils/etc.smk"
 #prepare input files
 include:
-    "modules/op/operate_inputs.smk"
+    "rules/op/operate_inputs.smk"
 include:
-    "modules/op/operate_optimisation.smk"
+    "rules/op/operate_optimisation.smk"
 #phylo-kmer placement, e.g.: rappas
 include:
-    "modules/op/ar.smk"
+    "rules/op/ar.smk"
 include:
-    "modules/placement/rappas.smk"
+    "rules/placement/rappas.smk"
 #alignment (for distance-based and ML approaches)
 include:
-    "modules/alignment/hmmer.smk"
+    "rules/alignment/hmmer.smk"
 #ML-based placements, e.g.: epa, epang, pplacer
 include:
-    "modules/placement/epa.smk"
+    "rules/placement/epa.smk"
 include:
-    "modules/placement/pplacer.smk"
+    "rules/placement/pplacer.smk"
 include:
-    "modules/placement/epang.smk"
+    "rules/placement/epang.smk"
 #distance-based placements, e.g.: apples
 include:
-    "modules/placement/apples.smk"
+    "rules/placement/apples.smk"
 #results and plots
 include:
-    "modules/op/operate_plots.smk"
+    "rules/op/operate_plots.smk"
 
 rule all:
     input:
