@@ -20,11 +20,11 @@ _rappas_experiment_dir = get_experiment_dir_template(config, PlacementSoftware.R
 
 # Benchmark templates
 _rappas_build_benchmark_template = get_benchmark_template(config, PlacementSoftware.RAPPAS,
-                                                          p="pruning", k="k", o="o", red="red", ar="ar",
-                                                          rule_name="dbbuild")
+    p="pruning", k="k", o="o", red="red", ar="ar",
+    rule_name="dbbuild") if cfg.get_mode(config) == cfg.Mode.RESOURCES else ""
 _rappas_place_benchmark_template = get_benchmark_template(config, PlacementSoftware.RAPPAS,
-                                                          p="pruning", length="length", k="k", o="o", red="red", ar="ar",
-                                                          rule_name="placement")
+    p="pruning", length="length", k="k", o="o", red="red", ar="ar",
+    rule_name="placement")  if cfg.get_mode(config) == cfg.Mode.RESOURCES else ""
 
 rappas_benchmark_templates = [_rappas_build_benchmark_template, _rappas_place_benchmark_template]
 

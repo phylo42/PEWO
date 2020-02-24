@@ -171,7 +171,6 @@ def get_jplace_outputs(config) -> List[str]:
             output_files.extend(_get_jplace_outputs(config, software))
     return output_files
 
-
 def build_placements_workflow() -> List[str]:
     """
     Builds expected outputs from tested placement software ("test_soft" field in the config file)
@@ -214,9 +213,6 @@ def _get_resources_tsv(config: Dict, software: PlacementSoftware, **kwargs) -> L
         software_template_args = []
         for h in config["config_epang"]["heuristics"]:
             h_index = heuristics.index(h)
-            print("GET:")
-            print(epang_benchmark_template_args)
-            print(epang_benchmark_template_args[h_index])
             software_templates.append(epang_benchmark_templates[h_index])
             software_template_args.append(epang_benchmark_template_args[h_index])
 
@@ -229,9 +225,6 @@ def _get_resources_tsv(config: Dict, software: PlacementSoftware, **kwargs) -> L
     else:
         raise RuntimeError("Unsupported software: " + software.value)
 
-    print(software)
-    print(software_templates)
-    print(software_template_args)
     for template, template_args in zip(software_templates, software_template_args):
         result.extend(expand(template, **template_args))
     return result

@@ -15,14 +15,14 @@
 #dataset_tree: /media/ben/STOCK/DATA/PEWO/jphmm_inputs/RAxML_bipartitions.HBV.REROOTED
 
 
-#dataset_align: demos/16SrRNA_resource_test/alignment_150.fasta
-#dataset_tree: demos/16SrRNA_resource_test/RAxML_bipartitions.150.BEST.WITH
+dataset_align: demos/16SrRNA_resource_test/alignment_150.fasta
+dataset_tree: demos/16SrRNA_resource_test/RAxML_bipartitions.150.BEST.WITH
 
-dataset_align: test/0.align
-dataset_tree: test/0.tree
+#dataset_align: test/1.align
+#dataset_tree: test/1.tree
 
 #working directory
-workdir: /home/nikolai/dev/pewo/run_resources
+workdir: /home/nikolai/dev/pewo/run_accuracy
 
 
 #states used in analysis, either '0' for nucleotides or '1' for amino acids
@@ -35,7 +35,7 @@ test_soft: [epa, epang, rappas, pplacer]
 # Read lengths to generate
 read_length: [300]
 # Number of random prunings to compute
-pruning_count: 0
+pruning_count: 2
 
 
 ## IF "ACCURACY" IS EVALUATED
@@ -57,7 +57,7 @@ query_type: user
 
 # queries used in resource evaluation, >10000 sequences recommended
 #query_user: test/EMP_92_studies_100000.fas
-query_user: test/0_r300.fasta
+query_user: test/1_r300.fasta
 #query_user: demos/16SrRNA_resource_test/EMP_92_studies_1000.fas
 
 

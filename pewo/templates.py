@@ -81,6 +81,10 @@ def get_experiment_log_dir_template(config: Dict, software: Software) -> str:
     return os.path.join(cfg.get_work_dir(config), "logs", software_name, "{pruning}")
 
 
+def get_name_prefix(config: Dict) -> str:
+    return "query" if cfg.get_mode(config) == cfg.Mode.LIKELIHOOD else "pruning"
+
+
 def get_common_queryname_template(config: Dict) -> str:
     """
     Each placement query has a template name based on two type of inputs:
@@ -93,7 +97,7 @@ def get_common_queryname_template(config: Dict) -> str:
 
     # For generated queries take the pruning and read length as an output template name.
     # For user queries take query file name as a template
-    return "{query}_r{length}" if cfg.get_mode(config) == cfg.Mode.LIKELIHOOD else "{pruning}_r{length}"
+    return "{" + get_name_prefix(config) + "}_r{length}"
 
 
 def get_common_template_args(config: Dict) -> Dict[str, Any]:

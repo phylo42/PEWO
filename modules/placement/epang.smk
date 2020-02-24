@@ -22,16 +22,16 @@ _alignment_dir = get_software_dir(config, AlignmentSoftware.HMMER)
 
 _epang_h1_place_benchmark_template = get_benchmark_template(config, PlacementSoftware.EPA_NG,
                                                             p="pruning", length="length", g="g", heuristic="h1",
-                                                            rule_name="placement")
+                                                            rule_name="placement") if cfg.get_mode(config) == cfg.Mode.RESOURCES else ""
 _epang_h2_place_benchmark_template = get_benchmark_template(config, PlacementSoftware.EPA_NG,
                                                             p="pruning", length="length", bigg="bigg", heuristic="h2",
-                                                            rule_name="placement")
+                                                            rule_name="placement") if cfg.get_mode(config) == cfg.Mode.RESOURCES else ""
 _epang_h3_place_benchmark_template = get_benchmark_template(config, PlacementSoftware.EPA_NG,
                                                             p="pruning", length="length", heuristic="h3",
-                                                            rule_name="placement")
+                                                            rule_name="placement") if cfg.get_mode(config) == cfg.Mode.RESOURCES else ""
 _epang_h4_place_benchmark_template = get_benchmark_template(config, PlacementSoftware.EPA_NG,
                                                             p="pruning", length="length", heuristic="h4",
-                                                            rule_name="placement")
+                                                            rule_name="placement") if cfg.get_mode(config) == cfg.Mode.RESOURCES else ""
 
 epang_benchmark_templates = [
     _epang_h1_place_benchmark_template,

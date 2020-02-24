@@ -13,7 +13,7 @@ _working_dir = cfg.get_work_dir(config)
 
 rule compute_nodedistance:
     input:
-        jplace_files=get_jplace_outputs()
+        jplace_files=get_jplace_outputs(config)
     output:
         os.path.join(_working_dir, "results.csv")
     log:

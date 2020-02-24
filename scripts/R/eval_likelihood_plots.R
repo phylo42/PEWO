@@ -56,7 +56,7 @@ for ( i in 1:length(soft_analyzed) ) {
 	softname<-soft_analyzed[[i]]
 	#epang is treated separatly for each heuristic3
 	softname_short<-strsplit(softname, "_")[[1]][1]
-	print(paste("ND heatmap for ",softname,sep=""))
+	print(paste("LL heatmap for ",softname,sep=""))
 	#select data for current software
 	if (softname_short!="epang") {
 		current_soft_data<-data[data$software==softname_short,]
@@ -69,8 +69,8 @@ for ( i in 1:length(soft_analyzed) ) {
 	current_soft_data<-current_soft_data[, colSums(is.na(current_soft_data)) != nrow(current_soft_data)]
 	
 	#build formulas dynamically fro parameters
-	formula_mean<-"likelihood ~ pruning + query"
-	formula_meanofmean<-"likelihood ~ query"
+	formula_mean<-"likelihood ~ pruning + query + length"
+	formula_meanofmean<-"likelihood ~ query + length"
 	if (length(soft_params[softname][[1]])>0) {  #is ==0 when no params
 		for ( j in 1:length(soft_params[softname][[1]] ) ) {
 			formula_mean<-paste(formula_mean, " + ",soft_params[softname][[1]][j], sep="")
@@ -92,7 +92,7 @@ for ( i in 1:length(soft_analyzed) ) {
 	alltables[[i]]<-data_meanofmean
 	#ouputs results table per software
 	print(paste("CSV table for ",softname,sep=""))
-	write.table(data_meanofmean,file=paste(workdir,"/summary_table_ND_",softname,".csv",sep=""),quote=TRUE,sep=";",dec=".",row.names=FALSE,col.names=TRUE)
+	write.table(data_meanofmean,file=paste(workdir,"/summary_table_LL_",softname,".csv",sep=""),quote=TRUE,sep=";",dec=".",row.names=FALSE,col.names=TRUE)
 
 }
 
@@ -100,8 +100,8 @@ for ( i in 1:length(soft_analyzed) ) {
 min_nd<-Inf
 max_nd<-0
 for ( i in 1:length(soft_analyzed) ) {
-	mi<-min(alltables[[i]]$nd)
-	ma<-max(alltables[[i]]$nd)
+	mi<-min(alltables[[i]]$likelihood)
+	ma<-max(alltables[[i]]$likelihood)
 	if (mi<min_nd) {
 		min_nd<-mi
 	}
@@ -132,7 +132,7 @@ for ( i in 1:length(soft_analyzed) ) {
 		params<-c(params,"none")
 	}
 	#if more than 2 parameters, build a facet_wrap combination
-	wrap_string<-"~r"
+	wrap_string<-"~length"
 	wrapcount<-0
 	if (length(params)>2) {
 		for (j in 3:length(params)) {
@@ -141,13 +141,13 @@ for ( i in 1:length(soft_analyzed) ) {
 		}
 	}
 	#build aes string from 2 first params + nd as fill
-	nrow=length(unique(data[!is.na(data$r),]$r)) #ncol matches read length (param r)
+	nrow=length(unique(data[!is.na(data$length),]$length)) #ncol matches read length (param r)
 	g<-ggplot( alltables[[i]], aes_string(x = sprintf("factor(%s)",params[1]) , y = sprintf("factor(%s)",params[2])  ) )
-	g<-g + geom_tile(aes(fill = nd))
+	g<-g + geom_tile(aes(fill = likelihood))
 	g<-g + facet_wrap(as.formula(wrap_string), labeller=global_labeller,nrow=nrow)
-	g<-g + geom_text(aes(label=sprintf("%0.2f", round(nd, digits = 2))))
+	g<-g + geom_text(aes(label=sprintf("%0.2f", round(likelihood, digits = 2))))
 	g<-g + scale_fill_distiller(limits=c(min_nd,max_nd),palette = "RdYlGn")
-	g<-g + labs(title=paste("mean ND: ",softname), x=paste("parameter: '",params[1],"'"), y=paste("parameter: '",params[2],"'"))
+	g<-g + labs(title=paste("mean LL: ",softname), x=paste("parameter: '",params[1],"'"), y=paste("parameter: '",params[2],"'"))
 	#( 2 * parameter uniq value) * (combinations of 3rd to nth params) + space for legend on the right
 	columns=1
 	if (length(params)>2) {
@@ -157,122 +157,7 @@ for ( i in 1:length(soft_analyzed) ) {
 	}
 	svg_width<-2+(0.7*length(unique(alltables[[i]][[params[1]]])) * columns)
 	svg_height<-1+( 1.5* length(unique(alltables[[i]][[params[2]]])) )
-	CairoSVG(file =paste(workdir,"/summary_plot_ND_",softname,".svg", sep=""),width=svg_width,height=svg_height)
+	CairoSVG(file =paste(workdir,"/summary_plot_LL_",softname,".svg", sep=""),width=svg_width,height=svg_height)
 	print(g)
 	dev.off()
 }
-
-
-
-#eND heatmaps per parameters
-alltables<-list()
-allplots<-list()
-
-for ( i in 1:length(soft_analyzed) ) {
-	softname<-soft_analyzed[[i]]
-	#epang is treated separatly for each heuristic
-	softname_short<-strsplit(softname, "_")[[1]][1]
-	print(paste("eND heatmap for ",softname,sep=""))
-	#select data for current software
-	if (softname_short!="epang") {
-		current_soft_data<-data[data$software==softname_short,]
-	} else {
-		heur<-substr(strsplit(softname, "_")[[1]][2],2,10)
-		current_soft_data<-data[data$software==softname_short & data$h==as.numeric(heur),]
-	}
-	#remove columns with only NA, meaning this parameter was not linked to current soft
-	current_soft_data<-current_soft_data[, colSums(is.na(current_soft_data)) != nrow(current_soft_data)]
-	#build formulas dynamically fro parameters
-	formula_mean<-"e_nd ~ pruning + r"
-	formula_meanofmean<-"e_nd ~ r"
-	if (length(soft_params[softname][[1]])>0) {  #is ==0 when no params
-		for ( j in 1:length(soft_params[softname][[1]] ) ) {
-			formula_mean<-paste(formula_mean, " + ",soft_params[softname][[1]][j], sep="")
-			formula_meanofmean<-paste(formula_meanofmean, " + ",soft_params[softname][[1]][j], sep="")
-		}
-	}
-	#aggregate as mean per pruning
-	data_mean<-aggregate(as.formula(formula_mean), current_soft_data, mean)
-	write.table(data_mean,file=paste(workdir,"/mean_per_pruning_eND_",softname,".csv",sep=""),quote=TRUE,sep=";",dec=".",row.names=FALSE,col.names=TRUE)
-	#aggregate as mean of means
-	data_meanofmean<-NULL;
-	data_meanofmean<-aggregate(as.formula(formula_meanofmean), data_mean, mean)
-	#order from best to wort parameters combination
-	data_meanofmean<-data_meanofmean[order(data_meanofmean$e_nd),]
-	data_meanofmean["software"]<-softname
-	#register results
-	alltables[[i]]<-data_meanofmean
-	#ouputs results table per software
-	print(paste("CSV table for ",softname,sep=""))
-	write.table(data_meanofmean,file=paste(workdir,"/summary_table_eND_",softname,".csv",sep=""),quote=TRUE,sep=";",dec=".",row.names=FALSE,col.names=TRUE)
-
-}
-
-#search for eND min/max
-min_e_nd<-Inf
-max_e_nd<-0
-for ( i in 1:length(soft_analyzed) ) {
-	mi<-min(alltables[[i]]$e_nd)
-	ma<-max(alltables[[i]]$e_nd)
-	if (mi<min_e_nd) {
-		min_e_nd<-mi
-	}
-	if (ma>max_e_nd) {
-		max_e_nd<-ma
-	}
-}
-
-#build all plots
-
-global_labeller <- labeller(
-  .default = label_both
-)
-
-for ( i in 1:length(soft_analyzed) ) {
-	softname<-soft_analyzed[[i]]
-	softname_short<-strsplit(softname, "_")[[1]][1]
-	params<-soft_params[softname][[1]]
-	#if 0 parameter, build heatmap on fake x/y
-	if (length(params)==0) {
-		alltables[[i]]["none"]<-"none"
-		params<-c(params,"none")
-	}
-
-	#if 1 parameter, build heatmap on fake y
-	if (length(params)==1) {
-		alltables[[i]]["none"]<-"none"
-		params<-c(params,"none")
-	}
-	#if more than 2 parameters, build a facet_wrap combination
-	wrap_string<-"~r"
-	wrapcount<-0
-	if (length(params)>2) {
-		for (j in 3:length(params)) {
-			wrap_string<-paste(wrap_string,params[j],sep="+")
-			wrapcount<-wrapcount+1
-		}
-	}
-	#build aes string from 2 first params + e_nd as fill
-	nrow=length(unique(data[!is.na(data$r),]$r)) #ncol matches read length (param r)
-	g<-ggplot( alltables[[i]], aes_string(x = sprintf("factor(%s)",params[1]) , y = sprintf("factor(%s)",params[2])  ) )
-	g<-g + geom_tile(aes(fill = e_nd))
-	g<-g + facet_wrap(as.formula(wrap_string), labeller=global_labeller,nrow=nrow)
-	g<-g + geom_text(aes(label=sprintf("%0.2f", round(e_nd, digits = 2))))
-	g<-g + scale_fill_distiller(limits=c(min_e_nd,max_e_nd),palette = "RdYlGn")
-	g<-g + labs(title=paste("mean eND: ",softname), x=paste("parameter: '",params[1],"'"), y=paste("parameter: '",params[2],"'"))
-	#( 2 * parameter uniq value) * (combinations of 3rd to nth params) + space for legend on the right
-	columns=1
-	if (length(params)>2) {
-		for (j in 3:length(params)) {
-			columns<- columns*length(unique(alltables[[i]][[params[j]]]))
-		}
-	}
-	svg_width<-2+(0.7*length(unique(alltables[[i]][[params[1]]])) * columns)
-	svg_height<-1+( 1.5* length(unique(alltables[[i]][[params[2]]])) )
-	CairoSVG(file =paste(workdir,"/summary_plot_eND_",softname,".svg", sep=""),width=svg_width,height=svg_height)
-	print(g)
-	dev.off()
-}
-
-
-#quit()
