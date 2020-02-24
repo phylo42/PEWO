@@ -30,3 +30,6 @@ install:
 
 script:
   .travis/build.sh
+
+after_failure:
+  - cat "$TRAVIS_BUILD_DIR"/examples/1_fast_test_of_accuracy_procedure/run/logs/taxtastic/*.log
