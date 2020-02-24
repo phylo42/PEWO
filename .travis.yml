@@ -15,10 +15,17 @@ install:
   
   # Useful for debugging any issues with conda
   - conda info -a
+
+  # Add channels
   - conda config --add channels defaults
   - conda config --add channels conda-forge
   - conda config --add channels bioconda
+
+  # Create the environment. Takes time
   - conda env create -f "$TRAVIS_BUILD_DIR"/envs/environment.yaml
+
+  # Build java tools
+  - ant -f "$TRAVIS_BUILD_DIR"/scripts/java/PEWO_java/build-cli.xml
 
 script:
   .travis/build.sh
