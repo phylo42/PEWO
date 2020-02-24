@@ -5,12 +5,12 @@
 # INPUT DATASET
 ##############################
 # alignment in fasta format and tree in newick format
-dataset_align: examples/HIV_accuracy_test/compendium-norec-exp.fasta
-dataset_tree: examples/HIV_accuracy_test/compendium-norec-exp-tree.newick
+dataset_align: examples/3_placement_accuracy_for_HIV_genomes/compendium-norec-exp.fasta
+dataset_tree: examples/3_placement_accuracy_for_HIV_genomes/compendium-norec-exp-tree.newick
 
 # working directory
 #MUST be an absolute path (some software do not accept relative path)
-workdir: /path/to/demos/HIV_accuracy_test/run
+workdir: /path/to/examples/3_placement_accuracy_for_HIV_genomes/run
 
 # states used in analysis, either '0' for nucleotides or '1' for amino acids
 states: 0
@@ -248,4 +248,5 @@ phylo_params:
 ########################################################################################################################
 
 #if 1, prints some debug lines on top of snakemake logs
-debug: 0
+  debug: 0
+

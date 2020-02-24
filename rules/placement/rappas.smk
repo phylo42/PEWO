@@ -142,7 +142,7 @@ rule db_build_rappas:
         arbin=lambda wildcards: get_ar_binary(config, wildcards.ar)
     run:
          shell(
-            "java -Xms2G -Xmx"+str(config["config_rappas"]["memory"])+"G -jar $(which RAPPAS.jar) -v 1 -p b -b $(which {params.arbin}) "
+            "java -Xms2G -Xmx"+str(config["config_rappas"]["memory"])+"G -jar $(which RAPPAS.jar) -v 0 -p b -b $(which {params.arbin}) "
             "-k {wildcards.k} --omega {wildcards.o} -t {input.t} -r {input.a} "
             "-w {params.workdir} --ardir {params.ardir} -s {params.states} --ratio-reduction {wildcards.red} "
             "--use_unrooted --dbfilename {params.dbfilename} "

@@ -10,7 +10,7 @@ dataset_tree: examples/5_CPU_RAM_requirements_evaluation/RAxML_bipartitions.150.
 
 # working directory
 #MUST be an absolute path (some software do not accept relative path)
-workdir: /path/to/demos/16SrRNA_resource_test/run
+workdir: /path/to/examples/5_CPU_RAM_requirements_evaluation/run
 
 # states used in analysis, either '0' for nucleotides or '1' for amino acids
 states: 0
@@ -45,7 +45,7 @@ repeats: 3
 query_type: user
 # queries used in resource evaluation, >10000 sequences recommended.
 # MUST be an absolute path (some software do not accept relative path).
-query_user: /path/to/demos/16SrRNA_resource_test/EMP_92_studies_10000.fas
+query_user: /path/to/examples/5_CPU_RAM_requirements_evaluation/EMP_92_studies_10000.fas
 
 
 
@@ -248,4 +248,4 @@ phylo_params:
 ########################################################################################################################
 
 #if 1, prints some debug lines on top of snakemake logs
-debug: 0
+  debug: 0

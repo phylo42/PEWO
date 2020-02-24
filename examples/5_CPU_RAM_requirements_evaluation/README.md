@@ -16,7 +16,7 @@ Consequently, increasing repeats should improve the evaluation.
 
 Download pipeline.
 ```
-git clone --recursive https://github.com/blinard-BIOINFO/PEWO_workflow.git 
+git clone --recursive https://github.com/blinard-BIOINFO/PEWO.git 
 cd PEWO_workflow
 ```
 
@@ -35,18 +35,18 @@ Test workflow before launch.
 ```
 snakemake -np \
 --snakefile eval_resources.smk \
---config workdir=$(pwd)/demos/16SrRNA_resource_test/run \
-query_user=`pwd`/demos/16SrRNA_resource_test/EMP_92_studies_100000.fas \
---configfile demos/16SrRNA_resource_test/config.yaml
+--config workdir=$(pwd)/examples/5_CPU_RAM_requirements_evaluation/run \
+query_user=`pwd`/examples/5_CPU_RAM_requirements_evaluation/EMP_92_studies_100000.fas \
+--configfile examples/5_CPU_RAM_requirements_evaluation/config.yaml
 ```
 
-Execute workflow, using 4 CPU cores.
+Execute workflow, using 2 CPU cores.
 ```
-snakemake -p --cores 4 \
+snakemake -p --cores 2 \
 --snakefile eval_resources.smk \
---config workdir=$(pwd)/demos/16SrRNA_resource_test/run \
-query_user=`pwd`/demos/16SrRNA_resource_test/EMP_92_studies_100000.fas \
---configfile demos/16SrRNA_resource_test/config.yaml
+--config workdir=$(pwd)/examples/5_CPU_RAM_requirements_evaluation/run \
+query_user=`pwd`/examples/5_CPU_RAM_requirements_evaluation/EMP_92_studies_100000.fas \
+--configfile examples/5_CPU_RAM_requirements_evaluation/config.yaml
 ```
 
 ## Comments
@@ -57,10 +57,10 @@ You could also set them manually by editing the config.yaml file
 before launch.
 
 Raw results will be written in
-'demos/16SrRNA_resource_test/run/benchmark'.
+'examples/5_CPU_RAM_requirements_evaluation/run/benchmark'.
 
 Results summaries and plots will be written in
-'demos/16SrRNA_resource_test/run'.
+'examples/5_CPU_RAM_requirements_evaluation/run'.
 
 See PEWO wiki for a more detailed explanation of the results:
-github.com/blinard-BIOINFO/PEWO_workflow/wiki
+https://github.com/phylo42/PEWO/wiki/Tutorials-and-results-interpretation
