@@ -7,9 +7,9 @@ err_report() {
 trap 'err_report $LINENO' ERR
 
 # Miniconda restored from cache
-if [ -d "$MINICONDA_DIR" ] && [ -e "$MINICONDA_DIR/bin/conda" ]; then
-    echo "Miniconda install already present from cache: $MINICONDA_DIR"
-    export PATH="$MINICONDA_DIR/bin:$PATH"
+if [ -d "$CONDA_DIR" ] && [ -e "$CONDA_DIR/bin/conda" ]; then
+    echo "Miniconda install already present from cache: $CONDA_DIR"
+    export PATH="$CONDA_DIR/bin:$PATH"
     hash -r
 # Install Miniconda from scratch
 else
@@ -20,7 +20,7 @@ else
     sudo apt-get update
     wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
     bash miniconda.sh -b -p $HOME/miniconda -u
-    export PATH="$HOME/miniconda/bin:$PATH"
+    export PATH="$CONDA_DIR/bin:$PATH"
     hash -r
     conda config --set always_yes yes --set changeps1 no
     conda update -q conda
