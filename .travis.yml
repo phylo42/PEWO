@@ -22,8 +22,8 @@ jobs:
       env: TRAVIS_JOB=install_conda
       script:
         - travis/install_conda.sh
-          ls $CONDA_DIR
-          ls $CONDA_DIR/bin
+        - ls $CONDA_DIR
+        - ls $CONDA_DIR/bin
     - stage: build-pewo
       language: bash
       env: TRAVIS_JOB=build_pewo
