@@ -35,5 +35,6 @@ else
 
     # Create the environment. Takes time
     conda env create -f "$TRAVIS_BUILD_DIR"/envs/environment.yaml
-    conda activate PEWO
 fi
+
+conda activate PEWO
