@@ -9,20 +9,28 @@ cache:
   directories:
     - $HOME/miniconda
 
+stages:
+  - build-conda
+  - build-pewo
+  - test
+
 jobs:
   include:
-    - language: python
+    - stage: build-conda
+      language: python
       python: "3.6"
       env: TRAVIS_JOB=install_conda
       script:
         - travis/install_conda.sh
-    - language: java
+    - stage: build-pewo
+      language: java
       env: TRAVIS_JOB=build_pewo
       script:
         # Build java tools
         - source activate PEWO
         - ant -f "$TRAVIS_BUILD_DIR"/scripts/java/PEWO_java/build-cli.xml
-    - language: python
+    - stage: test
+      language: python
       env: TRAVIS_JOB=test_accuracy
       script:
         .travis/test_accuracy.sh
