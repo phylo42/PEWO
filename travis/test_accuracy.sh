@@ -13,4 +13,4 @@ conda activate PEWO
 snakemake -p \
 --snakefile eval_accuracy.smk \
 --config workdir=`pwd`/travis/tests/1_travis_accuracy_test/run \
---configfile travis/tests/1_travis_accuracy_test/config.
+--configfile travis/tests/1_travis_accuracy_test/config.yaml
