@@ -41,9 +41,9 @@ snakemake -np \
 --configfile examples/1_fast_test_of_accuracy_procedure/config.yaml
 ```
 
-Execute workflow, using 2 CPU cores.
+Execute workflow, using 1 CPU core.
 ```
-snakemake -p --cores 2 \
+snakemake -p --cores 1 \
 --snakefile eval_accuracy.smk \
 --config workdir=`pwd`/examples/1_fast_test_of_accuracy_procedure/run \
 --configfile examples/1_fast_test_of_accuracy_procedure/config.yaml

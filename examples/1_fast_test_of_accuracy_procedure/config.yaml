@@ -128,7 +128,7 @@ config_rappas:
 
   #panel of k that is tested
   #integer in [3,16] (~8-10 recommended, >12 often produces too long computations)
-  k: [8]
+  k: [7]
 
   #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
   #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids
