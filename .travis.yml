@@ -23,11 +23,12 @@ jobs:
       script:
         - travis/install_conda.sh
     - stage: build-pewo
-      language: java
+      language: bash
       env: TRAVIS_JOB=build_pewo
       script:
         # Build java tools
         - export PATH="$CONDA_DIR/bin:$PATH"
+        - echo $PATH
         - conda info -a
         - conda activate PEWO
         - ant -f "$TRAVIS_BUILD_DIR"/scripts/java/PEWO_java/build-cli.xml
