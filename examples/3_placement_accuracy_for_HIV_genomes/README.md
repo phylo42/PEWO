@@ -19,8 +19,8 @@ range of topologies (1 leaf pruned, large clades pruned, ...).
 
 Download pipeline.
 ```
-git clone --recursive https://github.com/blinard-BIOINFO/PEWO.git 
-cd PEWO_workflow
+git clone --recursive https://github.com/phylo42/PEWO.git
+cd PEWO
 ```
 
 Execute installation script.
