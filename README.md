@@ -88,7 +88,7 @@ The content and interpretation of these files is detailed in the wiki documentat
 Please read the [dedicated wiki page](https://github.com/phylo42/PEWO/tree/master/examples/1_fast_test_of_accuracy_procedure).
 
 
-##Setup your own analyses
+## Setup your own analyses
 
 ### PEWO procedures
 
