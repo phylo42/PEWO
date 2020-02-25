@@ -29,6 +29,8 @@ jobs:
         # Build java tools
         - export PATH="$CONDA_DIR/bin:$PATH"
         - echo $PATH
+        - ls $CONDA_DIR/bin
+        - $CONDA_DIR/bin/conda
         - conda info -a
         - conda activate PEWO
         - ant -f "$TRAVIS_BUILD_DIR"/scripts/java/PEWO_java/build-cli.xml
