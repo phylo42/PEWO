@@ -16,7 +16,7 @@ workdir: travis/tests/2_travis_likelihood_test/run
 states: 0
 
 # which software to test, at least one of : epa, epang, pplacer, rappas, apples
-test_soft: [rappas, epa, epang, pplacer, apples]
+test_soft: [rappas, epa, epang, pplacer]
 
 # read lengths to test
 read_length: [150]

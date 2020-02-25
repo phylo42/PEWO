@@ -15,8 +15,7 @@ stages:
 
 jobs:
   include:
-    - stage: test_accuracy
-      language: python
+    - language: python
       python: "3.6"
       env: TRAVIS_JOB=test_accuracy
       before_install:
@@ -27,8 +26,7 @@ jobs:
       install: ant -f "$TRAVIS_BUILD_DIR"/scripts/java/PEWO_java/build-cli.xml
       script: travis/test_accuracy.sh
 
-    - stage: test_likelihood
-      language: python
+    - language: python
       python: "3.6"
       env: TRAVIS_JOB=test_likelihood
       before_install:
