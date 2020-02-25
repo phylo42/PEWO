@@ -5,10 +5,6 @@ env:
   global:
     - CONDA_DIR="$HOME/miniconda"
 
-cache:
-  directories:
-    - $HOME/miniconda
-
 stages:
   - test_accuracy
   - test_likelihood
