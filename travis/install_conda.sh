@@ -19,7 +19,7 @@ else
     # Install conda
     sudo apt-get update
     wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
-    bash miniconda.sh -b -p $HOME/miniconda -u
+    bash miniconda.sh -b -p $CONDA_DIR -u
     export PATH="$CONDA_DIR/bin:$PATH"
     hash -r
     conda config --set always_yes yes --set changeps1 no

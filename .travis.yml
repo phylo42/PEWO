@@ -17,11 +17,27 @@ stages:
 jobs:
   include:
     - stage: build-conda
-      language: python
+      language: bash
       python: "3.6"
-      env: TRAVIS_JOB=test_accuracy
-      install:
-        - travis/install_conda.sh
-        - ant -f "$TRAVIS_BUILD_DIR"/scripts/java/PEWO_java/build-cli.xml
+      env: TRAVIS_JOB=install_conda
       script:
-        - travis/test_accuracy.sh
+        - travis/install_conda.sh
+          ls $CONDA_DIR
+          ls $CONDA_DIR/bin
+    - stage: build-pewo
+      language: bash
+      env: TRAVIS_JOB=build_pewo
+      script:
+        # Build java tools
+        - export PATH="$CONDA_DIR/bin:$PATH"
+        - echo $PATH
+        - ls $CONDA_DIR
+        - ls $CONDA_DIR/bin
+        - $CONDA_DIR/bin/conda
+        - conda info -a
+        - conda activate PEWO
+        - ant -f "$TRAVIS_BUILD_DIR"/scripts/java/PEWO_java/build-cli.xml
+    - stage: test
+      language: python
+      env: TRAVIS_JOB=test_accuracy
+      script: travis/test_accuracy.sh
