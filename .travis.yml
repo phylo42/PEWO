@@ -4,7 +4,6 @@ git:
 env:
   global:
     - CONDA_DIR="$HOME/miniconda"
-    - CONDA_ENV
 
 cache:
   directories:
@@ -29,6 +28,7 @@ jobs:
       script:
         # Build java tools
         - export PATH="$CONDA_DIR/bin:$PATH"
+        - conda info -a
         - conda activate PEWO
         - ant -f "$TRAVIS_BUILD_DIR"/scripts/java/PEWO_java/build-cli.xml
     - stage: test
