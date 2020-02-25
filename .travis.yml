@@ -20,7 +20,6 @@ jobs:
       env: TRAVIS_JOB=test_accuracy
       before_install:
         - source travis/install_conda.sh
-        - conda activate PEWO
       install: ant -f "$TRAVIS_BUILD_DIR"/scripts/java/PEWO_java/build-cli.xml
       script: travis/test_accuracy.sh
 
@@ -29,7 +28,6 @@ jobs:
       env: TRAVIS_JOB=test_likelihood
       before_install:
         - source travis/install_conda.sh
-        - conda activate PEWO
       install: ant -f "$TRAVIS_BUILD_DIR"/scripts/java/PEWO_java/build-cli.xml
       script: travis/test_likelihood.sh
 
