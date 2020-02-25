@@ -29,6 +29,7 @@ jobs:
         # Build java tools
         - export PATH="$CONDA_DIR/bin:$PATH"
         - echo $PATH
+        - ls $CONDA_DIR
         - ls $CONDA_DIR/bin
         - $CONDA_DIR/bin/conda
         - conda info -a
