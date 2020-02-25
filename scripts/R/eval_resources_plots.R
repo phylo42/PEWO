@@ -27,7 +27,7 @@ pplacer<-c("ms","sb","mp")
 rappas<-c("k","o","red","ar")
 rappasdbbuild<-c("k","o","red","ar")
 rappasplacement<-c("k","o","red","ar")
-apples<-c("m","c")
+apples<-c("meth","crit")
 hmmbuild<-NULL
 ansrec<-c("red","ar")
 
