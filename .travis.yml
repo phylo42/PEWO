@@ -19,9 +19,7 @@ jobs:
       python: "3.6"
       env: TRAVIS_JOB=test_accuracy
       before_install:
-        - travis/install_conda.sh
-        - export PATH="$CONDA_DIR/bin:$PATH"
-        - conda info -a
+        - source travis/install_conda.sh
         - conda activate PEWO
       install: ant -f "$TRAVIS_BUILD_DIR"/scripts/java/PEWO_java/build-cli.xml
       script: travis/test_accuracy.sh
