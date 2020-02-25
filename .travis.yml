@@ -10,9 +10,8 @@ cache:
     - $HOME/miniconda
 
 stages:
-  - build-conda
-  - build-pewo
-  - test
+  - test_accuracy
+  - test_likelihood
 
 jobs:
   include:
@@ -22,7 +21,19 @@ jobs:
       env: TRAVIS_JOB=test_accuracy
       before_install:
         - travis/install_conda.sh
+        - export PATH="$CONDA_DIR/bin:$PATH"
         - conda info -a
         - conda activate PEWO
       install: ant -f "$TRAVIS_BUILD_DIR"/scripts/java/PEWO_java/build-cli.xml
       script: travis/test_accuracy.sh
+
+    - stage: test_likelihood
+      language: python
+      python: "3.6"
+      env: TRAVIS_JOB=test_likelihood
+      before_install:
+        - source travis/install_conda.sh
+        - conda activate PEWO
+      install: ant -f "$TRAVIS_BUILD_DIR"/scripts/java/PEWO_java/build-cli.xml
+      script: travis/test_likelihood.sh
+
