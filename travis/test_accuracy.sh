@@ -9,6 +9,10 @@ trap 'err_report $LINENO' ERR
 export PATH="$CONDA_DIR/bin:$PATH"
 conda activate PEWO
 
+
+python --version
+whereis python
+
 # Run the fast accuracy example
 snakemake -p \
 --snakefile eval_accuracy.smk \
