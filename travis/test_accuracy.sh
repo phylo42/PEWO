@@ -6,12 +6,8 @@ err_report() {
 
 trap 'err_report $LINENO' ERR
 
-export PATH="$CONDA_DIR/bin:$PATH"
+source "$CONDA_DIR/etc/profile.d/conda.sh"
 conda activate PEWO
-
-
-python --version
-whereis python
 
 # Run the fast accuracy example
 snakemake -p \
