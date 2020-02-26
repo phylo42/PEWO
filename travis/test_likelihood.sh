@@ -15,3 +15,5 @@ snakemake -p \
 --config workdir=`pwd`/travis/tests/2_travis/likelihood_test/run \
 --configfile travis/tests/2_travis_likelihood_test/config.yaml
 
+# Clean after
+rm -rf `pwd`/travis/tests/2_travis/likelihood_test/run
