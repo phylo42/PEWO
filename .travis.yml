@@ -8,6 +8,7 @@ env:
 stages:
   - test_accuracy
   - test_likelihood
+  - test_resources
 
 jobs:
   include:
@@ -27,3 +28,10 @@ jobs:
       install: ant -f "$TRAVIS_BUILD_DIR"/scripts/java/PEWO_java/build-cli.xml
       script: travis/test_likelihood.sh
 
+    - language: python
+      python: "3.6"
+      env: TRAVIS_JOB=test_resources
+      before_install:
+        - source travis/install_conda.sh
+      install: ant -f "$TRAVIS_BUILD_DIR"/scripts/java/PEWO_java/build-cli.xml
+      script: travis/test_resources.sh

@@ -9,11 +9,11 @@ trap 'err_report $LINENO' ERR
 source "$CONDA_DIR/etc/profile.d/conda.sh"
 conda activate PEWO
 
-# Run the fast likelihood example
+# Run the fast resources example. Use the same inputs as the likelihood test
 snakemake -p \
---snakefile eval_likelihood.smk \
---config workdir=`pwd`/travis/tests/2_travis_likelihood_test/run_likelihood \
+--snakefile eval_resources.smk \
+--config workdir=`pwd`/travis/tests/2_travis_likelihood_test/run_resources \
 --configfile `pwd`/travis/tests/2_travis_likelihood_test/config.yaml
 
 # Clean after
-rm -rf `pwd`/travis/tests/2_travis_likelihood_test/run_likelihood
+rm -rf `pwd`/travis/tests/2_travis_likelihood_test/run_resources
