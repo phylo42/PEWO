@@ -12,7 +12,7 @@ from typing import Union, Dict
 
 class PlacementSoftware(Enum):
     EPA = "epa"
-    EPA_NG = "epang"
+    EPANG = "epang"
     PPLACER = "pplacer"
     APPLES = "apples"
     RAPPAS = "rappas"
