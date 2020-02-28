@@ -6,18 +6,18 @@ This demo measures CPU/RAM/TIME resources consumed by the different
 placement softwares, using a reference dataset of 16S-rRNA barcodes.
 
 EPA-ng, PPlacer, RAPPAS are tested.
-Each measure is repeated 3 times.
-This analysis will require around 4 hours of computation.
+Each measure is repeated 2 times.
+This analysis will require around 3 hours of computation.
 
 Final measures are reported as the mean of the repeats.
-Consequently, increasing repeats should improve the evaluation.
+Consequently, increasing repeats would produce better evaluations.
 
 ## How to launch
 
 Download pipeline.
 ```
-git clone --recursive https://github.com/blinard-BIOINFO/PEWO.git 
-cd PEWO_workflow
+git clone --recursive https://github.com/phylo42/PEWO.git
+cd PEWO
 ```
 
 Execute installation script.

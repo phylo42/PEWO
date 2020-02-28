@@ -38,7 +38,7 @@ pruning_count: 0
 
 # number of identical runs to launch when evaluating RAM/CPU consumption
 # final measurements are reported as mean of the the runs.
-repeats: 3
+repeats: 2
 # defines queries source, one of the following:
 # user: query sequences are loaded from a file target by parameter "query_set"
 # simulate: queries are simulated from the input alignment (reserved for future upgrades, currently not implemented)
