@@ -19,8 +19,8 @@ workdir=args[1]
 #definition of software paramters
 
 epa<-c("g")
-epang_h1<-c("bigg")
-epang_h2<-c("g")
+epang_h1<-c("g")
+epang_h2<-c("bigg")
 epang_h3<-NULL
 epang_h4<-NULL
 pplacer<-c("ms","sb","mp")
