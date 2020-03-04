@@ -63,8 +63,8 @@ PEWO will look for the commands 'git' and 'conda'. Not finding these commands wi
 
 Download PEWO:
 ```
-git clone --recursive https://github.com/blinard-BIOINFO/PEWO_workflow.git 
-cd PEWO_workflow
+git clone --recursive https://github.com/phylo42/PEWO.git
+cd PEWO
 ```
 
 Execute installation script:
