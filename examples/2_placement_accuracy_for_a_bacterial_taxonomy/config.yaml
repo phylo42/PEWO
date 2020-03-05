@@ -5,12 +5,12 @@
 # INPUT DATASET
 ##############################
 # alignment in fasta format and tree in newick format
-dataset_align: examples/16SrRNA_accuracy_test/alignment_150.fasta
-dataset_tree: examples/16SrRNA_accuracy_test/RAxML_bipartitions.150.BEST.WITH
+dataset_align: examples/2_placement_accuracy_for_a_bacterial_taxonomy/alignment_150.fasta
+dataset_tree: examples/2_placement_accuracy_for_a_bacterial_taxonomy/RAxML_bipartitions.150.BEST.WITH
 
 # working directory
 #MUST be an absolute path (some software do not accept relative path)
-workdir: /path/to/demos/16SrRNA_accuracy_test/run
+workdir: /path/to/examples/2_placement_accuracy_for_a_bacterial_taxonomy/run
 
 # states used in analysis, either '0' for nucleotides or '1' for amino acids
 states: 0

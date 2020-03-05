@@ -7,9 +7,10 @@ and expected Node Distance (eND)for a reference dataset
 of 150 16S-rRNA barcodes.
 
 EPA-ng, PPlacer and RAPPAS are run using only their default parameters.
-Only 3 pruning are launched, to produce results rapidly in ~20 minutes.
+Only 2 pruning are launched, to rapidly produce results in less than
+20 minutes.
 
-A better analysis would ask for >50 prunings; to generate a wide
+A better analysis would require for >50 prunings to generate a wide
 range of topologies (1 leaf pruned, large clades pruned, ...).
 
 
@@ -17,8 +18,8 @@ range of topologies (1 leaf pruned, large clades pruned, ...).
 
 Download pipeline.
 ```
-git clone --recursive https://github.com/blinard-BIOINFO/PEWO_workflow.git 
-cd PEWO_workflow
+git clone --recursive https://github.com/phylo42/PEWO.git
+cd PEWO
 ```
 
 Execute installation script
@@ -36,16 +37,16 @@ Test workflow before launch.
 ```
 snakemake -np \
 --snakefile eval_accuracy.smk \
---config workdir=`pwd`/demos/16SrRNA_accuracy_test/run \
---configfile demos/16SrRNA_accuracy_test/config.yaml
+--config workdir=`pwd`/examples/1_fast_test_of_accuracy_procedure/run \
+--configfile examples/1_fast_test_of_accuracy_procedure/config.yaml
 ```
 
-Execute workflow, using 2 CPU cores.
+Execute workflow, using 1 CPU core.
 ```
-snakemake -p --cores 2 \
+snakemake -p --cores 1 \
 --snakefile eval_accuracy.smk \
---config workdir=`pwd`/demos/16SrRNA_accuracy_test/run \
---configfile demos/16SrRNA_accuracy_test/config.yaml
+--config workdir=`pwd`/examples/1_fast_test_of_accuracy_procedure/run \
+--configfile examples/1_fast_test_of_accuracy_procedure/config.yaml
 ```
 
 ## Comments
@@ -56,10 +57,10 @@ You could also set them manually by editing the config.yaml file
 before launch.
 
 Raw results will be written in
-'demos/16SrRNA_accuray_test/run/benchmark'.
+'examples/1_fast_test_of_accuracy_procedure/run'.
 
 Results summaries and plots will be written in
-'demos/16SrRNA_accuracy_test/run'.
+'examples/1_fast_test_of_accuracy_procedure/run'.
 
 See PEWO wiki for a more detailed explanation of the results:
-https://github.com/blinard-BIOINFO/PEWO_workflow/wiki/Tutorials-and-results-interpretation
+https://github.com/blinard-BIOINFO/PEWO/wiki/Tutorials-and-results-interpretation

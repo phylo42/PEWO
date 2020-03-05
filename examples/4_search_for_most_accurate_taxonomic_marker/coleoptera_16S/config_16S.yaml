@@ -5,12 +5,12 @@
 # INPUT DATASET
 ##############################
 # alignment in fasta format and tree in newick format
-dataset_align: examples/5_CPU_RAM_requirements_evaluation/alignment_150.fasta
-dataset_tree: examples/5_CPU_RAM_requirements_evaluation/RAxML_bipartitions.150.BEST.WITH
+dataset_align: examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_16S/16S_stripped.fasta.raxml.reduced.fasta
+dataset_tree: examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_16S/16S_stripped.fasta.raxml.tree_REROOTED_neuro.nwk
 
 # working directory
 #MUST be an absolute path (some software do not accept relative path)
-workdir: /path/to/examples/5_CPU_RAM_requirements_evaluation/run
+workdir: /path/to/examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_16S/run
 
 # states used in analysis, either '0' for nucleotides or '1' for amino acids
 states: 0
@@ -28,7 +28,7 @@ read_length: [150]
 ### this section matters only when you run the "eval_accuracy.smk" workflow
 
 # number of random prunings to compute
-pruning_count: 0
+pruning_count: 10
 
 
 ## IF "RESOURCES" ARE EVALUATED
@@ -38,14 +38,14 @@ pruning_count: 0
 
 # number of identical runs to launch when evaluating RAM/CPU consumption
 # final measurements are reported as mean of the the runs.
-repeats: 2
+repeats: 1
 # defines queries source, one of the following:
 # user: query sequences are loaded from a file target by parameter "query_set"
 # simulate: queries are simulated from the input alignment (reserved for future upgrades, currently not implemented)
 query_type: user
 # queries used in resource evaluation, >10000 sequences recommended.
 # MUST be an absolute path (some software do not accept relative path).
-query_user: /path/to/examples/5_CPU_RAM_requirements_evaluation/EMP_92_studies_10000.fas
+query_user: none
 
 
 
@@ -70,7 +70,7 @@ config_epa:
 
   #proportion of top scoring branch for which full optimization is computed
   #float in ]0,1], higher values increase accuracy but analysis is slower
-  G: [0.01,0.1]
+  G: [0.1]
 
 ### PPLACER
 ###############################
@@ -81,8 +81,8 @@ config_pplacer:
   #it uses a 2-step heuristic similar to EPA but called the "baseball" heuristic
   #(Matsen et al, 2012 ; doi: 10.1186/1471-2105-11-538)
   
-  max-strikes: [6,24]
-  strike-box: [3,12]
+  max-strikes: [6]
+  strike-box: [3]
   max-pitches: [40]
 
   #pre-masking, 1=yes, 0=no
@@ -104,10 +104,10 @@ config_epang:
 
   h1:
     #value in ]0,1], value close to 1 recommended by authors
-    g: [0.999,0.99999]  
+    g: [0.99999]  
   h2:
     #values in ]0,1], higher values increase accuracy but analysis is slower
-    G: [0.01]       
+    G: [0.1]       
   h3:
     options: none       #reserved if any option appears in future versions
   h4:
@@ -128,12 +128,12 @@ config_rappas:
 
   #panel of k that is tested
   #integer in [3,16] (~8-10 recommended, >12 often produces too long computations)
-  k: [7,8]
+  k: [8]
 
   #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
   #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids
   #For DNA, values in [1.5,2.0] recommended. For amino acids, values in [5,15] recommended.
-  omega: [1.5,2.0]
+  omega: [1.5]
 
   #reduction setup, e.g. gap/non-gap ratio
   #above which a site of the input alignment
@@ -249,3 +249,4 @@ phylo_params:
 
 #if 1, prints some debug lines on top of snakemake logs
   debug: 0
+

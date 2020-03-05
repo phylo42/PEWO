@@ -19,8 +19,8 @@ range of topologies (1 leaf pruned, large clades pruned, ...).
 
 Download pipeline.
 ```
-git clone --recursive https://github.com/blinard-BIOINFO/PEWO_workflow.git 
-cd PEWO_workflow
+git clone --recursive https://github.com/phylo42/PEWO.git
+cd PEWO
 ```
 
 Execute installation script.
@@ -38,16 +38,16 @@ Test workflow before launch.
 ```
 snakemake -np \
 --snakefile eval_accuracy.smk \
---config workdir=`pwd`/demos/HIV_accuracy_test/run \
---configfile demos/HIV_accuracy_test/config.yaml
+--config workdir=`pwd`/examples/3_placement_accuracy_for_HIV_genomes/run \
+--configfile examples/3_placement_accuracy_for_HIV_genomes/config.yaml
 ```
 
-Execute workflow, using 4 CPU cores.
+Execute workflow, using 2 CPU cores.
 ```
-snakemake -p --cores 4 \
+snakemake -p --cores 2 \
 --snakefile eval_accuracy.smk \
---config workdir=`pwd`/demos/HIV_accuracy_test/run \
---configfile demos/HIV_accuracy_test/config.yaml
+--config workdir=`pwd`/examples/3_placement_accuracy_for_HIV_genomes/run \
+--configfile examples/3_placement_accuracy_for_HIV_genomes/config.yaml
 ```
 
 ## Comments
@@ -58,10 +58,10 @@ You could also set them manually by editing the config.yaml file
 before launch.
 
 Raw results will be written in
-'demos/16SrRNA_accuray_test/run/benchmark'.
+'examples/3_placement_accuracy_for_HIV_genomes/run'.
 
 Results summaries and plots will be written in
-'demos/16SrRNA_accuracy_test/run'.
+'examples/3_placement_accuracy_for_HIV_genomes/run'.
 
 See PEWO wiki for a more detailed explanation of the results:
-github.com/blinard-BIOINFO/PEWO_workflow/wiki
+https://github.com/phylo42/PEWO/wiki/Tutorials-and-results-interpretation

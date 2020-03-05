@@ -5,21 +5,9 @@
 # INPUT DATASET
 ##############################
 #alignment in fasta format and tree in newick format
-#dataset_align: test/mod_150.phy.fasta
-#dataset_tree: test/RAxML_bipartitions.150.BEST.WITH
-#dataset_align: test/compendium-norec-exp.fasta
-#dataset_tree: test/compendium-norec-exp-tree.newick
-#dataset_align: /home/ben/Dropbox/viromeplacer/test_datasets/6leaves_tree/6_leaves_test_set.aln
-#dataset_tree: /home/ben/Dropbox/viromeplacer/test_datasets/6leaves_tree/6_leaves_test_set.tree
-#dataset_align: /media/ben/STOCK/DATA/PEWO/jphmm_inputs/HBV_alignment.fas
-#dataset_tree: /media/ben/STOCK/DATA/PEWO/jphmm_inputs/RAxML_bipartitions.HBV.REROOTED
-
 
 dataset_align: examples/1_fast_test_of_accuracy_procedure/alignment_150.fasta
 dataset_tree: examples/1_fast_test_of_accuracy_procedure/RAxML_bipartitions.150.BEST.WITH
-
-#dataset_align: test/1.align
-#dataset_tree: test/1.tree
 
 #working directory
 workdir: /home/nikolai/dev/pewo/run_accuracy1
@@ -33,9 +21,9 @@ test_soft: [epa, epang, rappas, pplacer]
 
 # READ GENERATION
 # Read lengths to generate
-read_length: [300]
+read_length: [150,300]
 # Number of random prunings to compute
-pruning_count: 2
+pruning_count: 50
 
 
 ## IF "ACCURACY" IS EVALUATED
@@ -56,9 +44,7 @@ repeats: 3
 query_type: user
 
 # queries used in resource evaluation, >10000 sequences recommended
-#query_user: test/EMP_92_studies_100000.fas
-query_user: test/1_r300.fasta
-#query_user: demos/16SrRNA_resource_test/EMP_92_studies_1000.fas
+query_user: examples/2_placement_accuracy_for_a_bacterial_taxonomy/EMP_92_studies_1000.fas
 
 
 
@@ -82,7 +68,7 @@ config_epa:
 
   #proportion of top scoring branch for which full optimization is computed
   #float in ]0,1]
-  G: [0.1]
+  G: [0.01,0.1]
 
 ### PPLACER
 ###############################
@@ -93,9 +79,9 @@ config_pplacer:
   #it uses a 2-step heuristic similar to EPA but called the "baseball" heuristic
   #(Matsen et al, 2012 ; doi: 10.1186/1471-2105-11-538)
 
-  max-strikes: [6]
-  strike-box: [3]
-  max-pitches: [40]
+  max-strikes: [6,12]
+  strike-box: [3,6]
+  max-pitches: [40,80]
 
   #pre-masking, 1=yes, 0=no
   premask: 1
@@ -118,7 +104,7 @@ config_epang:
   h1:
     g: [0.999,0.99999]
   h2:
-    G: [0.01,]
+    G: [0.01,0.1]
   h3:
     options: none    #reserved if any option appears in future versions
   h4:
@@ -139,12 +125,12 @@ config_rappas:
 
   #panel of k that is tested
   #integer in [2,16] (8~10 recommended, >12 often produces too long computations)
-  k: [6]
+  k: [7,8]
 
   #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
   #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids
   #For DNA, values in [1,2] recommended. For amino acids, values in [5,15] recommended.
-  omega: [2.0]
+  omega: [1.5,2.0]
 
   #reduction setup, e.g. gap/non-gap ratio
   #above which a site of the input alignment
@@ -170,8 +156,7 @@ config_rappas:
   #currently, only raxml-ng can use multiple threads
   #
   #!!! warning, be sure to set arsoft VALUES as UPPER CASE !!!
-  #arsoft: [PHYML]
-  arsoft: [RAXMLNG]
+  arsoft: [PHYML,RAXMLNG]
   arthreads: 2
 
   #maximum amount of memory available to rappas process
@@ -205,7 +190,7 @@ config_apples:
   # HYBRID : MLSE then ME
   #criteria: ["MLSE","ME","HYBRID"]
   #!warning, be sure to set criteria VALUES as UPPER CASE
-  criteria: [MLSE,ME,HYBRID]
+  criteria: [MLSE,ME]
 
 
 ########################################################################################################################

@@ -10,7 +10,7 @@ dataset_tree: examples/1_fast_test_of_accuracy_procedure/RAxML_bipartitions.150.
 
 # working directory
 #MUST be an absolute path (some software do not accept relative path)
-workdir: /path/to/demos/16SrRNA_accuracy_test/run
+workdir: /path/to/examples/1_fast_test_of_accuracy_procedure/run
 
 # states used in analysis, either '0' for nucleotides or '1' for amino acids
 states: 0
@@ -28,7 +28,7 @@ read_length: [150]
 ### this section matters only when you run the "eval_accuracy.smk" workflow
 
 # number of random prunings to compute
-pruning_count: 3
+pruning_count: 2
 
 
 ## IF "RESOURCES" ARE EVALUATED
@@ -70,7 +70,7 @@ config_epa:
 
   #proportion of top scoring branch for which full optimization is computed
   #float in ]0,1], higher values increase accuracy but analysis is slower
-  G: [0.01,0.1]
+  G: [0.1]
 
 ### PPLACER
 ###############################
@@ -81,9 +81,9 @@ config_pplacer:
   #it uses a 2-step heuristic similar to EPA but called the "baseball" heuristic
   #(Matsen et al, 2012 ; doi: 10.1186/1471-2105-11-538)
   
-  max-strikes: [6,24]
-  strike-box: [3,12]
-  max-pitches: [40,160]
+  max-strikes: [6]
+  strike-box: [3]
+  max-pitches: [40]
 
   #pre-masking, 1=yes, 0=no
   premask: 1
@@ -104,10 +104,10 @@ config_epang:
 
   h1:
     #value in ]0,1], value close to 1 recommended by authors
-    g: [0.999,0.99999]  
+    g: [0.99999]  
   h2:
     #values in ]0,1], higher values increase accuracy but analysis is slower
-    G: [0.01,0.1]       
+    G: [0.1]       
   h3:
     options: none       #reserved if any option appears in future versions
   h4:
@@ -128,12 +128,12 @@ config_rappas:
 
   #panel of k that is tested
   #integer in [3,16] (~8-10 recommended, >12 often produces too long computations)
-  k: [6,8]
+  k: [7]
 
   #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
   #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids
   #For DNA, values in [1.5,2.0] recommended. For amino acids, values in [5,15] recommended.
-  omega: [1.5,2.0]
+  omega: [2.0]
 
   #reduction setup, e.g. gap/non-gap ratio
   #above which a site of the input alignment
@@ -187,7 +187,7 @@ config_apples:
   # BE : k=1 (Beyer et al., 1974)
   #methods: ["OLS","FM","BE"]
   #!warning, be sure to set methods VALUES as UPPER CASE
-  methods: [OLS,FM,BE]
+  methods: [OLS]
 
   #List of placement criterion to test.
   #Possible values are:
@@ -196,7 +196,7 @@ config_apples:
   # HYBRID : MLSE then ME
   #criteria: ["MLSE","ME","HYBRID"]
   #!warning, be sure to set criteria VALUES as UPPER CASE
-  criteria: [MLSE,ME,HYBRID]
+  criteria: [MLSE]
 
 
 ########################################################################################################################
