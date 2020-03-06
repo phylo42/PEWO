@@ -1,39 +1,40 @@
-language: python
+git:
+  depth: 150
 
-python:
-  - "3.6"
+env:
+  global:
+    - CONDA_DIR="$HOME/miniconda"
 
 cache:
- directories:
-  - $HOME/miniconda
+  directories:
+    - $HOME/miniconda
 
-install:
-  # Install conda
-  - sudo apt-get update
-  - wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
-  - bash miniconda.sh -b -p $HOME/miniconda
-  - export PATH="$HOME/miniconda/bin:$PATH"
-  - hash -r
-  - conda config --set always_yes yes --set changeps1 no
-  - conda update -q conda
-  
-  # Useful for debugging any issues with conda
-  - conda info -a
+stages:
+  - build-conda
+  - build-pewo
+  - test
 
-  # Add channels
-  - conda config --add channels defaults
-  - conda config --add channels conda-forge
-  - conda config --add channels bioconda
-
-  # Create the environment. Takes time
-  - conda env create -f "$TRAVIS_BUILD_DIR"/envs/environment.yaml
-
-  # Build java tools
-  - source activate PEWO
-  - ant -f "$TRAVIS_BUILD_DIR"/scripts/java/PEWO_java/build-cli.xml
-
-script:
-  .travis/build.sh
-
-after_failure:
-  - cat "$TRAVIS_BUILD_DIR"/examples/1_fast_test_of_accuracy_procedure/run/logs/taxtastic/*.log
+jobs:
+  include:
+    - stage: build-conda
+      language: python
+      python: "3.6"
+      env: TRAVIS_JOB=install_conda
+      script:
+        - travis/install_conda.sh
+    - stage: build-pewo
+      language: bash
+      env: TRAVIS_JOB=build_pewo
+      script:
+        # Build java tools
+        - export PATH="$CONDA_DIR/bin:$PATH"
+        - echo $PATH
+        - ls $CONDA_DIR/bin
+        - $CONDA_DIR/bin/conda
+        - conda info -a
+        - conda activate PEWO
+        - ant -f "$TRAVIS_BUILD_DIR"/scripts/java/PEWO_java/build-cli.xml
+    - stage: test
+      language: python
+      env: TRAVIS_JOB=test_accuracy
+      script: travis/test_accuracy.sh

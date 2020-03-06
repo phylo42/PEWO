@@ -26,7 +26,7 @@ epang_h4<-NULL
 pplacer<-c("ms","sb","mp")
 rappasdbbuild<-c("k","o","red","ar")
 rappasplacement<-c("k","o","red","ar")
-apples<-c("m","c")
+apples<-c("meth","crit")
 hmmbuild<-NULL
 ansrec<-c("red","ar")
 
