@@ -5,12 +5,12 @@
 # INPUT DATASET
 ##############################
 # alignment in fasta format and tree in newick format
-dataset_align: examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_16S/16S_stripped.fasta.raxml.reduced.fasta
-dataset_tree: examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_16S/16S_stripped.fasta.raxml.tree_REROOTED_neuro.nwk
+dataset_align: examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_cox1/cox1a_et_cox1b.fasta
+dataset_tree: examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_cox1/cox1a_et_cox1b.fasta.raxml.tree_REROOTED_neuro.nwk
 
 # working directory
 #MUST be an absolute path (some software do not accept relative path)
-workdir: /path/to/examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_16S/run
+workdir: /path/to/examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_cox1/run
 
 # states used in analysis, either '0' for nucleotides or '1' for amino acids
 states: 0
@@ -167,7 +167,7 @@ config_rappas:
   #in particular, testing very large trees will be faster with more memory (32-64Gb)
   #(this is due to JVM garbage collector behaviour)
   #set as an integer value, which represents the maximum amount of Gb allocatable to the JVM (memory: 8 => 8 Gb of RAM)
-  memory: 16
+  memory: 32
 
 ### APPLES
 ###############################

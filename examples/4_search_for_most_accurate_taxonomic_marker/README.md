@@ -56,6 +56,11 @@ snakemake -np \
 --snakefile eval_accuracy.smk \
 --config workdir=`pwd`/examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_cox1/run \
 --configfile examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_cox1/config_cox1.yaml
+
+snakemake -np \
+--snakefile eval_accuracy.smk \
+--config workdir=`pwd`/examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_cob/run \
+--configfile examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_cob/config_cob.yaml
 ```
 
 Execute workflow for 12S gene, using 2 CPU cores.
@@ -80,6 +85,14 @@ snakemake -p --cores 2 \
 --snakefile eval_accuracy.smk \
 --config workdir=`pwd`/examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_cox1/run  \
 --configfile examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_cox1/config_cox1.yaml
+```
+
+Execute workflow for cytb gene, using 2 CPU cores.
+```
+snakemake -p --cores 2 \
+--snakefile eval_accuracy.smk \
+--config workdir=`pwd`/examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_cob/run  \
+--configfile examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_cob/config_cob.yaml
 ```
 
 
