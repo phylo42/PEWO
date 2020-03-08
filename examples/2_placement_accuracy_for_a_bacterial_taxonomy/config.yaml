@@ -28,7 +28,7 @@ read_length: [150,300]
 ### this section matters only when you run the "eval_accuracy.smk" workflow
 
 # number of random prunings to compute
-pruning_count: 10
+pruning_count: 5
 
 
 ## IF "RESOURCES" ARE EVALUATED
@@ -100,11 +100,11 @@ config_epang:
   # h3: heuristic equivalent to pplacer defaults, fast
   # h4: no heuristic, very very slow but should produce the best accuracy
   #(Barbera et al, 2019 ; doi: 10.1093/sysbio/syy054)
-  heuristics: ["h1","h2"]
+  heuristics: ["h1"]
 
   h1:
     #value in ]0,1], value close to 1 recommended by authors
-    g: [0.999,0.99999]  
+    g: [0.999,0.99999,0.9999999]  
   h2:
     #values in ]0,1], higher values increase accuracy but analysis is slower
     G: [0.01,0.1]       
@@ -159,7 +159,7 @@ config_rappas:
   #currently, only raxml-ng can use multiple threads
   #
   #!!! warning, be sure to set arsoft VALUES as UPPER CASE !!!
-  arsoft: [PHYML,RAXMLNG]
+  arsoft: [RAXMLNG]
   arthreads: 1
 
   #maximum amount of memory available to rappas process
