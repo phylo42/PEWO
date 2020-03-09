@@ -43,3 +43,18 @@ snakemake -p --cores 4 \
 query_user=`pwd`/examples/6_placement_likelihood/EMP_92_studies_1000.fas \
 --configfile examples/6_placement_likelihood/config.yaml
 ```
+
+## Comments
+
+In this example, 'workdir' and 'query_user' config flags are set
+dynamically, as it is required they are passed as absolute paths.
+You could also set them manually by editing the config.yaml file
+before launch.
+
+Raw results will be written in 'examples/6_placement_likelihood/run'.
+
+Results summaries and plots will be written in
+'examples/6_placement_likelihood/run'.
+
+See PEWO wiki for a more detailed explanation of the results:
+https://github.com/phylo42/PEWO/wiki/Tutorials-and-results-interpretation
