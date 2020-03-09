@@ -12,7 +12,7 @@ from pathlib import Path
 import pewo.config as cfg
 from pewo.software import PlacementSoftware, get_ar_binary
 from pewo.templates import get_output_template, get_log_template, get_experiment_dir_template, \
-    get_ar_output_templates, get_benchmark_template, get_output_template_args
+    get_ar_output_templates, get_benchmark_template, get_output_template_args, get_experiment_log_dir_template
 
 
 _working_dir = cfg.get_work_dir(config)
@@ -70,6 +70,9 @@ rule db_build_rappas:
         ar = lambda wildcards: get_ar_output_templates(config, wildcards.ar)
     output:
         database = os.path.join(_rappas_experiment_dir, "DB.bin")
+    log:
+        os.path.join(get_experiment_log_dir_template(config, PlacementSoftware.RAPPAS),
+                     "k{k}_o{o}_red{red}_ar{ar}.log")
     benchmark:
         repeat(_rappas_build_benchmark_template, config["repeats"])
     version: "1.00"
@@ -84,7 +87,7 @@ rule db_build_rappas:
             "java -Xms2G -Xmx"+str(config["config_rappas"]["memory"])+"G -jar $(which RAPPAS.jar) -v 0 -p b -b $(which {params.arbin}) "
             "-k {wildcards.k} --omega {wildcards.o} -t {input.t} -r {input.a} "
             "-w {params.workdir} --ardir {params.ardir} -s {params.states} --ratio-reduction {wildcards.red} "
-            "--use_unrooted --dbfilename {params.dbfilename} "
+            "--use_unrooted --dbfilename {params.dbfilename} &> {log}"
          )
 
 rule placement_rappas:
