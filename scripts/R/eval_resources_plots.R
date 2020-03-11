@@ -4,7 +4,7 @@ args = commandArgs(trailingOnly=TRUE)
 
 # test if there is at least one argument
 if (length(args)<1) {
-    stop("The directory containing benchmark results must be supplies as 1st argument.n", call.=FALSE)
+    stop("The directory containing benchmark results must be supplies as 1st argument.\n", call.=FALSE)
 }
 
 library(RColorBrewer)
@@ -178,12 +178,7 @@ for (opname in op_analyzed) {
         }
         #aggregate as mean per pruning
         data<-NULL
-        if (length(grep("epang",opname))>0) {
-            data<-df[df$operation=="epang" & df$h==substr(opname,nchar(opname),nchar(opname)),]
-        } else {
-            data<-df[df$operation==opname,]
-        }
-
+        data<-df[df$operation==opname,]
         data_mean<-aggregate(as.formula(formula_mean), data, mean)
         data_sd<-aggregate(as.formula(formula_mean), data, sd)  # not used for now, but could add error bars to barplots
 
