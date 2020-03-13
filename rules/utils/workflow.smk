@@ -85,6 +85,7 @@ def build_accuracy_workflow() -> List[str]:
     """
     # .jplace files
     placements = build_placements_workflow()
+    print(placements)
 
     # node distances from jplace outputs
     csv = [config["workdir"] + "/results.csv"]
@@ -203,6 +204,9 @@ def _get_resources_tsv(config: Dict, software: PlacementSoftware, **kwargs) -> L
     if software == PlacementSoftware.RAPPAS:
         software_templates = rappas_benchmark_templates
         software_template_args = rappas_benchmark_template_args
+    elif software == PlacementSoftware.RAPPAS2:
+        software_templates = []
+        software_template_args = []
     elif software == PlacementSoftware.EPA:
         software_templates = epa_benchmark_templates + hmmer_benchmark_templates
         software_template_args = epa_benchmark_template_args + hmmer_benchmark_template_args
@@ -215,7 +219,6 @@ def _get_resources_tsv(config: Dict, software: PlacementSoftware, **kwargs) -> L
             h_index = heuristics.index(h)
             software_templates.append(epang_benchmark_templates[h_index])
             software_template_args.append(epang_benchmark_template_args[h_index])
-
     elif software == PlacementSoftware.PPLACER:
         software_templates = pplacer_benchmark_templates + hmmer_benchmark_templates
         software_template_args = pplacer_benchmark_template_args + hmmer_benchmark_template_args

@@ -170,6 +170,15 @@ rule extend_trees_rappas:
     run:
         make_extended_tree(input.tree, output.ext_tree, input.jplace)
 
+rule extend_trees_rappas2:
+    input:
+         jplace=get_output_template(config, PlacementSoftware.RAPPAS2, "jplace"),
+         tree=config["dataset_tree"],
+    output:
+          ext_tree=get_output_template(config, PlacementSoftware.RAPPAS2, "tree")
+    run:
+        make_extended_tree(input.tree, output.ext_tree, input.jplace)
+
 rule extend_trees_apples:
     input:
          jplace=get_output_template(config, PlacementSoftware.APPLES, "jplace"),
@@ -287,6 +296,19 @@ rule calculate_likelihood_rappas:
     params:
           workdir=cfg.get_work_dir(config),
           software=PlacementSoftware.RAPPAS.value,
+          model="GTR+G"
+    run:
+        _calculate_likelihood(input, output, params, wildcards)
+
+rule calculate_likelihood_rappas2:
+    input:
+         alignment=_get_aligned_query_template(config),
+         tree=get_output_template(config, PlacementSoftware.RAPPAS2, "tree")
+    output:
+          csv=get_output_template(config, PlacementSoftware.RAPPAS2, "csv")
+    params:
+          workdir=cfg.get_work_dir(config),
+          software=PlacementSoftware.RAPPAS2.value,
           model="GTR+G"
     run:
         _calculate_likelihood(input, output, params, wildcards)

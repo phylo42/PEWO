@@ -25,9 +25,10 @@ epang_h3<-c()
 epang_h4<-c()
 pplacer<-c("ms","sb","mp")
 rappas<-c("k","o","red","ar")
+rappas2<-c("k","o","red","ar","mu")
 apples<-c("meth","crit")
 
-soft_params<-list(epa=epa,epang_h1=epang_h1,epang_h2=epang_h2,epang_h3=epang_h3,epang_h4=epang_h4,pplacer=pplacer,rappas=rappas,apples=apples)
+soft_params<-list(epa=epa,epang_h1=epang_h1,epang_h2=epang_h2,epang_h3=epang_h3,epang_h4=epang_h4,pplacer=pplacer,rappas=rappas,rappas2=rappas2,apples=apples)
 
 
 #load data
@@ -88,8 +89,9 @@ for ( i in 1:length(soft_analyzed) ) {
 }
 
 # search for ND min/max
-min_nd<-Inf
-max_nd<-0
+min_nd <- min(alltables[[1]]$likelihood)
+max_nd <- max(alltables[[1]]$likelihood)
+
 for ( i in 1:length(soft_analyzed) ) {
 	mi<-min(alltables[[i]]$likelihood)
 	ma<-max(alltables[[i]]$likelihood)

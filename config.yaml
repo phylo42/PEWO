@@ -6,24 +6,25 @@
 ##############################
 #alignment in fasta format and tree in newick format
 
-dataset_align: examples/1_fast_test_of_accuracy_procedure/alignment_150.fasta
-dataset_tree: examples/1_fast_test_of_accuracy_procedure/RAxML_bipartitions.150.BEST.WITH
+dataset_align: examples/6_placement_likelihood/alignment_150.fasta
+dataset_tree: examples/6_placement_likelihood/RAxML_bipartitions.150.BEST.WITH
 
 #working directory
-workdir: /home/nikolai/dev/pewo/run_accuracy1
+workdir: /home/nikolai/dev/pewo/run_likelihood
 
 
 #states used in analysis, either '0' for nucleotides or '1' for amino acids
 states: 0
 
 #which software to test, at least one of : epa, epang, pplacer, rappas, apples
-test_soft: [epa, epang, rappas, pplacer]
+#test_soft: [epa, epang, rappas, pplacer]
+test_soft: [rappas2]
 
 # READ GENERATION
 # Read lengths to generate
-read_length: [150,300]
+read_length: [300]
 # Number of random prunings to compute
-pruning_count: 50
+pruning_count: 0
 
 
 ## IF "ACCURACY" IS EVALUATED
@@ -44,7 +45,7 @@ repeats: 3
 query_type: user
 
 # queries used in resource evaluation, >10000 sequences recommended
-query_user: examples/2_placement_accuracy_for_a_bacterial_taxonomy/EMP_92_studies_1000.fas
+query_user: examples/6_placement_likelihood/EMP_92_studies_100.fas
 
 
 
@@ -164,6 +165,16 @@ config_rappas:
   #in particular, testing very large trees will be faster with more memory (due to JVM garbage collector behaviour)
   #set as an integer value, which represents the maximum amount of Gb allocatable to the JVM (memory: 8 => 8 Gb of RAM)
   memory: 8
+
+
+config_rappas2:
+  k: [7, 8, 9, 10]
+  omega: [1.5, 2.0]
+  reduction: [0.99]
+  arsoft: [PHYML]
+  arthreads: 2
+
+  mu: [7, 8, 9]
 
 ### APPLES
 ###############################

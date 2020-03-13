@@ -68,6 +68,10 @@ def get_experiment_dir_template(config: Dict, software: PlacementSoftware, **kwa
         return os.path.join(software_dir, input_set_dir_template, "meth{meth}_crit{crit}")
     elif software == PlacementSoftware.RAPPAS:
         return os.path.join(software_dir, input_set_dir_template, "red{red}_ar{ar}", "k{k}_o{o}")
+    elif software == PlacementSoftware.RAPPAS2:
+        return os.path.join(software_dir, input_set_dir_template, "red{red}_ar{ar}", "k{k}_o{o}_mu{mu}")
+    else:
+        raise RuntimeError(f"Unsupported software: {software}")
 
 
 def get_experiment_log_dir_template(config: Dict, software: Software) -> str:
@@ -158,6 +162,10 @@ def get_queryname_template(config: Dict, software: PlacementSoftware, **kwargs) 
         return get_common_queryname_template(config) + "_meth{meth}_crit{crit}"
     elif software == PlacementSoftware.RAPPAS:
         return get_common_queryname_template(config) + "_k{k}_o{o}_red{red}_ar{ar}"
+    elif software == PlacementSoftware.RAPPAS2:
+        return get_common_queryname_template(config) + "_k{k}_o{o}_red{red}_ar{ar}_mu{mu}"
+    else:
+        raise RuntimeError(f"Unsupported software: {software}")
 
 
 def get_output_template_args(config: Dict, software: PlacementSoftware, **kwargs) -> Dict[str, Any]:
@@ -206,8 +214,14 @@ def get_output_template_args(config: Dict, software: PlacementSoftware, **kwargs
         template_args["o"] = config["config_rappas"]["omega"]
         template_args["red"] = config["config_rappas"]["reduction"]
         template_args["ar"] = config["config_rappas"]["arsoft"]
+    elif software == PlacementSoftware.RAPPAS2:
+        template_args["k"] = config["config_rappas2"]["k"]
+        template_args["o"] = config["config_rappas2"]["omega"]
+        template_args["red"] = config["config_rappas2"]["reduction"]
+        template_args["ar"] = config["config_rappas2"]["arsoft"]
+        template_args["mu"] = config["config_rappas2"]["mu"]
     else:
-        raise RuntimeError("Unsupported software: " + software.value)
+        raise RuntimeError(f"Unsupported software: {software}")
     return template_args
 
 
