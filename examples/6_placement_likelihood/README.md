@@ -40,7 +40,7 @@ query_user=`pwd`/examples/6_placement_likelihood/EMP_92_studies_100.fas \
 
 Execute workflow, using 4 CPU cores:
 ```
-snakemake -p --cores 4 \
+snakemake -p --cores 2 \
 --snakefile eval_likelihood.smk \
 --config workdir=`pwd`/examples/6_placement_likelihood/run \
 query_user=`pwd`/examples/6_placement_likelihood/EMP_92_studies_100.fas \
