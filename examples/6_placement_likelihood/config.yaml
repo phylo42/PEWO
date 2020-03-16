@@ -23,7 +23,9 @@ pruning_count: 0
 # user: query sequences are loaded from a file target by parameter "query_set"
 # simulate: queries are simulated from the input alignment (reserved for future upgrades, currently not implemented)
 query_type: user
-
+# queries used in resource evaluation, >10000 sequences recommended.
+# MUST be an absolute path (some software do not accept relative path).
+query_user: /path/to/examples/6_placement_likelihood/EMP_92_studies_100.fas
 
 # The following section allow you to set parameters combinations that will be tested by the workflow
 # For each software/parameter, set a list of values.
