@@ -126,7 +126,7 @@ dependencies:
   - numpy=1.18.1=py36h95a1406_0
   - openjdk=11.0.1=h600c080_1018
   - openjpeg=2.3.1=h981e76c_3
-  - openmpi=4.0.2=hdf1f1ad_3
+  - openmpi=4.0.2=hb1b8bf9_1
   - openssl=1.1.1d=h516909a_0
   - paml=4.9=h516909a_5
   - pandas=1.0.1=py36hb3f55d8_0
