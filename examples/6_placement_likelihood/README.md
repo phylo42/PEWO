@@ -1,4 +1,4 @@
-# PEWO demo №5: Placement likelihood evaluation
+# PEWO demo №6
 
 ## Overview
 
@@ -60,4 +60,5 @@ Results summaries and plots will be written in
 'examples/6_placement_likelihood/run'.
 
 See PEWO wiki for a more detailed explanation of the results:
-https://github.com/phylo42/PEWO/wiki/Tutorials-and-results-interpretation
+https://github.com/phylo42/PEWO/wiki/IV.-Tutorials-and-results-interpretation
+
