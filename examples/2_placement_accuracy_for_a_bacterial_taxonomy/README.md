@@ -64,4 +64,4 @@ Results summaries and plots will be written in
 'examples/2_placement_accuracy_for_a_bacterial_taxonomy/run'.
 
 See PEWO wiki for a more detailed explanation of the results:
-https://github.com/blinard-BIOINFO/PEWO/wiki/Tutorials-and-results-interpretation
+https://github.com/phylo42/PEWO/wiki/IV.-Tutorials-and-results-interpretation
