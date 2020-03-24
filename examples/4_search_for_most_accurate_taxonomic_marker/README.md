@@ -104,14 +104,16 @@ You could also set them manually by editing the config.yaml file
 before launch.
 
 Raw results will be written in
+
 'examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_16S/run'
 'examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_12S/run'
 'examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_cox1/run'
 
 Results summaries and plots will be written in
+
 'examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_16S/run'
 'examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_12S/run'
 'examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_cox1/run'
 
 See PEWO wiki for a more detailed explanation of the results:
-https://github.com/phylo42/PEWO/wiki/Tutorials-and-results-interpretation
+https://github.com/phylo42/PEWO/wiki/IV.-Tutorials-and-results-interpretation
