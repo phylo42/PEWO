@@ -14,13 +14,13 @@ It is built on [Snakemake](https://snakemake.readthedocs.io/en/stable/) and [Min
 
 1. Evaluate phylogenetic placement accuracy, given a particular reference species tree and corresponding reference alignment. For instance, one can run PEWO on different trees built for different taxonomic marker genes and explore which markers produce better placements.
 
-2. Given a particular software/algorithm, empirically explore which sets of parameters produces the most accurate placements and for which computational costs. This can be particularly useful when a huge volume of sequences are to be placed and one may need to consider a balance between accuracy and scalability (CPU/RAM limitations).
+2. Given a particular software/algorithm, empirically explore which sets of parameters produces the most accurate placements, and at which computational costs. This can be particularly useful when a huge volume of sequences are to be placed and one may need to consider a balance between accuracy and scalability (CPU/RAM limitations).
 
 3. For developers, provide a basis to standardize phylogenetic placement evaluation and the establishment of benchmarks. PEWO aims to remove the hassle of re-implementing evaluation protocols that were described in anterior studies. In this regard, any phylogenetic placement developer is welcome to pull request new modules in the PEWO repository or contact us for future support of their new productions.
 
 ## Wiki documentation
 
-**An complete documentation, including a tutorial is available in the [wiki section](https://github.com/phylo42/PEWO/wiki) of this github repository.**
+**An complete documentation, including a tutorial for each workflow, is available in the [wiki section](https://github.com/phylo42/PEWO/wiki) of this github repository.**
 
 ## Installation
 
@@ -45,24 +45,24 @@ chmod u+x Miniconda3-latest-Linux-x86_64.sh
 ### Installation
 
 Download PEWO:
-```
+``` bash
 git clone --recursive https://github.com/phylo42/PEWO.git
 cd PEWO
 ```
 
 Execute installation script:
-```
+``` bash
 chmod u+x INSTALL.sh
 ./INSTALL.sh
 ```
 
 After installation, load environment:
-```
+``` bash
 conda activate PEWO
 ```
 
 You can launch a dry-run, if no error is throwed, PEWO is correctly installed:
-```
+``` bash
 snakemake -np \
 --snakefile eval_accuracy.smk \
 --config workdir=`pwd`/examples/1_fast_test_of_accuracy_procedure/run \
@@ -71,19 +71,20 @@ snakemake -np \
 
 You can launch a 20 minutes test, using 2 CPU cores.
 
-```
+``` bash
 snakemake -p --cores 2 \
 --snakefile eval_accuracy.smk \
 --config workdir=`pwd`/examples/1_fast_test_of_accuracy_procedure/run \
 --configfile examples/1_fast_test_of_accuracy_procedure/config.yaml
 ```
 
-If the test is successful, you should produce csv and svg files in the PEWO_workflow directory, for instance:
-* results.csv
-* summary_plot_eND_epang_h1.svg
-* summary_plot_eND_pplacer.svg
-* summary_plot_eND_rappas.svg
+If the test is successful, you should produce the following statistics and image files in the `PEWO_workflow` directory:
+* `results.csv`
+* `summary_plot_eND_epang_h1.svg`
+* `summary_plot_eND_pplacer.svg`
+* `summary_plot_eND_rappas.svg`
 
+<!-- ER questions: pointer to wiki doc. -->
 The content and interpretation of these files are detailed in the wiki documentation. 
 Please read the [dedicated wiki page](https://github.com/phylo42/PEWO/tree/master/examples/1_fast_test_of_accuracy_procedure).
 
@@ -119,7 +120,7 @@ Currently, (october 2019) there are no other implementations of phylogenetic pla
 
 **1. Activate PEWO environment:**
 
-```
+``` bash
 conda activate PEWO
 ```
 By default, the latest version of every phylogenetic placement software is installed in PEWO environment.
@@ -127,14 +128,14 @@ If you intend to evaluate anterior versions, you need to manually downgrade the 
 
 For instance, downgrading to anterior versions of PPlacer can be done with:
 
-```
+``` bash
 conda uninstall pplacer
 conda install pplacer=1.1.alpha17
 ```
 
 **2. Select a procedure :**
 
-PEWO proposes several procedures aiming to evaluate different aspects of phylogenetic placement. Each procedure is coding as a Snakemake workflow, which can be loaded via a dedicated Snakefile (PEWO_workflow/\*.smk).
+PEWO proposes several procedures aiming to evaluate different aspects of phylogenetic placement. Each procedure is coding as a Snakemake workflow, which can be loaded via a dedicated Snakefile (`PEWO_workflow/\*.smk`).
 
 Identify the Snakefile corresponding to your needs. 
 
@@ -145,9 +146,10 @@ Ressources | eval_ressources.smk | Given a reference tree/alignment and a set of
 Likelihood Improvement | eval_likelihood.smk | Given a reference tree/alignment, compute tree likelihoods induced by placements under a set of conditions, with higher likelihood reflecting better placements.
 
 
-**3. Setup the workflow by editing config.yaml:**
+**3. Setup the workflow by editing `config.yaml`:**
 
-The file config.yaml is where you setup the workflow. It contains 4 sections:
+<!-- ER: todo add link to procedures ; add link to explanation on substitution models -->
+The file `config.yaml` is where you setup the workflow. It contains 4 sections:
 * *Workflow configuration*
 The most important section: set the working directory, the input tree/alignment on which to evaluate placements, the number of pruning experiments or experiment repeats (see procedures).
 * *Per software configuration*
@@ -155,39 +157,45 @@ Select a panel of parameters and parameter values for each software. Measurement
 * *Options common to all software*
 Mostly related to the formatting of the jplace outputs. Note that these options will impact expected Node Distances.
 * *Evolutionary model*
-A very basic definition of the evolutionary model used in the procedures. Currently, only GTR+G (nucleotides), JTT+G, WAG+G and LG+G (amino acids) are supported.  
+A very basic definition of the evolutionary model used in the procedures. Currently, only GTR+G (for nucleotides), JTT+G, WAG+G and LG+G (for amino acids) are supported.  
 
 **4. Test your workflow:**
 
 It is strongly recommended to test if your configuration is valid and matches the analyses you intended.
 To do so, launch a dry run of the pipeline using the command:
 
-```
+``` bash
 snakemake --snakefile [snakefile].smk -np
 ```
 
-where \[snakefile\] is one of the sub-workflow snakefiles listed in the table above. 
+where `\[snakefile\]` is one of the sub-workflow snakefiles listed in the table above. 
 
 This will list the operations that will be run by the workflow. It is also recommended to export a graph detailing the different steps of the workflow (to avoid very large graphs in "Accuracy" sub-workflow, we force a single pruning).
 
-```
 # to display the graph in a window
+``` bash
 snakemake --snakefile [snakefile].smk --config pruning_count=1 --dag | dot | display
-
+```
 # to produce an image of the graph
+``` bash
 snakemake --snakefile [snakefile].smk --config pruning_count=1 --dag | dot -Tsvg > graph.svg
 ```
 
 **5. Launch the analysis:**
 
-```
+``` bash
 snakemake --snakefile [snakefile].smk -p --core [#cores] 
 ```
-Note that the workflow can be launched on a grid environment such as qsub.
-Refer to the snakemake documentation to learn how to configure the snakemake workflow for such an environment.
+<!-- ER changes: inserted grid system names and pointeers to wiki. qsub is a command. -->
+<!-- ER changes: inserted pointer to snake doc on this. -->
+Note that the workflow can be launched on a grid environment such as [SunGridEngine](https://en.wikipedia.org/wiki/Oracle_Grid_Engine) or [SLURM](https://en.wikipedia.org/wiki/Slurm_Workload_Manager) (i.e., with  `qsub` command).
+Refer to the snakemake [documentation](https://snakemake.readthedocs.io/en/stable/executing/cluster-cloud.html#cluster-execution) to learn how to configure a workflow for such environments.
+
+
 
 ## Contacts
 *B Linard, N Romashchenko, F Pardi, E Rivals*
+
 MAB team (Methods and Algorithms in Bioifnormatics), LIRMM, Montpellier, France.
 
 ## Licence
