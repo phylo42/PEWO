@@ -46,7 +46,7 @@ def get_experiment_dir_template(config: Dict, software: PlacementSoftware, **kwa
 
     if software == PlacementSoftware.EPA:
         return os.path.join(software_dir, input_set_dir_template, "g{g}")
-    elif software == PlacementSoftware.EPA_NG:
+    elif software == PlacementSoftware.EPANG:
         # Output template depends on the heuristic enabled.
         # Get the heuristic
         heuristic = kwargs.get("heuristic", None)
@@ -139,7 +139,7 @@ def get_queryname_template(config: Dict, software: PlacementSoftware, **kwargs) 
 
     if software == PlacementSoftware.EPA:
         return get_common_queryname_template(config) + "_g{g}"
-    elif software == PlacementSoftware.EPA_NG:
+    elif software == PlacementSoftware.EPANG:
         # Output template depends on the heuristic enabled.
         # Get the heuristic
         heuristic = kwargs.get("heuristic", None)
@@ -183,7 +183,7 @@ def get_output_template_args(config: Dict, software: PlacementSoftware, **kwargs
     # specify template arguments based on software
     if software == PlacementSoftware.EPA:
         template_args["g"] = config["config_epa"]["G"]
-    elif software == PlacementSoftware.EPA_NG:
+    elif software == PlacementSoftware.EPANG:
         # Output template depends on the heuristic enabled.
         # Get the heuristic
         heuristic = kwargs.get("heuristic", None)
@@ -258,10 +258,10 @@ def get_benchmark_template(config: Dict, software: Software, **kwargs) -> str:
     filename_template = join_kwargs(**template_args)[1:]
 
     software_name = software.name.lower()
-    if software == PlacementSoftware.EPA_NG:
+    if software == PlacementSoftware.EPANG:
         valid_heuristics = ("h1", "h2", "h3", "h4")
         assert heuristic and heuristic in valid_heuristics, f"{heuristic} is not a valid heuristic."
-        software_name = software.name.lower() + f"-h{heuristic}"
+        software_name = software.name.lower() + f"-{heuristic}"
 
     return os.path.join(cfg.get_work_dir(config), "benchmarks",
                         filename_template + "_" + software_name + "-" + rule_name + "_benchmark.tsv")

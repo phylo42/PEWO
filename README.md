@@ -18,31 +18,6 @@ It is built on [Snakemake](https://snakemake.readthedocs.io/en/stable/) and [Min
 
 3. For developers, provide a basis to standardize phylogenetic placement evaluation and the establishment of benchmarks. PEWO aims to remove the hassle of re-implementing evaluation protocols that were described in anterior studies. In this regard, any phylogenetic placement developer is welcome to pull request new modules in the PEWO repository or contact us for future support of their new productions.
 
-
-**Implemented procedures:**
-
-* *Node Distance (ND)* : 
-This standard procedure was introduced with EPA and reused in PPlacer and RAPPAS original manuscripts. The reference tree is pruned randomly. For each pruning, the pruned leaves are placed and accuracy is evaluated as the number of nodes separating expected and observed placements.
-
-* *Expected Node Distance (eND)* :
-An improved version of ND, which takes into account placement weights (e.g. Likelihood Weight Ratios, see documentation).
-
-* *Likelihood Improvement (LI)* : 
-Rapid evaluation of phylogenetic placements designed for developers and rapid evaluation of changes in the code and algorithms. Following placement, a re-optimization simply highlights better or worse results, in terms of likelihood changes.
-
-* *Ressources (RESS)* :
-CPU and peek RAM consumption are measured for every step required to operate phylogenetic placement (including alignment in alignment-based methods and ancestral state reconstruction + database build in alignment-free methods). This procedure mostly intends to evaluate the scalability of the methods, as punctual analyses or routine placement of large sequence volumes do not induce the same constraints. 
-
-**Supported software:**
-
-* **EPA**(RAxML)  (Berger et al, 2010) 
-* **PPlacer** (Matsen et al, 2011)
-* **EPA-ng**  (Barbera et al, 2019)
-* **RAPPAS**  (Linard et al, 2019)
-* **APPLES**  (Balaban et al, 2019)
-
-Currently (March 20202) there are no other implementations of phylogenetic placement algorithms. If you implement a new method, you are welcome to contact us for requesting future support. You can also implement a new snakemake module and contribute to PEWO via pull requests (see the [documentation](https://github.com/phylo42/PEWO/wiki/Developer-instructions) for contribution guidelines).
-
 ## Wiki documentation
 
 **An complete documentation, including a tutorial is available in the [wiki section](https://github.com/phylo42/PEWO/wiki) of this github repository.**
@@ -58,6 +33,14 @@ Before installation, the following packages should be available on your system m
 * GIT
 
 PEWO will look for the commands 'git' and 'conda'. Not finding these commands will cancel the PEWO installation.
+
+Below are debian commands to rapidly install them:
+```
+sudo apt-get install git
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+chmod u+x Miniconda3-latest-Linux-x86_64.sh
+./Miniconda3-latest-Linux-x86_64.sh
+```
 
 ### Installation
 
@@ -95,7 +78,7 @@ snakemake -p --cores 2 \
 --configfile examples/1_fast_test_of_accuracy_procedure/config.yaml
 ```
 
-If the test is successful, you should produce the following statistics and image files in the PEWO_workflow directory:
+If the test is successful, you should produce csv and svg files in the PEWO_workflow directory, for instance:
 * results.csv
 * summary_plot_eND_epang_h1.svg
 * summary_plot_eND_pplacer.svg
@@ -104,7 +87,35 @@ If the test is successful, you should produce the following statistics and image
 The content and interpretation of these files are detailed in the wiki documentation. 
 Please read the [dedicated wiki page](https://github.com/phylo42/PEWO/tree/master/examples/1_fast_test_of_accuracy_procedure).
 
-## Setup your own PEWO analyses
+
+## Setup your own analyses
+
+### PEWO procedures
+
+* *Node Distance (ND)* : 
+This standard procedure was introduced with EPA and reused in PPlacer and RAPPAS original manuscripts. The reference tree is pruned randomly. For each pruning the pruned leaves are placed and accuracy is evaluated as the number of nodes separating expected and observed placements.
+
+* *Expected Node Distance (eND)* :
+An improved version of ND, which takes into account placement weights (e.g. Likelihood Weight Ratios, see documentation).
+
+* *Likelihood Improvement (LI)* : 
+Rapid evaluation of phylogenetic placements designed for developers and rapid evaluation of small changes in the code/algorithms. Following placement, a reoptimisation simply highlights better of worse results, in terms of likelihood changes.
+
+* *Ressources (RESS)* :
+CPU and peek RAM consumption are measured for every steps required to operate a pylogenetic placement (including alignment in alignment-based methods and ancestral state reconstruction + database build in alignment-free methods). This procedure mostly intend to evaluate the scalability of the methods, as punctual analyses or routine placement of large sequence volumes do not induce the same constraints. 
+
+**Software currently supported by PEWO.**
+
+* **EPA**(RAxML)  (Berger et al, 2010) 
+* **PPlacer** (Matsen et al, 2011)
+* **EPA-ng**  (Barbera et al, 2019)
+* **RAPPAS**  (Linard et al, 2019)
+* **APPLES**  (Balaban et al, 2019)
+
+Currently, (october 2019) there are no other implementations of phylogenetic placement algorithms. If you implement a new method, you are welcome to contact us for requesting future support or you can directly code a new snakemake module and contribute to PEWO via pull requests (see documentation for contribution rules).
+
+
+## Analysis configuration
 
 **1. Activate PEWO environment:**
 
@@ -121,7 +132,7 @@ conda uninstall pplacer
 conda install pplacer=1.1.alpha17
 ```
 
-**2. Select a procedure:**
+**2. Select a procedure :**
 
 PEWO proposes several procedures aiming to evaluate different aspects of phylogenetic placement. Each procedure is coding as a Snakemake workflow, which can be loaded via a dedicated Snakefile (PEWO_workflow/\*.smk).
 
@@ -131,7 +142,7 @@ Procedure | Snakefile | Description
 --- | --- | ---
 Accuracy (ND + eND) | eval_accuracy.smk | Given a reference tree/alignment, compute both the "Node Distance" and "expected Node Distance" for a set of software and a set of conditions. This procedure is based on a pruning approach and an important parameter is the number of prunings that is run (see documentation).
 Ressources | eval_ressources.smk | Given a reference tree/alignment and a set of query reads, measures CPU/RAM consumptions for a set of software and a set of conditions. An important parameter is the number of repeats from which mean consumptions will be deduced (see documentation). 
-Likelihood Improvement | eval_likelihood.smk | Given a reference tree/alignment, compute Node Distance and expected Node Distance for a set of software and a set of conditions.
+Likelihood Improvement | eval_likelihood.smk | Given a reference tree/alignment, compute tree likelihoods induced by placements under a set of conditions, with higher likelihood reflecting better placements.
 
 
 **3. Setup the workflow by editing config.yaml:**
@@ -177,6 +188,7 @@ Refer to the snakemake documentation to learn how to configure the snakemake wor
 
 ## Contacts
 *B Linard, N Romashchenko, F Pardi, E Rivals*
+MAB team (Methods and Algorithms in Bioifnormatics), LIRMM, Montpellier, France.
 
 ## Licence
 

@@ -4,7 +4,7 @@ args = commandArgs(trailingOnly=TRUE)
 
 # test if there is at least one argument
 if (length(args)<1) {
-    stop("The directory containing benchmark results must be supplies as 1st argument.n", call.=FALSE)
+    stop("The directory containing benchmark results must be supplies as 1st argument.\n", call.=FALSE)
 }
 
 library(RColorBrewer)
@@ -19,12 +19,11 @@ workdir=args[1]
 #definition of software paramters
 
 epa<-c("g")
-epang_h1<-c("h","g")
-epang_h2<-c("h","bigg")
-epang_h3<-c("h")
-epang_h4<-c("h")
+epang_h1<-c("g")
+epang_h2<-c("bigg")
+epang_h3<-NULL
+epang_h4<-NULL
 pplacer<-c("ms","sb","mp")
-rappas<-c("k","o","red","ar")
 rappasdbbuild<-c("k","o","red","ar")
 rappasplacement<-c("k","o","red","ar")
 apples<-c("meth","crit")
@@ -32,17 +31,16 @@ hmmbuild<-NULL
 ansrec<-c("red","ar")
 
 soft_params<-list(
-                    "epa"=epa,
-                    "epang_h1"=epang_h1,
-                    "epang_h2"=epang_h2,
-                    "epang_h3"=epang_h3,
-                    "epang_h4"=epang_h4,
-                    "pplacer"=pplacer,
-                    "rappas"=rappas,
+                    "epa-placement"=epa,
+                    "epang-h1-placement"=epang_h1,
+                    "epang-h2-placement"=epang_h2,
+                    "epang-h3-placement"=epang_h3,
+                    "epang-h4-placement"=epang_h4,
+                    "pplacer-placement"=pplacer,
                     "rappas-dbbuild"=rappasdbbuild,
                     "rappas-placement"=rappasplacement,
-                    "apples"=apples,
-                    "hmmbuild"=hmmbuild,
+                    "apples-placement"=apples,
+                    "hmm-align"=hmmbuild,
                     "ansrec"=ansrec
                 )
 
@@ -180,12 +178,7 @@ for (opname in op_analyzed) {
         }
         #aggregate as mean per pruning
         data<-NULL
-        if (length(grep("epang",opname))>0) {
-            data<-df[df$operation=="epang" & df$h==substr(opname,nchar(opname),nchar(opname)),]
-        } else {
-            data<-df[df$operation==opname,]
-        }
-
+        data<-df[df$operation==opname,]
         data_mean<-aggregate(as.formula(formula_mean), data, mean)
         data_sd<-aggregate(as.formula(formula_mean), data, sd)  # not used for now, but could add error bars to barplots
 
@@ -285,10 +278,10 @@ for (i in 1:length(stats_to_plot)) {
 #associate operations to analyses
 analyses<-list()
 analyses["epa"]<-c("hmmer-align", "epa-placement")
-analyses["epang_h1"]<-c("hmmer-align", "epang_h1")
-analyses["epang_h2"]<-c("hmmer-align", "epang_h2")
-analyses["epang_h3"]<-c("hmmer-align", "epang_h3")
-analyses["epang_h4"]<-c("hmmer-align", "epang_h4")
+analyses["epang_h1"]<-c("hmmer-align", "epang-h1-placement")
+analyses["epang_h2"]<-c("hmmer-align", "epang-h2-placement")
+analyses["epang_h3"]<-c("hmmer-align", "epang-h3-placement")
+analyses["epang_h4"]<-c("hmmer-align", "epang-h4-placement")
 analyses["pplacer"]<-c("hmmer-align", "pplacer-placement")
 analyses["apples"]<-c("hmmer-align", "apples-placement")
 analyses["rappas"]<-c("ansrec", "rappas-dbbuild","rappas-placement")
