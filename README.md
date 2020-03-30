@@ -78,7 +78,7 @@ snakemake -p --cores 2 \
 --configfile examples/1_fast_test_of_accuracy_procedure/config.yaml
 ```
 
-If the test is successful, you should produce the following statistics and image files in the `PEWO_workflow` directory:
+If the test is successful, you should produce the following statistics and image files in the `examples/1_fast_test_of_accuracy_procedure/run` directory:
 * `results.csv`
 * `summary_plot_eND_epang_h1.svg`
 * `summary_plot_eND_pplacer.svg`
@@ -172,11 +172,11 @@ where `\[snakefile\]` is one of the sub-workflow snakefiles listed in the table 
 
 This will list the operations that will be run by the workflow. It is also recommended to export a graph detailing the different steps of the workflow (to avoid very large graphs in "Accuracy" sub-workflow, we force a single pruning).
 
-# to display the graph in a window
+**to display the graph in a window**
 ``` bash
 snakemake --snakefile [snakefile].smk --config pruning_count=1 --dag | dot | display
 ```
-# to produce an image of the graph
+**to produce an image of the graph**
 ``` bash
 snakemake --snakefile [snakefile].smk --config pruning_count=1 --dag | dot -Tsvg > graph.svg
 ```
