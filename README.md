@@ -86,7 +86,7 @@ If the test is successful, you should produce the following statistics and image
 
 <!-- ER questions: pointer to wiki doc. -->
 The content and interpretation of these files are detailed in the wiki documentation. 
-Please read the [dedicated wiki page](https://github.com/phylo42/PEWO/tree/master/examples/1_fast_test_of_accuracy_procedure).
+Please read the [dedicated wiki page](https://github.com/phylo42/PEWO/wiki/IV.-Tutorials-and-results-interpretation).
 
 
 ## Setup your own analyses
