@@ -3,9 +3,9 @@
 ########################################################################################################################
 
 # alignment in fasta format and tree in newick format
-dataset_align: examples/6_placement_likelihood/alignment_150.fasta
+dataset_align: examples/6_placement_likelihood/alignment_652.fasta
 
-dataset_tree: examples/6_placement_likelihood/RAxML_bipartitions.150.BEST.WITH
+dataset_tree: examples/6_placement_likelihood/tree_652.nwk
 
 # states used in analysis, either '0' for nucleotides or '1' for amino acids
 states: 0

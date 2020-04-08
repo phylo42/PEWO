@@ -38,7 +38,7 @@ query_user=`pwd`/examples/6_placement_likelihood/EMP_92_studies_100.fas \
 --configfile examples/6_placement_likelihood/config.yaml
 ```
 
-Execute workflow, using 4 CPU cores:
+Execute workflow, using 2 CPU cores:
 ```
 snakemake -p --cores 2 \
 --snakefile eval_likelihood.smk \
