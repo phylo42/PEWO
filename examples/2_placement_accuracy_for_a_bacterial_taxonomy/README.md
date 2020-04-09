@@ -42,9 +42,9 @@ snakemake -np \
 --configfile examples/2_placement_accuracy_for_a_bacterial_taxonomy/config.yaml
 ```
 
-Execute workflow, using 2 CPU cores.
+Execute workflow, using 2 CPU cores and 8Gb of RAM.
 ```
-snakemake -p --cores 2 \
+snakemake -p --cores 2 --resources mem_mb=8000\
 --snakefile eval_accuracy.smk \
 --config workdir=`pwd`/examples/2_placement_accuracy_for_a_bacterial_taxonomy/run \
 --configfile examples/2_placement_accuracy_for_a_bacterial_taxonomy/config.yaml

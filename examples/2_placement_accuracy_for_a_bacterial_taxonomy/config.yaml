@@ -16,10 +16,10 @@ workdir: /path/to/examples/2_placement_accuracy_for_a_bacterial_taxonomy/run
 states: 0
 
 # which software to test, at least one of : epa, epang, pplacer, rappas, apples
-test_soft: [rappas,epang,pplacer,apples]
+test_soft: [rappas,epang,pplacer]
 
 # read lengths to test
-read_length: [150,300]
+read_length: [300]
 
 
 ## IF "ACCURACY" IS EVALUATED
@@ -81,9 +81,9 @@ config_pplacer:
   #it uses a 2-step heuristic similar to EPA but called the "baseball" heuristic
   #(Matsen et al, 2012 ; doi: 10.1186/1471-2105-11-538)
   
-  max-strikes: [6,24]
-  strike-box: [3,12]
-  max-pitches: [40,160]
+  max-strikes: [1,3,6,12]
+  strike-box: [1,3,6,12]
+  max-pitches: [40]
 
   #pre-masking, 1=yes, 0=no
   premask: 1
@@ -100,7 +100,7 @@ config_epang:
   # h3: heuristic equivalent to pplacer defaults, fast
   # h4: no heuristic, very very slow but should produce the best accuracy
   #(Barbera et al, 2019 ; doi: 10.1093/sysbio/syy054)
-  heuristics: ["h1"]
+  heuristics: [h1]
 
   h1:
     #value in ]0,1], value close to 1 recommended by authors
@@ -128,12 +128,12 @@ config_rappas:
 
   #panel of k that is tested
   #integer in [3,16] (~8-10 recommended, >12 often produces too long computations)
-  k: [7,8]
+  k: [6,7,8]
 
   #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
   #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids
   #For DNA, values in [1.5,2.0] recommended. For amino acids, values in [5,15] recommended.
-  omega: [1.5,2.0]
+  omega: [1.75,2.0]
 
   #reduction setup, e.g. gap/non-gap ratio
   #above which a site of the input alignment

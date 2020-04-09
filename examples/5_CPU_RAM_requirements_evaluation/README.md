@@ -40,9 +40,9 @@ query_user=`pwd`/examples/5_CPU_RAM_requirements_evaluation/EMP_92_studies_10000
 --configfile examples/5_CPU_RAM_requirements_evaluation/config.yaml
 ```
 
-Execute workflow, using 2 CPU cores.
+Execute workflow, using 2 CPU cores and 16Gb of RAM.
 ```
-snakemake -p --cores 2 \
+snakemake -p --cores 2 --resources mem_mb=16000 \
 --snakefile eval_resources.smk \
 --config workdir=$(pwd)/examples/5_CPU_RAM_requirements_evaluation/run \
 query_user=`pwd`/examples/5_CPU_RAM_requirements_evaluation/EMP_92_studies_100000.fas \
