@@ -81,8 +81,8 @@ config_pplacer:
   #it uses a 2-step heuristic similar to EPA but called the "baseball" heuristic
   #(Matsen et al, 2012 ; doi: 10.1186/1471-2105-11-538)
   
-  max-strikes: [1,3,6,12]
-  strike-box: [1,3,6,12]
+  max-strikes: [1,3,6]
+  strike-box: [1,3,6]
   max-pitches: [40]
 
   #pre-masking, 1=yes, 0=no
