@@ -67,7 +67,9 @@ def get_experiment_dir_template(config: Dict, software: PlacementSoftware, **kwa
     elif software == PlacementSoftware.APPLES:
         return os.path.join(software_dir, input_set_dir_template, "meth{meth}_crit{crit}")
     elif software == PlacementSoftware.RAPPAS:
-        return os.path.join(software_dir, input_set_dir_template, "red{red}_ar{ar}", "k{k}_o{o}")
+        return os.path.join(software_dir, input_set_dir_template, "red{red}_ar{ar}")
+    elif software == PlacementSoftware.APPSPAM:
+        return os.path.join(software_dir, input_set_dir_template, "mode{mode}_d{d}")
 
 
 def get_experiment_log_dir_template(config: Dict, software: Software) -> str:
@@ -158,6 +160,8 @@ def get_queryname_template(config: Dict, software: PlacementSoftware, **kwargs) 
         return get_common_queryname_template(config) + "_meth{meth}_crit{crit}"
     elif software == PlacementSoftware.RAPPAS:
         return get_common_queryname_template(config) + "_k{k}_o{o}_red{red}_ar{ar}"
+    elif software == PlacementSoftware.APPSPAM:
+        return get_common_queryname_template(config) + "_mode{mode}_d{d}"
 
 
 def get_output_template_args(config: Dict, software: PlacementSoftware, **kwargs) -> Dict[str, Any]:
@@ -206,6 +210,9 @@ def get_output_template_args(config: Dict, software: PlacementSoftware, **kwargs
         template_args["o"] = config["config_rappas"]["omega"]
         template_args["red"] = config["config_rappas"]["reduction"]
         template_args["ar"] = config["config_rappas"]["arsoft"]
+    elif software == PlacementSoftware.APPSPAM:
+        template_args["d"] = config["config_appspam"]["d"]
+        template_args["mode"] = config["config_appspam"]["mode"]
     else:
         raise RuntimeError("Unsupported software: " + software.value)
     return template_args

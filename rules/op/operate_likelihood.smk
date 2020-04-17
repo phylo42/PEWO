@@ -179,6 +179,15 @@ rule extend_trees_apples:
     run:
         make_extended_tree(input.tree, output.ext_tree, input.jplace)
 
+rule extend_trees_appspam:
+    input:
+         jplace=get_output_template(config, PlacementSoftware.APPSPAM, "jplace"),
+         tree=config["dataset_tree"],
+    output:
+          ext_tree=get_output_template(config, PlacementSoftware.APPSPAM, "tree")
+    run:
+        make_extended_tree(input.tree, output.ext_tree, input.jplace)
+
 rule calculate_likelihood_epa:
     """
     Calculates likelihood values for the placements produced by EPA.
@@ -307,6 +316,21 @@ rule calculate_likelihood_apples:
     run:
         _calculate_likelihood(input, output, params, wildcards)
 
+rule calculate_likelihood_apples:
+    """
+    Calculates likelihood values for the placements produced by APPSPAM.
+    """
+    input:
+         alignment=_get_aligned_query_template(config),
+         tree=get_output_template(config, PlacementSoftware.APPSPAM, "tree")
+    output:
+          csv=get_output_template(config, PlacementSoftware.APPSPAM, "csv")
+    params:
+          workdir=cfg.get_work_dir(config),
+          software=PlacementSoftware.APPSPAM.value,
+          model="GTR+G"
+    run:
+        _calculate_likelihood(input, output, params, wildcards)
 
 def _get_csv_output(config: Dict) -> List[str]:
     """

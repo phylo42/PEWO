@@ -10,20 +10,20 @@ dataset_align: examples/1_fast_test_of_accuracy_procedure/alignment_150.fasta
 dataset_tree: examples/1_fast_test_of_accuracy_procedure/RAxML_bipartitions.150.BEST.WITH
 
 #working directory
-workdir: /home/nikolai/dev/pewo/run_accuracy1
+workdir: /home/matthias/Documents/test_PEWO
 
 
 #states used in analysis, either '0' for nucleotides or '1' for amino acids
 states: 0
 
 #which software to test, at least one of : epa, epang, pplacer, rappas, apples
-test_soft: [epa, epang, rappas, pplacer]
+test_soft: [pplacer, appspam] #epa, epang, rappas, 
 
 # READ GENERATION
 # Read lengths to generate
-read_length: [150,300]
+read_length: [150]
 # Number of random prunings to compute
-pruning_count: 50
+pruning_count: 1
 
 
 ## IF "ACCURACY" IS EVALUATED
@@ -68,7 +68,7 @@ config_epa:
 
   #proportion of top scoring branch for which full optimization is computed
   #float in ]0,1]
-  G: [0.01,0.1]
+  G: [0.1]
 
 ### PPLACER
 ###############################
@@ -79,9 +79,9 @@ config_pplacer:
   #it uses a 2-step heuristic similar to EPA but called the "baseball" heuristic
   #(Matsen et al, 2012 ; doi: 10.1186/1471-2105-11-538)
 
-  max-strikes: [6,12]
-  strike-box: [3,6]
-  max-pitches: [40,80]
+  max-strikes: [12]
+  strike-box: [6]
+  max-pitches: [80]
 
   #pre-masking, 1=yes, 0=no
   premask: 1
@@ -98,13 +98,13 @@ config_epang:
   # h3: heuristic equivalent to pplacer defaults, fast
   # h4: no heuristic, very very slow but should produce the best accuracy
   #(Barbera et al, 2019 ; doi: 10.1093/sysbio/syy054)
-  heuristics: ["h1", "h2", "h3", "h4"]
+  heuristics: ["h1"]
 
   #heuristic-specific parameters can be setup in following lines
   h1:
-    g: [0.999,0.99999]
+    g: [0.99999]
   h2:
-    G: [0.01,0.1]
+    G: [0.1]
   h3:
     options: none    #reserved if any option appears in future versions
   h4:
@@ -125,12 +125,12 @@ config_rappas:
 
   #panel of k that is tested
   #integer in [2,16] (8~10 recommended, >12 often produces too long computations)
-  k: [7,8]
+  k: [8]
 
   #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
   #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids
   #For DNA, values in [1,2] recommended. For amino acids, values in [5,15] recommended.
-  omega: [1.5,2.0]
+  omega: [2.0]
 
   #reduction setup, e.g. gap/non-gap ratio
   #above which a site of the input alignment
@@ -181,7 +181,7 @@ config_apples:
   # BE : k=1 (Beyer et al., 1974)
   #methods: ["OLS","FM","BE"]
   #!warning, be sure to set methods VALUES as UPPER CASE
-  methods: [OLS,BE]
+  methods: [BE]
 
   #List of placement criterion to test.
   #Possible values are:
@@ -190,8 +190,20 @@ config_apples:
   # HYBRID : MLSE then ME
   #criteria: ["MLSE","ME","HYBRID"]
   #!warning, be sure to set criteria VALUES as UPPER CASE
-  criteria: [MLSE,ME]
+  criteria: [ME]
 
+### APP-SPAM
+###############################
+
+config_appspam:
+
+  #appspam placements are based on distance computations between the query and the reference tree
+
+  #List of matching modes to test.
+  mode: [all]
+
+  #List of number of dont care positions to test.
+  d: [20]
 
 ########################################################################################################################
 # OPTIONS COMMON TO ALL SOFTWARE
