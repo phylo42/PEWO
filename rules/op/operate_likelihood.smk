@@ -316,7 +316,7 @@ rule calculate_likelihood_apples:
     run:
         _calculate_likelihood(input, output, params, wildcards)
 
-rule calculate_likelihood_apples:
+rule calculate_likelihood_appspam:
     """
     Calculates likelihood values for the placements produced by APPSPAM.
     """

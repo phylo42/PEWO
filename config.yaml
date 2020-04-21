@@ -200,7 +200,7 @@ config_appspam:
   #appspam placements are based on distance computations between the query and the reference tree
 
   #List of matching modes to test.
-  mode: [all]
+  mode: [ALL]
 
   #List of number of dont care positions to test.
   d: [20]

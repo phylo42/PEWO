@@ -223,8 +223,8 @@ def _get_resources_tsv(config: Dict, software: PlacementSoftware, **kwargs) -> L
         software_templates = apples_benchmark_templates + hmmer_benchmark_templates
         software_template_args = apples_benchmark_template_args + hmmer_benchmark_template_args
     elif software == PlacementSoftware.APPSPAM:
-        software_templates = pplacer_benchmark_templates + hmmer_benchmark_templates
-        software_template_args = pplacer_benchmark_template_args + hmmer_benchmark_template_args
+        software_templates = appspam_benchmark_templates + hmmer_benchmark_templates
+        software_template_args = appspam_benchmark_template_args + hmmer_benchmark_template_args
     else:
         raise RuntimeError("Unsupported software: " + software.value)
 
