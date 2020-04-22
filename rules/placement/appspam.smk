@@ -2,7 +2,6 @@
 Module to operate placements with APPSPAM
 """
 
-
 __author__ = "Benjamin Linard, Nikolai Romashchenko"
 __license__ = "MIT"
 
@@ -25,19 +24,18 @@ appspam_benchmark_template_args = [get_output_template_args(config, PlacementSof
 
 
 # FIXME: These are the same methods as in the epang.smk
-def _get_appspam_input_reads(config) -> str:
+def _get_appspam_input_sequences(config) -> str:
     return os.path.join(_alignment_dir, "{pruning}", get_common_queryname_template(config) + ".fasta_refs")
 
-
 def _get_appspam_input_queries(config) -> str:
-    return os.path.join(_alignment_dir, "{pruning}", get_common_queryname_template(config) + ".fasta_queries")
+    return os.path.join(_working_dir, "R", "{pruning}_r{length}.fasta")
 
 def _get_appspam_input_tree() -> str:
     return os.path.join(_working_dir, "T", "{pruning}.tree")
 
 rule placement_appspam:
     input:
-        r=_get_appspam_input_reads(config),
+        s=_get_appspam_input_sequences(config),
         q=_get_appspam_input_queries(config),
         t=_get_appspam_input_tree(),
     output:
@@ -49,5 +47,5 @@ rule placement_appspam:
     version: "1.0"
     shell:
         """
-        fswm -r {input.r} -q {input.q} -t {input.t} -m {wildcards.mode} -d {wildcards.d} -o {output.jplace}
+        fswm -s {input.s} -q {input.q} -t {input.t} -m {wildcards.mode} -d {wildcards.d} -o {output.jplace} >& {log}
         """
