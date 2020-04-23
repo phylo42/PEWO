@@ -17,13 +17,13 @@ workdir: /home/matthias/Documents/test_PEWO
 states: 0
 
 #which software to test, at least one of : epa, epang, pplacer, rappas, apples
-test_soft: [pplacer, appspam] #epa, epang, rappas, 
+test_soft: [pplacer, appspam, apples] #epa, epang, rappas, 
 
 # READ GENERATION
 # Read lengths to generate
 read_length: [150]
 # Number of random prunings to compute
-pruning_count: 1
+pruning_count: 3
 
 
 ## IF "ACCURACY" IS EVALUATED
@@ -190,7 +190,7 @@ config_apples:
   # HYBRID : MLSE then ME
   #criteria: ["MLSE","ME","HYBRID"]
   #!warning, be sure to set criteria VALUES as UPPER CASE
-  criteria: [ME]
+  criteria: [MLSE]
 
 ### APP-SPAM
 ###############################
@@ -200,10 +200,12 @@ config_appspam:
   #appspam placements are based on distance computations between the query and the reference tree
 
   #List of matching modes to test.
-  mode: [ALL]
+  matchingmode: [ALL, FIRST]
+
+  assignmentmode: [LCA, BEST, RANDOM]
 
   #List of number of dont care positions to test.
-  d: [20]
+  d: [16, 32]
 
 ########################################################################################################################
 # OPTIONS COMMON TO ALL SOFTWARE

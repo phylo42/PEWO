@@ -47,5 +47,5 @@ rule placement_appspam:
     version: "1.0"
     shell:
         """
-        fswm -s {input.s} -q {input.q} -t {input.t} -m {wildcards.mode} -d {wildcards.d} -o {output.jplace} >& {log}
+        fswm -s {input.s} -q {input.q} -t {input.t} -m {wildcards.matchingmode} -g {wildcards.assignmentmode} -d {wildcards.d} -o {output.jplace} --threshold {wildcards.filteringthreshold} >& {log}
         """

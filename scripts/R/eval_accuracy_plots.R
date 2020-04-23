@@ -26,7 +26,7 @@ epang_h4<-c()
 pplacer<-c("ms","sb","mp")
 rappas<-c("k","o","red","ar")
 apples<-c("meth","crit")
-appspam<-c("mode","d")
+appspam<-c("matchingmode","assignmentmode","filteringthreshold","d")
 
 soft_params<-list(epa=epa,epang_h1=epang_h1,epang_h2=epang_h2,epang_h3=epang_h3,epang_h4=epang_h4,pplacer=pplacer,rappas=rappas,apples=apples,appspam=appspam)
 

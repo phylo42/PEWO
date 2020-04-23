@@ -10,16 +10,16 @@ dataset_tree: examples/2_placement_accuracy_for_a_bacterial_taxonomy/RAxML_bipar
 
 # working directory
 #MUST be an absolute path (some software do not accept relative path)
-workdir: /path/to/examples/2_placement_accuracy_for_a_bacterial_taxonomy/run
+workdir: /home/matthias/Documents/test_PEWO
 
 # states used in analysis, either '0' for nucleotides or '1' for amino acids
 states: 0
 
 # which software to test, at least one of : epa, epang, pplacer, rappas, apples
-test_soft: [rappas,epang,pplacer]
+test_soft: [appspam,pplacer]
 
 # read lengths to test
-read_length: [300]
+read_length: [150]
 
 
 ## IF "ACCURACY" IS EVALUATED
@@ -28,7 +28,7 @@ read_length: [300]
 ### this section matters only when you run the "eval_accuracy.smk" workflow
 
 # number of random prunings to compute
-pruning_count: 5
+pruning_count: 1
 
 
 ## IF "RESOURCES" ARE EVALUATED
@@ -81,8 +81,8 @@ config_pplacer:
   #it uses a 2-step heuristic similar to EPA but called the "baseball" heuristic
   #(Matsen et al, 2012 ; doi: 10.1186/1471-2105-11-538)
   
-  max-strikes: [1,3,6]
-  strike-box: [1,3,6]
+  max-strikes: [6]
+  strike-box: [3]
   max-pitches: [40]
 
   #pre-masking, 1=yes, 0=no
@@ -128,12 +128,12 @@ config_rappas:
 
   #panel of k that is tested
   #integer in [3,16] (~8-10 recommended, >12 often produces too long computations)
-  k: [6,7,8]
+  k: [8]
 
   #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
   #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids
   #For DNA, values in [1.5,2.0] recommended. For amino acids, values in [5,15] recommended.
-  omega: [1.75,2.0]
+  omega: [2.0]
 
   #reduction setup, e.g. gap/non-gap ratio
   #above which a site of the input alignment
@@ -159,7 +159,6 @@ config_rappas:
   #currently, only raxml-ng can use multiple threads
   #
   #!!! warning, be sure to set arsoft VALUES as UPPER CASE !!!
-  arsoft: [RAXMLNG]
   arthreads: 1
 
   #maximum amount of memory available to rappas process
@@ -198,6 +197,25 @@ config_apples:
   #!warning, be sure to set criteria VALUES as UPPER CASE
   criteria: [MLSE,ME,HYBRID]
 
+### APP-SPAM
+###############################
+
+config_appspam:
+
+  #appspam placements are based on distance computations between the query and the reference tree
+
+  #List of matching modes to test.
+  matchingmode: [ALL, BEST]
+
+  #List of assignment modes to test
+  assignmentmode: [LCA]
+
+  #Filtering threshold. Number of dont care positions will be multiplied by this constant.
+  #All words below the threshold will not be considered
+  filteringthreshold: [0, 10, 20, 30, 40]
+
+  #List of number of dont care positions to test.
+  d: [32]
 
 ########################################################################################################################
 # OPTIONS COMMON TO ALL SOFTWARE
