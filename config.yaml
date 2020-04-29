@@ -6,11 +6,11 @@
 ##############################
 #alignment in fasta format and tree in newick format
 
-dataset_align: examples/6_placement_likelihood/alignment_150.fasta
-dataset_tree: examples/6_placement_likelihood/RAxML_bipartitions.150.BEST.WITH
+dataset_align: /home/nikolai/dev/datasets/d652/reference.fasta
+dataset_tree: /home/nikolai/dev/datasets/d652/tree.newick
 
 #working directory
-workdir: /home/nikolai/dev/pewo/run_likelihood
+workdir: /home/nikolai/dev/datasets/d652/pewo_accuracy_nofilter
 
 
 #states used in analysis, either '0' for nucleotides or '1' for amino acids
@@ -24,7 +24,7 @@ test_soft: [rappas2]
 # Read lengths to generate
 read_length: [300]
 # Number of random prunings to compute
-pruning_count: 0
+pruning_count: 10
 
 
 ## IF "ACCURACY" IS EVALUATED
@@ -69,7 +69,7 @@ config_epa:
 
   #proportion of top scoring branch for which full optimization is computed
   #float in ]0,1]
-  G: [0.01,0.1]
+  G: [0.01]
 
 ### PPLACER
 ###############################
@@ -131,7 +131,7 @@ config_rappas:
   #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
   #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids
   #For DNA, values in [1,2] recommended. For amino acids, values in [5,15] recommended.
-  omega: [1.5,2.0]
+  omega: [1.5, 2.0]
 
   #reduction setup, e.g. gap/non-gap ratio
   #above which a site of the input alignment
@@ -168,13 +168,16 @@ config_rappas:
 
 
 config_rappas2:
-  k: [7, 8, 9, 10]
-  omega: [1.5, 2.0]
+  k: [8, 10]
+  omega: [2.0]
+  #omega: [1.5, 2.0]
   reduction: [0.99]
   arsoft: [PHYML]
-  arthreads: 2
+  arthreads: 1
+  filter: "no-filter"
 
-  mu: [7, 8, 9]
+  #mu: [0.0625, 0.125, 0.25, 0.5]
+  mu: [1.0]
 
 ### APPLES
 ###############################

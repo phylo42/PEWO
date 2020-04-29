@@ -38,23 +38,25 @@ rule db_build_rappas2:
         model = select_model_phymlstyle(),
         ardir = os.path.join(Path(_rappas_experiment_dir).parent, "AR"),
         workdir = _rappas2_experiment_dir,
-        arbin = lambda wildcards: get_ar_binary(config, wildcards.ar)
+        arbin = lambda wildcards: get_ar_binary(config, wildcards.ar),
+        arthreads = config["config_rappas2"]["arthreads"]
     run:
         shell(
             "rappas2.py build " +
             "-b $(which {params.arbin}) " +
             "-k {wildcards.k} " +
             "--omega {wildcards.o} " +
+            "--filter {wildcards.filter} " +
             "-u {wildcards.mu} " +
             "-m {params.model} "
             "-t {input.t} " +
             "-r {input.a} " +
             "-w {params.workdir} " +
+            "--threads {params.arthreads} " +
             "--ardir {params.ardir} " +
             "--ratio-reduction {wildcards.red} " +
             "--use-unrooted  &> {log} "
         )
-
 
 rule placement_rappas2:
     input:
@@ -76,6 +78,9 @@ rule placement_rappas2:
             "--threads 1 " + \
             "{input.r} " + \
             "&> {log} "
-        move_command = "mv {params.workdir}/placements_{wildcards.query}_r{wildcards.length}.fasta.jplace " + \
-            "{params.workdir}/{wildcards.query}_r{wildcards.length}_k{wildcards.k}_o{wildcards.o}_red{wildcards.red}_ar{wildcards.ar}_mu{wildcards.mu}_rappas2.jplace"
+        query_wildcard = "{wildcards.query}" if cfg.get_mode(config) == cfg.Mode.LIKELIHOOD else "{wildcards.pruning}"
+        move_command = "mv {params.workdir}/placements_" + query_wildcard + "_r{wildcards.length}.fasta.jplace " + \
+                       "{params.workdir}/" + \
+                       query_wildcard + \
+                       "_r{wildcards.length}_k{wildcards.k}_o{wildcards.o}_red{wildcards.red}_ar{wildcards.ar}_mu{wildcards.mu}_f{wildcards.filter}_rappas2.jplace"
         shell(";".join(_ for _ in [rappas_command, move_command]))

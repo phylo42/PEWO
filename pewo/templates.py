@@ -69,7 +69,7 @@ def get_experiment_dir_template(config: Dict, software: PlacementSoftware, **kwa
     elif software == PlacementSoftware.RAPPAS:
         return os.path.join(software_dir, input_set_dir_template, "red{red}_ar{ar}", "k{k}_o{o}")
     elif software == PlacementSoftware.RAPPAS2:
-        return os.path.join(software_dir, input_set_dir_template, "red{red}_ar{ar}", "k{k}_o{o}_mu{mu}")
+        return os.path.join(software_dir, input_set_dir_template, "red{red}_ar{ar}", "k{k}_o{o}_mu{mu}_f{filter}")
     else:
         raise RuntimeError(f"Unsupported software: {software}")
 
@@ -163,7 +163,7 @@ def get_queryname_template(config: Dict, software: PlacementSoftware, **kwargs) 
     elif software == PlacementSoftware.RAPPAS:
         return get_common_queryname_template(config) + "_k{k}_o{o}_red{red}_ar{ar}"
     elif software == PlacementSoftware.RAPPAS2:
-        return get_common_queryname_template(config) + "_k{k}_o{o}_red{red}_ar{ar}_mu{mu}"
+        return get_common_queryname_template(config) + "_k{k}_o{o}_red{red}_ar{ar}_mu{mu}_f{filter}"
     else:
         raise RuntimeError(f"Unsupported software: {software}")
 
@@ -220,6 +220,7 @@ def get_output_template_args(config: Dict, software: PlacementSoftware, **kwargs
         template_args["red"] = config["config_rappas2"]["reduction"]
         template_args["ar"] = config["config_rappas2"]["arsoft"]
         template_args["mu"] = config["config_rappas2"]["mu"]
+        template_args["filter"] = config["config_rappas2"]["filter"]
     else:
         raise RuntimeError(f"Unsupported software: {software}")
     return template_args
