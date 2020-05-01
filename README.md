@@ -40,6 +40,9 @@ sudo apt-get install git
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
 chmod u+x Miniconda3-latest-Linux-x86_64.sh
 ./Miniconda3-latest-Linux-x86_64.sh
+# when installation ask if you want to run conda init, answer yes
+# after installation ends, reload bash so that conda belongs to your PATH
+bash 
 ```
 
 ### Installation
