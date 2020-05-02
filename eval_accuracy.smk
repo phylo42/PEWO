@@ -33,7 +33,7 @@ include:
 include:
     "rules/op/ar.smk"
 include:
-    "rules/placement/rappas.smk"
+    "rules/placement/rappas_dbinram.smk"
 #alignment (for distance-based and ML approaches)
 include:
     "rules/alignment/hmmer.smk"

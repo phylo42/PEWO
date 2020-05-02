@@ -5,9 +5,9 @@
 This demo measures placement accuracy in terms of Node Distance (ND)
 and expected Node Distance (eND) for two different reference trees
 based on the same 1000 coleopteran mitochondria but three different
-loci: cox1, 12S and 16S rRNA genes.
+loci: cox1, 12S, cytb and 16S rRNA genes.
 
-Three accuracy procedures are launched independantly for each locus.
+Four accuracy procedures are launched independantly for each locus.
 The goal is to compare placement accuray measured for each locus and
 deduce which reference tree appears to be a better reference for future
 placements. 
@@ -56,6 +56,11 @@ snakemake -np \
 --snakefile eval_accuracy.smk \
 --config workdir=`pwd`/examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_cox1/run \
 --configfile examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_cox1/config_cox1.yaml
+
+snakemake -np \
+--snakefile eval_accuracy.smk \
+--config workdir=`pwd`/examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_cob/run \
+--configfile examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_cob/config_cob.yaml
 ```
 
 Execute workflow for 12S gene, using 2 CPU cores.
@@ -82,6 +87,14 @@ snakemake -p --cores 2 \
 --configfile examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_cox1/config_cox1.yaml
 ```
 
+Execute workflow for cytb gene, using 2 CPU cores.
+```
+snakemake -p --cores 2 \
+--snakefile eval_accuracy.smk \
+--config workdir=`pwd`/examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_cob/run  \
+--configfile examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_cob/config_cob.yaml
+```
+
 
 ## Comments
 
@@ -91,14 +104,17 @@ You could also set them manually by editing the config.yaml file
 before launch.
 
 Raw results will be written in
+
 'examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_16S/run'
 'examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_12S/run'
 'examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_cox1/run'
 
 Results summaries and plots will be written in
+
 'examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_16S/run'
 'examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_12S/run'
 'examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_cox1/run'
 
 See PEWO wiki for a more detailed explanation of the results:
-https://github.com/phylo42/PEWO/wiki/Tutorials-and-results-interpretation
+
+https://github.com/phylo42/PEWO/wiki/IV.-Tutorials-and-results-interpretation

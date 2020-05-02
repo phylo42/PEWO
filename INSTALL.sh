@@ -39,9 +39,23 @@ else
   fi
 fi
 
-
 cd $install_dir
 basedir=$(pwd)
+
+#test if code was clone using recursive option
+#check if ant build files are present
+java_dep="$basedir/scripts/java/PEWO_java/build-cli.xml"
+rap_dep="$basedir/scripts/java/PEWO_java/lib/RAPPAS/build-cli.xml"
+if [ ! -f "$java_dep" ] ; then
+        echo "Dependancy not found : $java_dep "
+        echo "Did you clone PEWO repository using --recursive option ? (Damn, read the instructions!)"
+        exit 1
+fi
+if [ ! -f "$rap_dep" ] ; then
+        echo "Dependancy not found : $rap_dep "
+        echo "Did you clone PEWO repository using --recursive option ? (Damn, read the instructions!)"
+        exit 1
+fi
 
 #test if base commands are available
 echo "PEWO installer: Testing if installation requirements are met..."
