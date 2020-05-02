@@ -104,10 +104,10 @@ config_epang:
 
   h1:
     #value in ]0,1], value close to 1 recommended by authors
-    g: [0.999, 0.99999]  
+    g: [0.9, 0.999, 0.99999]  
   h2:
     #values in ]0,1], higher values increase accuracy but analysis is slower
-    G: [0.01, 0.1]       
+    G: [0.01, 0.1, 0.5]       
   h3:
     options: none       #reserved if any option appears in future versions
   h4:
@@ -133,7 +133,7 @@ config_rappas:
   #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
   #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids
   #For DNA, values in [1.5,2.0] recommended. For amino acids, values in [5,15] recommended.
-  omega: [2.0]
+  omega: [1.5,2.0]
 
   #reduction setup, e.g. gap/non-gap ratio
   #above which a site of the input alignment

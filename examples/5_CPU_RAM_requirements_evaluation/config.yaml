@@ -5,8 +5,8 @@
 # INPUT DATASET
 ##############################
 # alignment in fasta format and tree in newick format
-dataset_align: examples/5_CPU_RAM_requirements_evaluation/alignment_150.fasta
-dataset_tree: examples/5_CPU_RAM_requirements_evaluation/RAxML_bipartitions.150.BEST.WITH
+dataset_align: examples/5_CPU_RAM_requirements_evaluation/alignment_652.fasta
+dataset_tree: examples/5_CPU_RAM_requirements_evaluation/tree_652.nwk
 
 # working directory
 #MUST be an absolute path (some software do not accept relative path)
@@ -100,7 +100,7 @@ config_epang:
   # h3: heuristic equivalent to pplacer defaults, fast
   # h4: no heuristic, very very slow but should produce the best accuracy
   #(Barbera et al, 2019 ; doi: 10.1093/sysbio/syy054)
-  heuristics: ["h1"]
+  heuristics: [h1]
 
   h1:
     #value in ]0,1], value close to 1 recommended by authors
