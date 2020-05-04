@@ -81,8 +81,8 @@ config_pplacer:
   #it uses a 2-step heuristic similar to EPA but called the "baseball" heuristic
   #(Matsen et al, 2012 ; doi: 10.1186/1471-2105-11-538)
   
-  max-strikes: [6,24]
-  strike-box: [3,12]
+  max-strikes: [12]
+  strike-box: [6]
   max-pitches: [40]
 
   #pre-masking, 1=yes, 0=no
@@ -128,12 +128,12 @@ config_rappas:
 
   #panel of k that is tested
   #integer in [3,16] (~8-10 recommended, >12 often produces too long computations)
-  k: [7,8]
+  k: [6,8]
 
   #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
   #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids
   #For DNA, values in [1.5,2.0] recommended. For amino acids, values in [5,15] recommended.
-  omega: [1.5,2.0]
+  omega: [2.0]
 
   #reduction setup, e.g. gap/non-gap ratio
   #above which a site of the input alignment
