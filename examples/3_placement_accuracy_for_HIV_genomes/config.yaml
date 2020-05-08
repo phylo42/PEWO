@@ -10,13 +10,13 @@ dataset_tree: examples/3_placement_accuracy_for_HIV_genomes/compendium-norec-exp
 
 # working directory
 #MUST be an absolute path (some software do not accept relative path)
-workdir: /path/to/examples/3_placement_accuracy_for_HIV_genomes/run
+workdir: /home/matthias/Documents/test_PEWO_xmp3
 
 # states used in analysis, either '0' for nucleotides or '1' for amino acids
 states: 0
 
 # which software to test, at least one of : epa, epang, pplacer, rappas, apples
-test_soft: [rappas,epang]
+test_soft: [epang, appspam, pplacer]
 
 # read lengths to test
 read_length: [500]
@@ -28,7 +28,7 @@ read_length: [500]
 ### this section matters only when you run the "eval_accuracy.smk" workflow
 
 # number of random prunings to compute
-pruning_count: 5
+pruning_count: 50
 
 
 ## IF "RESOURCES" ARE EVALUATED
@@ -100,14 +100,14 @@ config_epang:
   # h3: heuristic equivalent to pplacer defaults, fast
   # h4: no heuristic, very very slow but should produce the best accuracy
   #(Barbera et al, 2019 ; doi: 10.1093/sysbio/syy054)
-  heuristics: ["h1","h2"]
+  heuristics: ["h2"]
 
   h1:
     #value in ]0,1], value close to 1 recommended by authors
     g: [0.9, 0.999, 0.99999]  
   h2:
     #values in ]0,1], higher values increase accuracy but analysis is slower
-    G: [0.01, 0.1, 0.5]       
+    G: [0.1]       
   h3:
     options: none       #reserved if any option appears in future versions
   h4:
@@ -128,7 +128,7 @@ config_rappas:
 
   #panel of k that is tested
   #integer in [3,16] (~8-10 recommended, >12 often produces too long computations)
-  k: [7,8]
+  k: [8]
 
   #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
   #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids
@@ -197,6 +197,24 @@ config_apples:
   #criteria: ["MLSE","ME","HYBRID"]
   #!warning, be sure to set criteria VALUES as UPPER CASE
   criteria: [MLSE]
+
+### APP-SPAM
+###############################
+
+config_appspam:
+
+  #appspam placements are based on distance computations between the query and the reference tree
+
+  #List of matching modes to test.
+  matchingmode: [ALL, BEST]
+
+  assignmentmode: [BEST, LCA, APPLES, WEIGHTED, KMER, KMERLCA]
+
+  filteringthreshold: [0, 40]
+
+
+  #List of number of dont care positions to test.
+  d: [8, 12]
 
 
 ########################################################################################################################

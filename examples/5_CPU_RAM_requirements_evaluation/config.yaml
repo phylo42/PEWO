@@ -10,13 +10,13 @@ dataset_tree: examples/5_CPU_RAM_requirements_evaluation/tree_652.nwk
 
 # working directory
 #MUST be an absolute path (some software do not accept relative path)
-workdir: /path/to/examples/5_CPU_RAM_requirements_evaluation/run
+workdir: /home/matthias/Documents/test_PEWO_xmp5
 
 # states used in analysis, either '0' for nucleotides or '1' for amino acids
 states: 0
 
 # which software to test, at least one of : epa, epang, pplacer, rappas, apples
-test_soft: [rappas,epang,pplacer]
+test_soft: [rappas,epang,pplacer,appspam]
 
 # read lengths to test
 read_length: [150]
@@ -45,7 +45,7 @@ repeats: 2
 query_type: user
 # queries used in resource evaluation, >10000 sequences recommended.
 # MUST be an absolute path (some software do not accept relative path).
-query_user: /path/to/examples/5_CPU_RAM_requirements_evaluation/EMP_92_studies_10000.fas
+query_user: /home/matthias/Documents/PEWO/examples/5_CPU_RAM_requirements_evaluation/EMP_92_studies_10000.fas
 
 
 

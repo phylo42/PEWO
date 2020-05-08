@@ -10,7 +10,7 @@ dataset_align: examples/1_fast_test_of_accuracy_procedure/alignment_150.fasta
 dataset_tree: examples/1_fast_test_of_accuracy_procedure/RAxML_bipartitions.150.BEST.WITH
 
 #working directory
-workdir: /home/matthias/Documents/test_PEWO
+workdir: /home/matthias/Documents/test_PEWO_xmp1
 
 
 #states used in analysis, either '0' for nucleotides or '1' for amino acids
@@ -23,7 +23,7 @@ test_soft: [pplacer, appspam, apples] #epa, epang, rappas,
 # Read lengths to generate
 read_length: [150]
 # Number of random prunings to compute
-pruning_count: 3
+pruning_count: 10
 
 
 ## IF "ACCURACY" IS EVALUATED
@@ -200,12 +200,15 @@ config_appspam:
   #appspam placements are based on distance computations between the query and the reference tree
 
   #List of matching modes to test.
-  matchingmode: [ALL, FIRST]
+  matchingmode: [ALL, BEST]
 
-  assignmentmode: [LCA, BEST, RANDOM]
+  assignmentmode: [BEST, LCA, RANDOM, PHYLOKMERS, APPLES, WEIGHTED, KMER, KMERLCA]
+
+  filteringthreshold: [0, 40]
+
 
   #List of number of dont care positions to test.
-  d: [16, 32]
+  d: [8, 12]
 
 ########################################################################################################################
 # OPTIONS COMMON TO ALL SOFTWARE

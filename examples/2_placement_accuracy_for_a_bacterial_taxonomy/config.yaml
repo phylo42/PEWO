@@ -10,13 +10,13 @@ dataset_tree: examples/2_placement_accuracy_for_a_bacterial_taxonomy/RAxML_bipar
 
 # working directory
 #MUST be an absolute path (some software do not accept relative path)
-workdir: /home/matthias/Documents/test_PEWO
+workdir: /home/matthias/Documents/test_PEWO_xmp2
 
 # states used in analysis, either '0' for nucleotides or '1' for amino acids
 states: 0
 
 # which software to test, at least one of : epa, epang, pplacer, rappas, apples
-test_soft: [appspam,pplacer]
+test_soft: [pplacer, appspam, apples]
 
 # read lengths to test
 read_length: [150]
@@ -28,7 +28,7 @@ read_length: [150]
 ### this section matters only when you run the "eval_accuracy.smk" workflow
 
 # number of random prunings to compute
-pruning_count: 1
+pruning_count: 5
 
 
 ## IF "RESOURCES" ARE EVALUATED
@@ -38,7 +38,7 @@ pruning_count: 1
 
 # number of identical runs to launch when evaluating RAM/CPU consumption
 # final measurements are reported as mean of the the runs.
-repeats: 1
+repeats: 3
 # defines queries source, one of the following:
 # user: query sequences are loaded from a file target by parameter "query_set"
 # simulate: queries are simulated from the input alignment (reserved for future upgrades, currently not implemented)
@@ -186,7 +186,7 @@ config_apples:
   # BE : k=1 (Beyer et al., 1974)
   #methods: ["OLS","FM","BE"]
   #!warning, be sure to set methods VALUES as UPPER CASE
-  methods: [OLS,FM,BE]
+  methods: [FM]
 
   #List of placement criterion to test.
   #Possible values are:
@@ -195,7 +195,7 @@ config_apples:
   # HYBRID : MLSE then ME
   #criteria: ["MLSE","ME","HYBRID"]
   #!warning, be sure to set criteria VALUES as UPPER CASE
-  criteria: [MLSE,ME,HYBRID]
+  criteria: [HYBRID]
 
 ### APP-SPAM
 ###############################
@@ -205,17 +205,17 @@ config_appspam:
   #appspam placements are based on distance computations between the query and the reference tree
 
   #List of matching modes to test.
-  matchingmode: [ALL, BEST]
+  matchingmode: [ALL]
 
   #List of assignment modes to test
-  assignmentmode: [LCA]
+  assignmentmode: [BEST, LCA, RANDOM, PHYLOKMERS, APPLES, WEIGHTED, KMER, KMERLCA]
 
   #Filtering threshold. Number of dont care positions will be multiplied by this constant.
   #All words below the threshold will not be considered
-  filteringthreshold: [0, 10, 20, 30, 40]
+  filteringthreshold: [0, 40]
 
   #List of number of dont care positions to test.
-  d: [32]
+  d: [8, 12]
 
 ########################################################################################################################
 # OPTIONS COMMON TO ALL SOFTWARE
