@@ -16,7 +16,7 @@ workdir: /home/matthias/Documents/test_PEWO_xmp5
 states: 0
 
 # which software to test, at least one of : epa, epang, pplacer, rappas, apples
-test_soft: [rappas,epang,pplacer,appspam]
+test_soft: [epang,pplacer,appspam]
 
 # read lengths to test
 read_length: [150]

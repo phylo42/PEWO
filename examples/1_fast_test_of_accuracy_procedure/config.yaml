@@ -10,13 +10,13 @@ dataset_tree: examples/1_fast_test_of_accuracy_procedure/RAxML_bipartitions.150.
 
 # working directory
 #MUST be an absolute path (some software do not accept relative path)
-workdir: /path/to/examples/1_fast_test_of_accuracy_procedure/run
+workdir: /home/matthias/Documents/test_PEWO_xmp1
 
 # states used in analysis, either '0' for nucleotides or '1' for amino acids
 states: 0
 
 # which software to test, at least one of : epa, epang, pplacer, rappas, apples
-test_soft: [rappas,epang,pplacer]
+test_soft: [appspam,epang,pplacer,rappas]
 
 # read lengths to test
 read_length: [150]
@@ -28,7 +28,7 @@ read_length: [150]
 ### this section matters only when you run the "eval_accuracy.smk" workflow
 
 # number of random prunings to compute
-pruning_count: 2
+pruning_count: 14
 
 
 ## IF "RESOURCES" ARE EVALUATED
@@ -197,6 +197,23 @@ config_apples:
   #criteria: ["MLSE","ME","HYBRID"]
   #!warning, be sure to set criteria VALUES as UPPER CASE
   criteria: [MLSE]
+
+### APP-SPAM
+###############################
+
+config_appspam:
+
+  #appspam placements are based on distance computations between the query and the reference tree
+
+  #List of assignment modes to test
+  assignmentmode: [BEST, LCA, PHYLOKMERS, APPLES, WEIGHTED, KMER, KMERLCA]
+
+  #Filtering threshold. Number of dont care positions will be multiplied by this constant.
+  #All words below the threshold will not be considered
+  filteringthreshold: [0, 40]
+
+  #List of number of dont care positions to test.
+  d: [8, 12]
 
 
 ########################################################################################################################

@@ -199,16 +199,12 @@ config_apples:
 
 ### APP-SPAM
 ###############################
-
 config_appspam:
 
   #appspam placements are based on distance computations between the query and the reference tree
 
-  #List of matching modes to test.
-  matchingmode: [ALL]
-
   #List of assignment modes to test
-  assignmentmode: [BEST, LCA, RANDOM, PHYLOKMERS, APPLES, WEIGHTED, KMER, KMERLCA]
+  assignmentmode: [BEST, LCA, PHYLOKMERS, APPLES, WEIGHTED, KMER, KMERLCA]
 
   #Filtering threshold. Number of dont care positions will be multiplied by this constant.
   #All words below the threshold will not be considered
