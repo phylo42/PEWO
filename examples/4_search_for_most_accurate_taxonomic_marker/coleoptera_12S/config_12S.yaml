@@ -128,7 +128,7 @@ config_rappas:
 
   #panel of k that is tested
   #integer in [3,16] (~8-10 recommended, >12 often produces too long computations)
-  k: [8]
+  k: [8,9,10]
 
   #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
   #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids
@@ -167,7 +167,7 @@ config_rappas:
   #in particular, testing very large trees will be faster with more memory (32-64Gb)
   #(this is due to JVM garbage collector behaviour)
   #set as an integer value, which represents the maximum amount of Gb allocatable to the JVM (memory: 8 => 8 Gb of RAM)
-  memory: 8
+  memory: 16
 
 ### APPLES
 ###############################

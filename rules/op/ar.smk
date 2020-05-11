@@ -57,7 +57,7 @@ rule ar_phyml:
     run:
         phylo_params=extract_params(input.s)  #launch 1 extract per pruning
         states="nt" if config["states"]==0 else "aa"
-        arbin = get_ar_binary(config, "PHYML")
+        arbin = get_ar_binary(config,"PHYML")
         shell(
             arbin+" --ancestral --no_memory_check --leave_duplicates -d "+states+" -f e -o r -b 0 -v 0.0 "
             "-i {input.a} -u {input.t} -c {params.c} "

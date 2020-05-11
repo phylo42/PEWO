@@ -1,4 +1,4 @@
-# PEWO demo n°2 : Resource evaluation
+# PEWO demo n°5
 
 ## Overview
 
@@ -63,4 +63,4 @@ Results summaries and plots will be written in
 'examples/5_CPU_RAM_requirements_evaluation/run'.
 
 See PEWO wiki for a more detailed explanation of the results:
-https://github.com/phylo42/PEWO/wiki/Tutorials-and-results-interpretation
+https://github.com/phylo42/PEWO/wiki/IV.-Tutorials-and-results-interpretation

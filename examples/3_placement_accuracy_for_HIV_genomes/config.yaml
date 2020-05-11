@@ -16,7 +16,7 @@ workdir: /path/to/examples/3_placement_accuracy_for_HIV_genomes/run
 states: 0
 
 # which software to test, at least one of : epa, epang, pplacer, rappas, apples
-test_soft: [rappas,epang,pplacer]
+test_soft: [rappas,epang]
 
 # read lengths to test
 read_length: [500]
@@ -28,7 +28,7 @@ read_length: [500]
 ### this section matters only when you run the "eval_accuracy.smk" workflow
 
 # number of random prunings to compute
-pruning_count: 10
+pruning_count: 5
 
 
 ## IF "RESOURCES" ARE EVALUATED
@@ -100,14 +100,14 @@ config_epang:
   # h3: heuristic equivalent to pplacer defaults, fast
   # h4: no heuristic, very very slow but should produce the best accuracy
   #(Barbera et al, 2019 ; doi: 10.1093/sysbio/syy054)
-  heuristics: ["h1"]
+  heuristics: ["h1","h2"]
 
   h1:
     #value in ]0,1], value close to 1 recommended by authors
-    g: [0.99999]  
+    g: [0.999, 0.99999]  
   h2:
     #values in ]0,1], higher values increase accuracy but analysis is slower
-    G: [0.1]       
+    G: [0.01, 0.1]       
   h3:
     options: none       #reserved if any option appears in future versions
   h4:
@@ -128,12 +128,12 @@ config_rappas:
 
   #panel of k that is tested
   #integer in [3,16] (~8-10 recommended, >12 often produces too long computations)
-  k: [8]
+  k: [7,8]
 
   #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
   #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids
   #For DNA, values in [1.5,2.0] recommended. For amino acids, values in [5,15] recommended.
-  omega: [1.5]
+  omega: [2.0]
 
   #reduction setup, e.g. gap/non-gap ratio
   #above which a site of the input alignment
@@ -160,7 +160,7 @@ config_rappas:
   #
   #!!! warning, be sure to set arsoft VALUES as UPPER CASE !!!
   arsoft: [RAXMLNG]
-  arthreads: 4
+  arthreads: 1
 
   #maximum amount of memory available to rappas process
   #this has no influence on placement accuracy but it will impact "resources" evaluation
