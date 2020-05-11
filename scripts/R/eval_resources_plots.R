@@ -29,6 +29,8 @@ rappasplacement<-c("k","o","red","ar")
 apples<-c("meth","crit")
 hmmbuild<-NULL
 ansrec<-c("red","ar")
+appspam<-c("assignmentmode","filteringthreshold","d")
+
 
 soft_params<-list(
                     "epa-placement"=epa,
@@ -41,7 +43,8 @@ soft_params<-list(
                     "rappas-placement"=rappasplacement,
                     "apples-placement"=apples,
                     "hmm-align"=hmmbuild,
-                    "ansrec"=ansrec
+                    "ansrec"=ansrec,
+                    "appspam"=appspam
                 )
 
 

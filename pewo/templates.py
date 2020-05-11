@@ -67,9 +67,9 @@ def get_experiment_dir_template(config: Dict, software: PlacementSoftware, **kwa
     elif software == PlacementSoftware.APPLES:
         return os.path.join(software_dir, input_set_dir_template, "meth{meth}_crit{crit}")
     elif software == PlacementSoftware.RAPPAS:
-        return os.path.join(software_dir, input_set_dir_template, "red{red}_ar{ar}")
+        return os.path.join(software_dir, input_set_dir_template, "red{red}_ar{ar}", "k{k}_o{o}")
     elif software == PlacementSoftware.APPSPAM:
-        return os.path.join(software_dir, input_set_dir_template, "matchingmode{matchingmode}_assignmentmode{assignmentmode}_filteringthreshold{filteringthreshold}_d{d}")
+        return os.path.join(software_dir, input_set_dir_template, "assignmentmode{assignmentmode}_filteringthreshold{filteringthreshold}_d{d}")
 
 
 def get_experiment_log_dir_template(config: Dict, software: Software) -> str:
@@ -161,7 +161,7 @@ def get_queryname_template(config: Dict, software: PlacementSoftware, **kwargs) 
     elif software == PlacementSoftware.RAPPAS:
         return get_common_queryname_template(config) + "_k{k}_o{o}_red{red}_ar{ar}"
     elif software == PlacementSoftware.APPSPAM:
-        return get_common_queryname_template(config) + "_matchingmode{matchingmode}_assignmentmode{assignmentmode}_filteringthreshold{filteringthreshold}_d{d}"
+        return get_common_queryname_template(config) + "_assignmentmode{assignmentmode}_filteringthreshold{filteringthreshold}_d{d}"
 
 
 def get_output_template_args(config: Dict, software: PlacementSoftware, **kwargs) -> Dict[str, Any]:
@@ -212,7 +212,6 @@ def get_output_template_args(config: Dict, software: PlacementSoftware, **kwargs
         template_args["ar"] = config["config_rappas"]["arsoft"]
     elif software == PlacementSoftware.APPSPAM:
         template_args["d"] = config["config_appspam"]["d"]
-        template_args["matchingmode"] = config["config_appspam"]["matchingmode"]
         template_args["assignmentmode"] = config["config_appspam"]["assignmentmode"]
         template_args["filteringthreshold"] = config["config_appspam"]["filteringthreshold"]
     else:
