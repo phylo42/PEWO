@@ -14,7 +14,6 @@ from pewo.software import AlignmentSoftware, PlacementSoftware
 from pewo.templates import get_software_dir, get_common_queryname_template, get_common_template_args, \
     get_output_template, get_output_template_args
 
-
 def get_accuracy_nd_plots() -> List[str]:
     """
     Creates a list of plot files that will be computed in the accuracy mode.
@@ -223,8 +222,8 @@ def _get_resources_tsv(config: Dict, software: PlacementSoftware, **kwargs) -> L
         software_templates = apples_benchmark_templates + hmmer_benchmark_templates
         software_template_args = apples_benchmark_template_args + hmmer_benchmark_template_args
     elif software == PlacementSoftware.APPSPAM:
-        software_templates = appspam_benchmark_templates + hmmer_benchmark_templates
-        software_template_args = appspam_benchmark_template_args + hmmer_benchmark_template_args
+        software_templates = appspam_benchmark_templates
+        software_template_args = appspam_benchmark_template_args
     else:
         raise RuntimeError("Unsupported software: " + software.value)
 

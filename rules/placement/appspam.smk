@@ -16,14 +16,12 @@ _working_dir = cfg.get_work_dir(config)
 _alignment_dir = get_software_dir(config, AlignmentSoftware.HMMER)
 
 _appspam_place_benchmark_template = get_benchmark_template(config, PlacementSoftware.APPSPAM,
-                                                          p="pruning", length="length", mode="mode", d="d",
+                                                          p="pruning", length="length", mode="assignmentmode", d="d", threshold="filteringthreshold",
                                                           rule_name="placement") if cfg.get_mode(config) == cfg.Mode.RESOURCES else ""
 
 appspam_benchmark_templates = [_appspam_place_benchmark_template]
 appspam_benchmark_template_args = [get_output_template_args(config, PlacementSoftware.APPSPAM),]
 
-
-# FIXME: These are the same methods as in the epang.smk
 def _get_appspam_input_sequences(config) -> str:
     return os.path.join(_alignment_dir, "{pruning}", get_common_queryname_template(config) + ".fasta_refs")
 

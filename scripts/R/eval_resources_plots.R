@@ -42,9 +42,9 @@ soft_params<-list(
                     "rappas-dbbuild"=rappasdbbuild,
                     "rappas-placement"=rappasplacement,
                     "apples-placement"=apples,
+                    "appspam-placement"=appspam,
                     "hmm-align"=hmmbuild,
-                    "ansrec"=ansrec,
-                    "appspam"=appspam
+                    "ansrec"=ansrec
                 )
 
 
@@ -287,6 +287,7 @@ analyses["epang_h3"]<-c("hmmer-align", "epang-h3-placement")
 analyses["epang_h4"]<-c("hmmer-align", "epang-h4-placement")
 analyses["pplacer"]<-c("hmmer-align", "pplacer-placement")
 analyses["apples"]<-c("hmmer-align", "apples-placement")
+analyses["appspam"]<-c("appspam-placement")
 analyses["rappas"]<-c("ansrec", "rappas-dbbuild","rappas-placement")
 
 results<-list()

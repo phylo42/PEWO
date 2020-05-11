@@ -15,8 +15,8 @@ workdir: /home/matthias/Documents/test_PEWO_xmp5
 # states used in analysis, either '0' for nucleotides or '1' for amino acids
 states: 0
 
-# which software to test, at least one of : epa, epang, pplacer, rappas, apples
-test_soft: [epang,pplacer,appspam]
+# which software to test, at least one of : epa, epang, pplacer, rappas, apples, appspam
+test_soft: [epang, apples, appspam]
 
 # read lengths to test
 read_length: [150]
@@ -38,17 +38,14 @@ pruning_count: 0
 
 # number of identical runs to launch when evaluating RAM/CPU consumption
 # final measurements are reported as mean of the the runs.
-repeats: 2
+repeats: 1
 # defines queries source, one of the following:
 # user: query sequences are loaded from a file target by parameter "query_set"
 # simulate: queries are simulated from the input alignment (reserved for future upgrades, currently not implemented)
 query_type: user
 # queries used in resource evaluation, >10000 sequences recommended.
 # MUST be an absolute path (some software do not accept relative path).
-query_user: /home/matthias/Documents/PEWO/examples/5_CPU_RAM_requirements_evaluation/EMP_92_studies_10000.fas
-
-
-
+query_user: /home/matthias/Documents/PEWO/examples/5_CPU_RAM_requirements_evaluation/EMP_92_studies_100000.fas
 
 ########################################################################################################################
 # PER SOFTWARE CONFIGURATION
@@ -197,6 +194,23 @@ config_apples:
   #criteria: ["MLSE","ME","HYBRID"]
   #!warning, be sure to set criteria VALUES as UPPER CASE
   criteria: [MLSE]
+
+### APP-SPAM
+###############################
+
+config_appspam:
+
+  #appspam placements are based on distance computations between the query and the reference tree
+
+  #List of assignment modes to test
+  assignmentmode: [BESTSCORE]
+
+  #Filtering threshold. Number of dont care positions will be multiplied by this constant.
+  #All words below the threshold will not be considered
+  filteringthreshold: [0]
+
+  #List of number of dont care positions to test.
+  d: [8]
 
 
 ########################################################################################################################
