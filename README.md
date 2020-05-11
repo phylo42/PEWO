@@ -156,9 +156,9 @@ Identify the Snakefile corresponding to your needs.
 
 Procedure | Snakefile | Description
 --- | --- | ---
-Accuracy (ND + eND) | `eval_accuracy.smk` | Given a reference tree/alignment, compute both the "Node Distance" and "expected Node Distance" for a set of software and a set of conditions. This procedure is based on a pruning approach and an important parameter is the number of prunings that is run (see documentation).
-Ressources | `eval_ressources.smk` | Given a reference tree/alignment and a set of query reads, measures CPU/RAM consumptions for a set of software and a set of conditions. An important parameter is the number of repeats from which mean consumptions will be deduced (see documentation). 
-Likelihood Improvement | `eval_likelihood.smk` | Given a reference tree and alignment, compute tree likelihoods induced by placements under a set of conditions, with a lower likelihood reflecting better placements.
+Pruning-based Accuracy evaluation (PAC) | `eval_accuracy.smk` | Given a reference tree/alignment, compute both the "Node Distance" and "expected Node Distance" for a set of software and a set of conditions. This procedure is based on a pruning approach and an important parameter is the number of prunings that is run (see documentation).
+Ressources evaluation (RES) | `eval_ressources.smk` | Given a reference tree/alignment and a set of query reads, measures CPU/RAM consumptions for a set of software and a set of conditions. An important parameter is the number of repeats from which mean consumptions will be deduced (see documentation). 
+Likelihood-based Accuracy evaluation (LAC) | `eval_likelihood.smk` | Given a reference tree and alignment, compute tree likelihoods induced by placements under a set of conditions, with a lower likelihood reflecting better placements.
 
 
 
@@ -174,6 +174,32 @@ Select a panel of parameters and parameter values for each software. Measurement
 Mostly related to the formatting of the jplace outputs. Note that these options will impact expected Node Distances.
 * *Evolutionary model*
 A very basic definition of the evolutionary model used in the procedures. Currently, only GTR+G (for nucleotides), JTT+G, WAG+G and LG+G (for amino acids) are supported.  
+
+**Notes on memory usage for alignment-free methods:**
+Alignment-free methods such as RAPPAS require to build/load a database in memory prior to the placement.
+This step can be memory consuming for large datasets. Correctly managing the memory is done as follows:
+
+1. Do a test with a single RAPPAS run on the tree/alignment you use as input dataset.Write down the peek memory. To measure peek memory you can use:
+```
+/usr/bin/time -v command
+#Make sure to use the full path, it's not the default linux 'time' command. 
+```
+And search for the line "Maximum resident set size".
+
+2. For instance, You conclude RAPPAS requires 8Gb per analysis. Then force RAPPAS to use 8Gb of RAM via the snakemake config file and the field:
+```yaml
+config_rappas:
+    memory: 8
+```
+
+3. Finally choose the maximum amount of RAM that can be used by snakemake during its launch. For instance, if you have a machine with 32Gb of RAM :
+```
+snakemake -p --cores 8 --resources mem_mb=32000 \
+--snakefile eval_accuracy.smk \
+--config workdir=`pwd`/examples/2_placement_accuracy_for_a_bacterial_taxonomy/run \
+--configfile examples/2_placement_accuracy_for_a_bacterial_taxonomy/config.yaml
+```
+With this setup, snakemake will wait for 8gb to be free before each RAPPAS launch and will run with a maximum of four RAPPAS launches in parallel (32/8=4).
 
 **4. Test your workflow:**
 
