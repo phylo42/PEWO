@@ -85,7 +85,6 @@ def build_accuracy_workflow() -> List[str]:
     """
     # .jplace files
     placements = build_placements_workflow()
-    print(placements)
 
     # node distances from jplace outputs
     csv = [config["workdir"] + "/results.csv"]
