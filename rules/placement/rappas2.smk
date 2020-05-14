@@ -17,32 +17,30 @@ from pewo.templates import get_output_template, get_log_template, get_experiment
 _working_dir = cfg.get_work_dir(config)
 _rappas2_experiment_dir = get_experiment_dir_template(config, PlacementSoftware.RAPPAS2)
 _rappas_experiment_dir = get_experiment_dir_template(config, PlacementSoftware.RAPPAS)
+_rappas_experiment_parent = Path(_rappas_experiment_dir).parent
 
 rule db_build_rappas_ar:
     input:
         a = os.path.join(_working_dir, "A", "{pruning}.align"),
         t = os.path.join(_working_dir, "T", "{pruning}.tree"),
-        ar_seq_txt = os.path.join(Path(_rappas_experiment_dir).parent, "AR", "extended_align.phylip_phyml_ancestral_seq.txt")
+        ar_seq_txt = os.path.join(_rappas_experiment_parent, "AR", "extended_align.phylip_phyml_ancestral_seq.txt")
     output:
-        extended_tree_node_mapping = os.path.join(Path(_rappas_experiment_dir).parent, "extended_trees", "extended_tree_node_mapping.tsv"),
-        artree_id_mapping = os.path.join(Path(_rappas_experiment_dir).parent, "AR", "ARtree_id_mapping.tsv")
+        extended_tree_node_mapping = os.path.join(_rappas_experiment_parent, "extended_trees", "extended_tree_node_mapping.tsv"),
+        artree_id_mapping = os.path.join(_rappas_experiment_parent, "AR", "ARtree_id_mapping.tsv")
     log:
-        os.path.join(Path(_rappas_experiment_dir).parent, "db_build_aronly.log")
+        os.path.join(_rappas_experiment_parent, "db_build_aronly.log")
     version: "1.00"
     params:
         model = select_model_phymlstyle(),
-        ardir = os.path.join(Path(_rappas_experiment_dir).parent, "AR"),
-        workdir = _rappas2_experiment_dir,
-        arbin = lambda wildcards: get_ar_binary(config, wildcards.ar),
+        ardir = os.path.join(_rappas_experiment_parent, "AR"),
+
+        # run os.path.join to force snakemake substituing the wildcards
+        workdir = os.path.join(_rappas_experiment_parent, ""),
         arthreads = config["config_rappas2"]["arthreads"]
     run:
         shell(
             "rappas2.py build " +
-            "-b $(which {params.arbin}) " +
-            "-k {wildcards.k} " +
-            "--omega {wildcards.o} " +
-            "--filter {wildcards.filter} " +
-            "-u {wildcards.mu} " +
+            "-b $(which phyml) " +
             "-m {params.model} "
             "-t {input.t} " +
             "-r {input.a} " +
