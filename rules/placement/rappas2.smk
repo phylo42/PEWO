@@ -18,6 +18,42 @@ _working_dir = cfg.get_work_dir(config)
 _rappas2_experiment_dir = get_experiment_dir_template(config, PlacementSoftware.RAPPAS2)
 _rappas_experiment_dir = get_experiment_dir_template(config, PlacementSoftware.RAPPAS)
 
+rule db_build_rappas_ar:
+    input:
+        a = os.path.join(_working_dir, "A", "{pruning}.align"),
+        t = os.path.join(_working_dir, "T", "{pruning}.tree"),
+        ar_seq_txt = os.path.join(Path(_rappas_experiment_dir).parent, "AR", "extended_align.phylip_phyml_ancestral_seq.txt")
+    output:
+        extended_tree_node_mapping = os.path.join(Path(_rappas_experiment_dir).parent, "extended_trees", "extended_tree_node_mapping.tsv"),
+        artree_id_mapping = os.path.join(Path(_rappas_experiment_dir).parent, "AR", "ARtree_id_mapping.tsv")
+    log:
+        os.path.join(Path(_rappas_experiment_dir).parent, "db_build_aronly.log")
+    version: "1.00"
+    params:
+        model = select_model_phymlstyle(),
+        ardir = os.path.join(Path(_rappas_experiment_dir).parent, "AR"),
+        workdir = _rappas2_experiment_dir,
+        arbin = lambda wildcards: get_ar_binary(config, wildcards.ar),
+        arthreads = config["config_rappas2"]["arthreads"]
+    run:
+        shell(
+            "rappas2.py build " +
+            "-b $(which {params.arbin}) " +
+            "-k {wildcards.k} " +
+            "--omega {wildcards.o} " +
+            "--filter {wildcards.filter} " +
+            "-u {wildcards.mu} " +
+            "-m {params.model} "
+            "-t {input.t} " +
+            "-r {input.a} " +
+            "-w {params.workdir} " +
+            "--threads {params.arthreads} " +
+            "--ardir {params.ardir} " +
+            "--ratio-reduction {wildcards.red} " +
+            "--aronly " + 
+            "--use-unrooted  &> {log} "
+        )
+
 
 rule db_build_rappas2:
     """
@@ -27,14 +63,17 @@ rule db_build_rappas2:
     input:
         a = os.path.join(_working_dir, "A", "{pruning}.align"),
         t = os.path.join(_working_dir, "T", "{pruning}.tree"),
-        ar = lambda wildcards: get_ar_output_templates(config, wildcards.ar)
+        ar = lambda wildcards: get_ar_output_templates(config, wildcards.ar),
+        extended_tree = os.path.join(Path(_rappas_experiment_dir).parent,"extended_trees", "extended_tree_withBL.tree"),
+        extended_tree_node_mapping = os.path.join(Path(_rappas_experiment_dir).parent, "extended_trees", "extended_tree_node_mapping.tsv"),
+        ar_seq_txt = os.path.join(Path(_rappas_experiment_dir).parent, "AR", "extended_align.phylip_phyml_ancestral_seq.txt"),
+        artree_id_mapping = os.path.join(Path(_rappas_experiment_dir).parent, "AR", "ARtree_id_mapping.tsv")
     output:
         database = os.path.join(_rappas2_experiment_dir, "DB_k{k}_o{o}.rps")
     log:
         os.path.join(_rappas2_experiment_dir, "db_build.log")
     version: "1.00"
     params:
-        states = ["nucl"] if config["states"]==0 else ["amino"],
         model = select_model_phymlstyle(),
         ardir = os.path.join(Path(_rappas_experiment_dir).parent, "AR"),
         workdir = _rappas2_experiment_dir,
