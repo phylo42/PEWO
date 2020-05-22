@@ -142,23 +142,23 @@ def get_node_by_id(tree: Phylo.BaseTree, postorder_node_id: int) -> Phylo.BaseTr
     raise RuntimeError(str(postorder_node_id) + " not found.")
 
 
-def extend_tree(tree: Phylo.BaseTree, branch_id: int, node_name: str) -> None:
+def extend_tree(tree: Phylo.BaseTree, placement: PlacementRecord, node_name: str) -> None:
     """
     Extends a tree by adding a placed sequence.
     Changes the input tree
     """
     # The node under the branch where the sequence must be placed
-    x = get_node_by_id(tree, branch_id)
+    x = get_node_by_id(tree, placement.edge_num)
 
     # the half of the old branch leading to the old sub tree
-    y = Phylo.BaseTree.Clade(x.branch_length / 2, x.name)
+    y = Phylo.BaseTree.Clade(x.branch_length - placement.distal_length, x.name)
     y.clades = deepcopy(x.clades)
 
     # the half of the old branch leading to the placed sequence
-    z = Phylo.BaseTree.Clade(x.branch_length / 2, node_name)
+    z = Phylo.BaseTree.Clade(placement.pendant_length, node_name)
 
     # modify the original node
-    x.branch_length /= 2
+    x.branch_length = placement.distal_length
     x.clades = [y, z]
     x.name = ''
 
@@ -174,15 +174,14 @@ def make_extended_tree(input_file: str, output_file: str, jplace_file: str) -> N
         # get the best placement reported
         best_record = placement.placements[0]
 
-        # get the placed sequence id and the best branch post-order id
-        branch_id = best_record.edge_num
+        # get the placed sequence id
         seq_name = placement.sequence_name
 
         # read the tree
         tree = Phylo.read(input_file, "newick")
 
         # extend the tree with the placed sequence
-        extend_tree(tree, branch_id, seq_name)
+        extend_tree(tree, best_record, seq_name)
 
         # output the modified tree
         Phylo.write(tree, output_file, "newick")

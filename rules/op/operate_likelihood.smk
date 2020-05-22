@@ -43,7 +43,9 @@ def _calculate_likelihood(input: RuleInputs, output: RuleOutputs, params: RulePa
             '--tree {input.tree} '
             '--model {params.model} '
             '--redo '
-            '--threads 1'
+            '--threads 1 '
+            '--opt-branches {params.optimization} '
+            '--opt-model {params.optimization} '
             '| grep "Final LogLikelihood" | cut -d" " -f3', read=True
         ).decode("utf-8").strip()
         values.append(
@@ -200,7 +202,8 @@ rule calculate_likelihood_epa:
     params:
           workdir=cfg.get_work_dir(config),
           software=PlacementSoftware.EPA.value,
-          model="GTR+G"
+          model="GTR+G",
+          optimization=config["lac"]["optimization"]
     run:
         _calculate_likelihood(input, output, params, wildcards)
 
@@ -216,7 +219,8 @@ rule calculate_likelihood_epang_h1:
     params:
           workdir=cfg.get_work_dir(config),
           software=PlacementSoftware.EPANG.value,
-          model="GTR+G"
+          model="GTR+G",
+          optimization=config["lac"]["optimization"]
     run:
         _calculate_likelihood(input, output, params, wildcards)
 
@@ -232,7 +236,8 @@ rule calculate_likelihood_epang_h2:
     params:
           workdir=cfg.get_work_dir(config),
           software=PlacementSoftware.EPANG.value,
-          model="GTR+G"
+          model="GTR+G",
+          optimization=config["lac"]["optimization"]
     run:
         _calculate_likelihood(input, output, params, wildcards)
 
@@ -248,7 +253,8 @@ rule calculate_likelihood_epang_h3:
     params:
           workdir=cfg.get_work_dir(config),
           software=PlacementSoftware.EPANG.value,
-          model="GTR+G"
+          model="GTR+G",
+          optimization=config["lac"]["optimization"]
     run:
         _calculate_likelihood(input, output, params, wildcards)
 
@@ -264,7 +270,8 @@ rule calculate_likelihood_epang_h4:
     params:
           workdir=cfg.get_work_dir(config),
           software=PlacementSoftware.EPANG.value,
-          model="GTR+G"
+          model="GTR+G",
+          optimization=config["lac"]["optimization"]
     run:
         _calculate_likelihood(input, output, params, wildcards)
 
@@ -280,7 +287,8 @@ rule calculate_likelihood_pplacer:
     params:
           workdir=cfg.get_work_dir(config),
           software=PlacementSoftware.PPLACER.value,
-          model="GTR+G"
+          model="GTR+G",
+          optimization=config["lac"]["optimization"]
     run:
         _calculate_likelihood(input, output, params, wildcards)
 
@@ -296,7 +304,8 @@ rule calculate_likelihood_rappas:
     params:
           workdir=cfg.get_work_dir(config),
           software=PlacementSoftware.RAPPAS.value,
-          model="GTR+G"
+          model="GTR+G",
+          optimization=config["lac"]["optimization"]
     run:
         _calculate_likelihood(input, output, params, wildcards)
 
@@ -309,7 +318,8 @@ rule calculate_likelihood_rappas2:
     params:
           workdir=cfg.get_work_dir(config),
           software=PlacementSoftware.RAPPAS2.value,
-          model="GTR+G"
+          model="GTR+G",
+          optimization=config["lac"]["optimization"]
     run:
         _calculate_likelihood(input, output, params, wildcards)
 
@@ -325,7 +335,8 @@ rule calculate_likelihood_apples:
     params:
           workdir=cfg.get_work_dir(config),
           software=PlacementSoftware.APPLES.value,
-          model="GTR+G"
+          model="GTR+G",
+          optimization=config["lac"]["optimization"]
     run:
         _calculate_likelihood(input, output, params, wildcards)
 

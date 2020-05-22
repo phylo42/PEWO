@@ -9,6 +9,7 @@ __license__ = "MIT"
 
 from pewo.software import get_ar_binary
 from pewo.templates import get_ar_output_templates
+import pewo.config as cfg
 
 
 rule compute_ar_inputs:
@@ -39,37 +40,46 @@ rule compute_ar_inputs:
 
 rule ar_phyml:
     input:
-        a=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_arPHYML/extended_trees/extended_align.phylip",
-        t=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_arPHYML/extended_trees/extended_tree_withBL_withoutInterLabels.tree",
-        s=config["workdir"]+"/T/{pruning}_optimised.info"
-    output:
-        config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_arPHYML/AR/extended_align.phylip_phyml_ancestral_seq.txt",
-        config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_arPHYML/AR/extended_align.phylip_phyml_ancestral_tree.txt",
-        config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_arPHYML/AR/extended_align.phylip_phyml_stats.txt",
-        config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_arPHYML/AR/extended_align.phylip_phyml_tree.txt"
+        a = config["workdir"]+"/RAPPAS/{pruning}/red{red}_arPHYML/extended_trees/extended_align.phylip",
+        t = config["workdir"]+"/RAPPAS/{pruning}/red{red}_arPHYML/extended_trees/extended_tree_withBL_withoutInterLabels.tree",
+        s = config["workdir"]+"/T/{pruning}_optimised.info"
+    output: get_ar_output_templates(config, "PHYML")
     log:
-        config["workdir"]+"/logs/ar/{pruning}_red{reduction}_arPHYML.log"
+        config["workdir"]+"/logs/ar/{pruning}_red{red}_arPHYML.log"
     benchmark:
-        repeat(config["workdir"]+"/benchmarks/{pruning}_red{reduction}_arPHYML_ansrec_benchmark.tsv", config["repeats"])
+        repeat(config["workdir"]+"/benchmarks/{pruning}_red{red}_arPHYML_ansrec_benchmark.tsv", config["repeats"])
     params:
-        outname=config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_arPHYML",
-        c=config["phylo_params"]["categories"],
+        outname = os.path.join(cfg.get_work_dir(config), "RAPPAS", "{pruning}", "red{red}_arPHYML"),
+        c = config["phylo_params"]["categories"],
     run:
-        phylo_params=extract_params(input.s)  #launch 1 extract per pruning
-        states="nt" if config["states"]==0 else "aa"
+        phylo_params = extract_params(input.s)  #launch 1 extract per pruning
+        states = "nt" if config["states"] == 0 else "aa"
         arbin = get_ar_binary(config,"PHYML")
-        shell(
-            arbin+" --ancestral --no_memory_check --leave_duplicates -d "+states+" -f e -o r -b 0 -v 0.0 "
-            "-i {input.a} -u {input.t} -c {params.c} "
-            "-m "+select_model_phymlstyle()+" -a "+str(phylo_params['alpha'])+" &> {log} ;"
-            """
-            mkdir -p {params.outname}/AR
-            mv {params.outname}/extended_trees/extended_align.phylip_phyml_ancestral_seq.txt {params.outname}/AR/extended_align.phylip_phyml_ancestral_seq.txt
-            mv {params.outname}/extended_trees/extended_align.phylip_phyml_ancestral_tree.txt {params.outname}/AR/extended_align.phylip_phyml_ancestral_tree.txt
-            mv {params.outname}/extended_trees/extended_align.phylip_phyml_stats.txt {params.outname}/AR/extended_align.phylip_phyml_stats.txt
-            mv {params.outname}/extended_trees/extended_align.phylip_phyml_tree.txt {params.outname}/AR/extended_align.phylip_phyml_tree.txt
-            """
-        )
+
+        ar_command = arbin + \
+            " --ancestral " \
+            " --no_memory_check " \
+            " --leave_duplicates " \
+            " -d " + states + \
+            " -f e " + \
+            " -o r " + \
+            " -b 0 " + \
+            " -v 0.0 " + \
+            " -i " + input.a + \
+            " -u " + input.t + \
+            " -c " + str(params.c) + \
+            " -m " + select_model_phymlstyle() + \
+            " -a " + str(phylo_params['alpha']) + \
+            " &> " + str(log)
+        commands = [
+            ar_command,
+            "mkdir -p {params.outname}/AR",
+            "mv {params.outname}/extended_trees/extended_align.phylip_phyml_ancestral_seq.txt {params.outname}/AR/extended_align.phylip_phyml_ancestral_seq.txt",
+            "mv {params.outname}/extended_trees/extended_align.phylip_phyml_ancestral_tree.txt {params.outname}/AR/extended_align.phylip_phyml_ancestral_tree.txt",
+            "mv {params.outname}/extended_trees/extended_align.phylip_phyml_stats.txt {params.outname}/AR/extended_align.phylip_phyml_stats.txt",
+            "mv {params.outname}/extended_trees/extended_align.phylip_phyml_tree.txt {params.outname}/AR/extended_align.phylip_phyml_tree.txt",
+        ]
+        shell(";\n".join(command for command in commands))
 
 rule ar_raxmlng:
     input:
