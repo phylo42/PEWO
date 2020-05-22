@@ -19,14 +19,21 @@ _rappas2_experiment_dir = get_experiment_dir_template(config, PlacementSoftware.
 _rappas_experiment_dir = get_experiment_dir_template(config, PlacementSoftware.RAPPAS)
 _rappas_experiment_parent = Path(_rappas_experiment_dir).parent
 
+
 rule db_build_rappas_ar:
     input:
         a = os.path.join(_working_dir, "A", "{pruning}.align"),
-        t = os.path.join(_working_dir, "T", "{pruning}.tree"),
-        ar_seq_txt = os.path.join(_rappas_experiment_parent, "AR", "extended_align.phylip_phyml_ancestral_seq.txt")
+        t = os.path.join(_working_dir, "T", "{pruning}.tree")
+        #ar_seq_txt = os.path.join(_rappas_experiment_parent, "AR", "extended_align.phylip_phyml_ancestral_seq.txt")
     output:
-        extended_tree_node_mapping = os.path.join(_rappas_experiment_parent, "extended_trees", "extended_tree_node_mapping.tsv"),
-        artree_id_mapping = os.path.join(_rappas_experiment_parent, "AR", "ARtree_id_mapping.tsv")
+        os.path.join(Path(_rappas_experiment_dir).parent, "AR", "extended_align.phylip_phyml_ancestral_seq.txt"),
+        os.path.join(Path(_rappas_experiment_dir).parent, "AR", "ARtree_id_mapping.tsv"),
+        os.path.join(Path(_rappas_experiment_dir).parent, "extended_trees", "extended_align.fasta"),
+        os.path.join(Path(_rappas_experiment_dir).parent, "extended_trees", "extended_align.phylip"),
+        os.path.join(Path(_rappas_experiment_dir).parent, "extended_trees", "extended_tree_withBL.tree"),
+        os.path.join(Path(_rappas_experiment_dir).parent, "extended_trees", "extended_tree_withBL_withoutInterLabels.tree"),
+        extended_tree_node_mapping = os.path.join(Path(_rappas_experiment_dir).parent, "extended_trees", "extended_tree_node_mapping.tsv")
+        
     log:
         os.path.join(_rappas_experiment_parent, "db_build_aronly.log")
     version: "1.00"
@@ -46,12 +53,13 @@ rule db_build_rappas_ar:
             "-r {input.a} " +
             "-w {params.workdir} " +
             "--threads {params.arthreads} " +
-            "--ardir {params.ardir} " +
             "--ratio-reduction {wildcards.red} " +
             "--aronly " + 
             "--use-unrooted  &> {log} "
         )
 
+ruleorder: db_build_rappas_ar > compute_ar_inputs
+ruleorder: db_build_rappas_ar > ar_phyml
 
 rule db_build_rappas2:
     """
