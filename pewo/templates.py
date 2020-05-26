@@ -23,7 +23,7 @@ def _check_software(software: Any) -> None:
 def get_software_dir(config: Dict,
                      software: Union[PlacementSoftware, AlignmentSoftware]) -> str:
     """
-    Returns a working directory for given software.
+    Returns a working directory for givFen software.
     """
     _check_software(software)
 

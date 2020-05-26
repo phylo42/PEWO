@@ -24,7 +24,7 @@ test_soft: [rappas2]
 # Read lengths to generate
 read_length: [300]
 # Number of random prunings to compute
-pruning_count: 10
+pruning_count: 1
 
 
 ## IF "ACCURACY" IS EVALUATED
@@ -168,7 +168,7 @@ config_rappas:
 
 
 config_rappas2:
-  k: [8, 10]
+  k: [8]
   omega: [2.0]
   #omega: [1.5, 2.0]
   reduction: [0.99]
@@ -245,6 +245,9 @@ minlwr: 0.01
 phylo_params:
   model: "GTR+G"
   categories: 4
+
+lac:
+  optimization: "OFF"
 
 
 ########################################################################################################################
