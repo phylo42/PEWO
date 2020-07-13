@@ -199,13 +199,10 @@ config_appspam:
 
   #appspam placements are based on distance computations between the query and the reference tree
 
-  assignmentmode: [BEST, LCA, RANDOM, PHYLOKMERS, APPLES, WEIGHTED, KMER, KMERLCA]
-
-  filteringthreshold: [0, 40]
-
+  mode: [LCACOUNT]
 
   #List of number of dont care positions to test.
-  d: [8, 12]
+  w: [8, 12]
 
 ########################################################################################################################
 # OPTIONS COMMON TO ALL SOFTWARE

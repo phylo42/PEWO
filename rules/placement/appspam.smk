@@ -11,12 +11,11 @@ from pewo.software import PlacementSoftware, AlignmentSoftware
 from pewo.templates import get_output_template, get_log_template, get_software_dir, \
     get_common_queryname_template, get_benchmark_template, get_output_template_args
 
-
 _working_dir = cfg.get_work_dir(config)
 _alignment_dir = get_software_dir(config, AlignmentSoftware.HMMER)
 
 _appspam_place_benchmark_template = get_benchmark_template(config, PlacementSoftware.APPSPAM,
-                                                          p="pruning", length="length", mode="assignmentmode", d="d", threshold="filteringthreshold",
+                                                          p="pruning", length="length", mode="assignmentmode", w="w",
                                                           rule_name="placement") if cfg.get_mode(config) == cfg.Mode.RESOURCES else ""
 
 appspam_benchmark_templates = [_appspam_place_benchmark_template]
@@ -45,5 +44,5 @@ rule placement_appspam:
     version: "1.0"
     shell:
         """
-        appspam -s {input.s} -q {input.q} -t {input.t} -g {wildcards.assignmentmode} -k {wildcards.d} -o {output.jplace} --threshold {wildcards.filteringthreshold} >& {log}
+        appspam -s {input.s} -q {input.q} -t {input.t} -g {wildcards.mode} -w {wildcards.w} -o {output.jplace} >& {log}
         """
