@@ -161,7 +161,7 @@ def get_queryname_template(config: Dict, software: PlacementSoftware, **kwargs) 
     elif software == PlacementSoftware.RAPPAS:
         return get_common_queryname_template(config) + "_k{k}_o{o}_red{red}_ar{ar}"
     elif software == PlacementSoftware.APPSPAM:
-        return get_common_queryname_template(config) + "mode{mode}_w{w}"
+        return get_common_queryname_template(config) + "_mode{mode}_w{w}"
 
 
 def get_output_template_args(config: Dict, software: PlacementSoftware, **kwargs) -> Dict[str, Any]:
