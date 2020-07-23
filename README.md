@@ -1,11 +1,9 @@
 # PEWO: "Placement Evaluation WOrkflows"
 
-[![Build Status](https://travis-ci.com/phylo42/PEWO.svg?branch=master)](https://travis-ci.com/phylo42/PEWO)
+[![Build Status](https://travis-ci.com/phylo42/PEWO.svg?branch=master)](https://travis-ci.com/phylo42/PEWO) [![license](https://img.shields.io/github/license/shenwei356/seqkit.svg?maxAge=2592000)](https://github.com/phylo42/RAPPAS/LICENSE) [![Cross-platform](https://img.shields.io/badge/platform-any-ec2eb4.svg?style=flat)](https://github.com/phylo42/RAPPAS)
 
 - **Documents:** [**Usage**](https://github.com/phylo42/PEWO/wiki),
 [**Tutorial**](https://github.com/phylo42/PEWO/wiki),
-[![license](https://img.shields.io/github/license/shenwei356/seqkit.svg?maxAge=2592000)](https://github.com/phylo42/RAPPAS/LICENSE)
-[![Cross-platform](https://img.shields.io/badge/platform-any-ec2eb4.svg?style=flat)](https://github.com/phylo42/RAPPAS)
 
 <!-- badge generated via https://shields.io/) -->
 - **Please cite:** [![doi](https://img.shields.io/static/v1?label=doi&message=10.1093/bioinformatics/btaa657&color=blue)](https://doi.org/10.1093/bioinformatics/btaa657)
