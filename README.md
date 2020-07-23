@@ -2,6 +2,28 @@
 
 [![Build Status](https://travis-ci.com/phylo42/PEWO.svg?branch=master)](https://travis-ci.com/phylo42/PEWO)
 
+- **Documents:** [**Usage**](https://github.com/phylo42/PEWO/wiki),
+[**Tutorial**](https://github.com/phylo42/PEWO/wiki),
+[![license](https://img.shields.io/github/license/shenwei356/seqkit.svg?maxAge=2592000)](https://github.com/phylo42/RAPPAS/LICENSE)
+[![Cross-platform](https://img.shields.io/badge/platform-any-ec2eb4.svg?style=flat)](https://github.com/phylo42/RAPPAS)
+
+<!-- badge generated via https://shields.io/) -->
+- **Please cite:** [![doi](https://img.shields.io/static/v1?label=doi&message=10.1093/bioinformatics/btaa657&color=blue)](https://doi.org/10.1093/bioinformatics/btaa657)
+
+
+
+<!-- <img align="left" src="https://github.com/blinard-BIOINFO/RAPPAS/wiki/images/rappas_logo_small.jpg" > -->
+
+**PEWO: a collection of workflows to benchmark phylogenetic placement**
+
+*Benjamin Linard, Nikolai Romashchenko, Fabio Pardi, Eric Rivals*
+
+*Bioinformatics, btaa657, 22 July 2020*
+
+*doi.org/10.1093/bioinformatics/btaa657*
+
+<br />
+
 **Benchmark existing placement software and compare placement accuracy on different reference trees.**
 
 ## Overview
