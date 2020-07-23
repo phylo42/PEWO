@@ -238,7 +238,7 @@ Refer to the snakemake [documentation](https://snakemake.readthedocs.io/en/stabl
 ## Contacts
 *B Linard, N Romashchenko, F Pardi, E Rivals*
 
-MAB team (Methods and Algorithms in Bioifnormatics), LIRMM, Montpellier, France.
+MAB team (Methods and Algorithms in Bioinformatics), LIRMM, Montpellier, France.
 
 ## Licence
 
