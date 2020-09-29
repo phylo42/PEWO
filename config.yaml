@@ -6,25 +6,50 @@
 ##############################
 #alignment in fasta format and tree in newick format
 
-dataset_align: /home/nikolai/dev/datasets/d652/reference.fasta
-dataset_tree: /home/nikolai/dev/datasets/d652/tree.newick
+
+# PAC
+# D652
+dataset_align: /home/nikolai/dev/rappas/data/test/D652/bv_refs_aln_stripped_99.5.fasta
+dataset_tree: /home/nikolai/dev/rappas/data/test/D652/RAxML_result.bv_refs_aln
+
+# D500
+#dataset_align: /home/nikolai/dev/rappas/data/DATASETS/EPA_datasets/500.phy.fasta
+#dataset_tree: /home/nikolai/dev/rappas/data/DATASETS/EPA_datasets/RAxML_result.optimization500
+
+# D155 (full virus genome, 9k positions, 2% gap rate
+#dataset_align: /home/nikolai/dev/rappas/data/test/D155/reference.fasta
+#dataset_tree: /home/nikolai/dev/rappas/data/test/D155/tree.newick
+
+# D140 (amino acids)
+#dataset_align: /home/nikolai/dev/rappas/data/test/D140/140.phy.fasta
+#dataset_tree: /home/nikolai/dev/rappas/data/test/D140/RAxML_bipartitions.140.BEST.WITH
+
+
+# LAC
+#dataset_align: /home/nikolai/dev/pewo/bernoulli_652/
+#dataset_tree: /home/nikolai/dev/rappas/data/test/D652/RAxML_result.bv_refs_aln
+
 
 #working directory
-workdir: /home/nikolai/dev/datasets/d652/pewo_accuracy_nofilter
-
+#workdir: /home/nikolai/dev/pewo/bernoulli_652
+#workdir: /home/nikolai/dev/pewo/bernoulli_500
+#workdir: /home/nikolai/dev/pewo/bernoulli_155
+#workdir: /home/nikolai/dev/pewo/D140
+workdir: /home/nikolai/dev/pewo/D652
 
 #states used in analysis, either '0' for nucleotides or '1' for amino acids
 states: 0
 
 #which software to test, at least one of : epa, epang, pplacer, rappas, apples
 #test_soft: [epa, epang, rappas, pplacer]
-test_soft: [rappas2]
+test_soft: [rappas]
+#test_soft: [rappas2]
 
 # READ GENERATION
 # Read lengths to generate
 read_length: [300]
 # Number of random prunings to compute
-pruning_count: 1
+pruning_count: 10
 
 
 ## IF "ACCURACY" IS EVALUATED
@@ -126,12 +151,12 @@ config_rappas:
 
   #panel of k that is tested
   #integer in [2,16] (8~10 recommended, >12 often produces too long computations)
-  k: [7,8]
+  k: [3]
 
   #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
   #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids
   #For DNA, values in [1,2] recommended. For amino acids, values in [5,15] recommended.
-  omega: [1.5, 2.0]
+  omega: [1.5]
 
   #reduction setup, e.g. gap/non-gap ratio
   #above which a site of the input alignment
@@ -169,15 +194,20 @@ config_rappas:
 
 config_rappas2:
   k: [8]
-  omega: [2.0]
-  #omega: [1.5, 2.0]
+  omega: [1.5]
   reduction: [0.99]
   arsoft: [PHYML]
   arthreads: 1
-  filter: "no-filter"
+  filter: "NO-FILTER"
 
   #mu: [0.0625, 0.125, 0.25, 0.5]
   mu: [1.0]
+
+  #f: [0.01, 0.25, 0.5, 0.75, 0.99]
+  #model: ["BERNOULLI"]
+
+  f: 1.0
+  model: ["DEFAULT", "MULTINOMIAL"]
 
 ### APPLES
 ###############################

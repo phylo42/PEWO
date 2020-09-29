@@ -58,7 +58,6 @@ def get_rappas_input_reads(pruning):
         return [os.path.join(output_dir, pruning + "_r" + str(l) + ".fasta")
                 for l in config["read_length"]]
 
-
 rule db_build_in_ram_rappas:
     """
     Build a RAPPAS database in RAM.
