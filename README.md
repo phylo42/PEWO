@@ -106,24 +106,6 @@ Please read the [dedicated wiki page](https://github.com/phylo42/PEWO/wiki/IV.-T
 
 ### PEWO procedures
 
-* *Node Distance (ND)* : 
-This standard procedure was introduced with EPA and reused in PPlacer and RAPPAS original manuscripts. The reference tree is pruned randomly. For each pruning, the pruned leaves are placed and accuracy is evaluated as the number of nodes separating expected and observed placements.
-
- <!-- ER  ALT : you need to delete previous paragraph -->
-This distance measure between two placements was introduced with EPA and reused in PPlacer and RAPPAS original manuscripts. It is computed as follows: The reference tree is pruned randomly, which removes one sequence of the tree. The pruned sequence serves as query for placement against the pruned tree, but one knows the true solution (ie. the position of that sequence in the  original tree). The resulting placement is compared to the true solution by evaluating the accuracy as the number of nodes separating the true and observed placements. This procedure is repeated with numerous prunings. One drawback: the running time.
-
-* *Expected Node Distance (eND)* :
-An improved version of ND, which takes into account placement weights (e.g. Likelihood Weight Ratios, see documentation).
-
-<!-- ER comment: no documentation link ; add bib reference ; what is improved  -->
-
-* *Likelihood Improvement (LI)* : 
-Rapid evaluation of phylogenetic placements designed for developers and rapid evaluation of changes in the code and algorithms. Following placement, a re-optimization simply highlights better or worse results, in terms of likelihood changes.
-
-* *Ressources (RESS)* :
-CPU and peek RAM consumptions are measured for every step required to operate phylogenetic placement (including alignment in alignment-based methods and ancestral state reconstruction + database build in alignment-free methods). This procedure mostly intends to evaluate the scalability of the methods, as punctual analyses or routine placement of large sequence volumes do not induce the same constraints. 
-
-
 **Software currently supported by PEWO.**
 
 * **EPA**(RAxML)  (Berger et al, 2010) 
