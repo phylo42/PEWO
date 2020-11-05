@@ -223,7 +223,7 @@ snakemake --snakefile [snakefile].smk -p --core [#cores]
 <!-- ER changes: inserted grid system names and pointeers to wiki. qsub is a command. -->
 <!-- ER changes: inserted pointer to snake doc on this. -->
 Note that the workflow can be launched on a grid environment such as [SunGridEngine](https://en.wikipedia.org/wiki/Oracle_Grid_Engine) or [SLURM](https://en.wikipedia.org/wiki/Slurm_Workload_Manager) (i.e., with  `qsub` command).
-Refer to the snakemake [documentation](https://snakemake.readthedocs.io/en/stable/executing/cluster-cloud.html#cluster-execution) to learn how to configure a workflow for such environments.
+Refer to the snakemake [documentation](https://snakemake.readthedocs.io/en/stable/executing/cluster.html) to learn how to configure a workflow for such environments.
 
 
 
