@@ -10,16 +10,16 @@ dataset_tree: examples/2_placement_accuracy_for_a_bacterial_taxonomy/RAxML_bipar
 
 # working directory
 #MUST be an absolute path (some software do not accept relative path)
-workdir: /home/matthias/Documents/test_PEWO_xmp2
+workdir: /path/to/examples/2_placement_accuracy_for_a_bacterial_taxonomy/run
 
 # states used in analysis, either '0' for nucleotides or '1' for amino acids
 states: 0
 
 # which software to test, at least one of : epa, epang, pplacer, rappas, apples
-test_soft: [pplacer, appspam, apples]
+test_soft: [rappas,epang,pplacer]
 
 # read lengths to test
-read_length: [150]
+read_length: [300]
 
 
 ## IF "ACCURACY" IS EVALUATED
@@ -38,7 +38,7 @@ pruning_count: 5
 
 # number of identical runs to launch when evaluating RAM/CPU consumption
 # final measurements are reported as mean of the the runs.
-repeats: 3
+repeats: 1
 # defines queries source, one of the following:
 # user: query sequences are loaded from a file target by parameter "query_set"
 # simulate: queries are simulated from the input alignment (reserved for future upgrades, currently not implemented)
@@ -81,8 +81,8 @@ config_pplacer:
   #it uses a 2-step heuristic similar to EPA but called the "baseball" heuristic
   #(Matsen et al, 2012 ; doi: 10.1186/1471-2105-11-538)
   
-  max-strikes: [6]
-  strike-box: [3]
+  max-strikes: [1,3,6]
+  strike-box: [1,3,6]
   max-pitches: [40]
 
   #pre-masking, 1=yes, 0=no
@@ -128,12 +128,12 @@ config_rappas:
 
   #panel of k that is tested
   #integer in [3,16] (~8-10 recommended, >12 often produces too long computations)
-  k: [8]
+  k: [6,7,8]
 
   #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
   #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids
   #For DNA, values in [1.5,2.0] recommended. For amino acids, values in [5,15] recommended.
-  omega: [2.0]
+  omega: [1.75,2.0]
 
   #reduction setup, e.g. gap/non-gap ratio
   #above which a site of the input alignment
@@ -159,6 +159,7 @@ config_rappas:
   #currently, only raxml-ng can use multiple threads
   #
   #!!! warning, be sure to set arsoft VALUES as UPPER CASE !!!
+  arsoft: [RAXMLNG]
   arthreads: 1
 
   #maximum amount of memory available to rappas process
@@ -186,7 +187,7 @@ config_apples:
   # BE : k=1 (Beyer et al., 1974)
   #methods: ["OLS","FM","BE"]
   #!warning, be sure to set methods VALUES as UPPER CASE
-  methods: [FM]
+  methods: [OLS,FM,BE]
 
   #List of placement criterion to test.
   #Possible values are:
@@ -195,23 +196,34 @@ config_apples:
   # HYBRID : MLSE then ME
   #criteria: ["MLSE","ME","HYBRID"]
   #!warning, be sure to set criteria VALUES as UPPER CASE
-  criteria: [HYBRID]
+  criteria: [MLSE,ME,HYBRID]
 
 ### APP-SPAM
 ###############################
+
 config_appspam:
 
-  #appspam placements are based on distance computations between the query and the reference tree
+  #appspam calculates phylogenetic distances between all query and reference distances based on 
+  #filtered spaced word matches. The placement position is determined with different heuristics (mode).
+  #(Blanke, Morgenstern, 2020 ; https://doi.org/10.1101/2020.10.19.344986)
 
-  #List of assignment modes to test
-  assignmentmode: [BEST, LCA, PHYLOKMERS, APPLES, WEIGHTED, KMER, KMERLCA]
+  #List of placement heuristics to test.
+  #Possible values are:
+  # MINDIST   : Above reference with smallest phylogenetic distance.
+  # SPAMCOUNT : Above reference with most filtered spaced word matches.
+  # LCADIST   : LCA of two leaves with smallest phylogenetic distances.
+  # LCACOUNT  : LCA of two leaves with most filtered spaced word matches.
+  # APPLES    : Our calculated distances are used as input matrix for APPLES.
+  mode: [LCACOUNT]
 
-  #Filtering threshold. Number of dont care positions will be multiplied by this constant.
-  #All words below the threshold will not be considered
-  filteringthreshold: [0, 40]
+  #List of weights for the pattern to be tested (number of match positions).
+  #Largest values tend result in shorter running times. w between [8, 16] recommended, use 12 as default.
+  w: [8, 12]
 
-  #List of number of dont care positions to test.
-  d: [8, 12]
+  #Number of pattern from which spaced words are generated.
+  #At the moment 1 is heavily recommended. 
+  pattern: [1]
+
 
 ########################################################################################################################
 # OPTIONS COMMON TO ALL SOFTWARE

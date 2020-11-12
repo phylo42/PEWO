@@ -10,13 +10,13 @@ dataset_tree: examples/1_fast_test_of_accuracy_procedure/RAxML_bipartitions.150.
 
 # working directory
 #MUST be an absolute path (some software do not accept relative path)
-workdir: /home/matthias/Documents/test_PEWO_xmp1
+workdir: /path/to/examples/1_fast_test_of_accuracy_procedure/run
 
 # states used in analysis, either '0' for nucleotides or '1' for amino acids
 states: 0
 
 # which software to test, at least one of : epa, epang, pplacer, rappas, apples
-test_soft: [appspam,epang,pplacer,rappas]
+test_soft: [rappas,epang,pplacer]
 
 # read lengths to test
 read_length: [150]
@@ -28,7 +28,7 @@ read_length: [150]
 ### this section matters only when you run the "eval_accuracy.smk" workflow
 
 # number of random prunings to compute
-pruning_count: 14
+pruning_count: 2
 
 
 ## IF "RESOURCES" ARE EVALUATED
@@ -203,18 +203,26 @@ config_apples:
 
 config_appspam:
 
-  #appspam placements are based on distance computations between the query and the reference tree
+  #appspam calculates phylogenetic distances between all query and reference distances based on 
+  #filtered spaced word matches. The placement position is determined with different heuristics (mode).
+  #(Blanke, Morgenstern, 2020 ; https://doi.org/10.1101/2020.10.19.344986)
 
-  #List of assignment modes to test
-  assignmentmode: [BEST, LCA, PHYLOKMERS, APPLES, WEIGHTED, KMER, KMERLCA]
+  #List of placement heuristics to test.
+  #Possible values are:
+  # MINDIST   : Above reference with smallest phylogenetic distance.
+  # SPAMCOUNT : Above reference with most filtered spaced word matches.
+  # LCADIST   : LCA of two leaves with smallest phylogenetic distances.
+  # LCACOUNT  : LCA of two leaves with most filtered spaced word matches.
+  # APPLES    : Our calculated distances are used as input matrix for APPLES.
+  mode: [LCACOUNT]
 
-  #Filtering threshold. Number of dont care positions will be multiplied by this constant.
-  #All words below the threshold will not be considered
-  filteringthreshold: [0, 40]
+  #List of weights for the pattern to be tested (number of match positions).
+  #Largest values tend result in shorter running times. w between [8, 16] recommended, use 12 as default.
+  w: [8, 12]
 
-  #List of number of dont care positions to test.
-  d: [8, 12]
-
+  #Number of pattern from which spaced words are generated.
+  #At the moment 1 is heavily recommended. 
+  pattern: [1]
 
 ########################################################################################################################
 # OPTIONS COMMON TO ALL SOFTWARE
