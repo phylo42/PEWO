@@ -69,7 +69,7 @@ def get_experiment_dir_template(config: Dict, software: PlacementSoftware, **kwa
     elif software == PlacementSoftware.RAPPAS:
         return os.path.join(software_dir, input_set_dir_template, "red{red}_ar{ar}", "k{k}_o{o}")
     elif software == PlacementSoftware.APPSPAM:
-        return os.path.join(software_dir, input_set_dir_template, "mode{mode}_w{w}")
+        return os.path.join(software_dir, input_set_dir_template, "mode{mode}_w{w}_pattern{pattern}")
 
 
 def get_experiment_log_dir_template(config: Dict, software: Software) -> str:
@@ -161,7 +161,7 @@ def get_queryname_template(config: Dict, software: PlacementSoftware, **kwargs) 
     elif software == PlacementSoftware.RAPPAS:
         return get_common_queryname_template(config) + "_k{k}_o{o}_red{red}_ar{ar}"
     elif software == PlacementSoftware.APPSPAM:
-        return get_common_queryname_template(config) + "_mode{mode}_w{w}"
+        return get_common_queryname_template(config) + "_mode{mode}_w{w}_pattern{pattern}"
 
 
 def get_output_template_args(config: Dict, software: PlacementSoftware, **kwargs) -> Dict[str, Any]:
@@ -213,6 +213,7 @@ def get_output_template_args(config: Dict, software: PlacementSoftware, **kwargs
     elif software == PlacementSoftware.APPSPAM:
         template_args["w"] = config["config_appspam"]["w"]
         template_args["mode"] = config["config_appspam"]["mode"]
+        template_args["pattern"] = config["config_appspam"]["pattern"]
     else:
         raise RuntimeError("Unsupported software: " + software.value)
     return template_args

@@ -29,7 +29,7 @@ rappasplacement<-c("k","o","red","ar")
 apples<-c("meth","crit")
 hmmbuild<-NULL
 ansrec<-c("red","ar")
-appspam<-c("mode","w")
+appspam<-c("mode","w","pattern")
 
 
 soft_params<-list(

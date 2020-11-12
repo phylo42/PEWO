@@ -15,7 +15,7 @@ _working_dir = cfg.get_work_dir(config)
 _alignment_dir = get_software_dir(config, AlignmentSoftware.HMMER)
 
 _appspam_place_benchmark_template = get_benchmark_template(config, PlacementSoftware.APPSPAM,
-                                                          p="pruning", length="length", mode="assignmentmode", w="w",
+                                                          p="pruning", length="length", mode="mode", w="w", pattern="pattern",
                                                           rule_name="placement") if cfg.get_mode(config) == cfg.Mode.RESOURCES else ""
 
 appspam_benchmark_templates = [_appspam_place_benchmark_template]
@@ -44,5 +44,5 @@ rule placement_appspam:
     version: "1.0"
     shell:
         """
-        appspam -s {input.s} -q {input.q} -t {input.t} -g {wildcards.mode} -w {wildcards.w} -o {output.jplace} >& {log}
+        appspam -s {input.s} -q {input.q} -t {input.t} -m {wildcards.mode} -w {wildcards.w} -p {wildcards.pattern} -o {output.jplace} >& {log}
         """
