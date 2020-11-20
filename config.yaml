@@ -16,8 +16,8 @@ workdir: /home/nikolai/dev/pewo/run_accuracy1
 #states used in analysis, either '0' for nucleotides or '1' for amino acids
 states: 0
 
-#which software to test, at least one of : epa, epang, pplacer, rappas, apples
-test_soft: [epa, epang, rappas, pplacer]
+#which software to test, at least one of : epa, epang, pplacer, rappas, apples, appspam
+test_soft: [epa, epang, rappas, pplacer,appspam]
 
 # READ GENERATION
 # Read lengths to generate
