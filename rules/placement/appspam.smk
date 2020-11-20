@@ -2,7 +2,7 @@
 Module to operate placements with APPSPAM
 """
 
-__author__ = "Benjamin Linard, Nikolai Romashchenko"
+__author__ = "Matthias Blanke"
 __license__ = "MIT"
 
 import os
