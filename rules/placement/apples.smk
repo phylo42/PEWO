@@ -28,7 +28,6 @@ apples_benchmark_template_args = [get_output_template_args(config, PlacementSoft
 def _get_apples_input_reads(config) -> str:
     return os.path.join(_alignment_dir, "{pruning}", get_common_queryname_template(config) + ".fasta_refs")
 
-
 def _get_apples_input_queries(config) -> str:
     return os.path.join(_alignment_dir, "{pruning}", get_common_queryname_template(config) + ".fasta_queries")
 

@@ -17,6 +17,7 @@ class PlacementSoftware(Enum):
     APPLES = "apples"
     RAPPAS = "rappas"
     RAPPAS2 = "rappas2"
+    APPSPAM = "appspam"
 
     @staticmethod
     def get_by_value(value):
