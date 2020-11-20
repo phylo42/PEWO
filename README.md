@@ -113,11 +113,12 @@ Please read the [dedicated wiki page](https://github.com/phylo42/PEWO/wiki/IV.-T
 * **EPA-ng**  (Barbera et al, 2019)
 * **RAPPAS**  (Linard et al, 2019)
 * **APPLES**  (Balaban et al, 2019)
+* **App-SpaM**  (Blanke et al, [preprint](https://doi.org/10.1101/2020.10.19.344986))
+
 
 <!-- ER changes -->
 PEWO can easily be extended to integrate new tools for phylogenetic placement, and new tools are welcome. 
-As of March 2020, these tools are the main software for phylogenetic placement. To the best of your knowledge, no other implementation of phylogenetic placement algorithms are available (with a conda package). 
-<!-- Currently (March 2020) there are no other implementations of phylogenetic placement algorithms.  -->
+As of November 2020, these tools are the main software for phylogenetic placement. To the best of your knowledge, no other implementation of phylogenetic placement algorithms are available (with a conda package). 
 
 If you implement a new method, you are welcome to contact us for requesting future support. You can also implement a new snakemake module and contribute to PEWO via pull requests (see the [documentation](https://github.com/phylo42/PEWO/wiki/Developer-instructions) for contribution guidelines).
 

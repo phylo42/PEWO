@@ -11,6 +11,13 @@ run
 *.csv
 *.tsv
 #directories built by demos
-demos/HIV_accuracy_test/run
-demos/16SrRNA_accuracy_test/run
-demos/16SrRNA_resource_test/run
+examples/1_fast_test_of_accuracy_procedure/run
+examples/2_placement_accuracy_for_a_bacterial_taxonomy/run
+examples/3_placement_accuracy_for_HIV_genomes/run
+examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_12S/run
+examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_16S/run
+examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_cob/run
+examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_cox1/run
+examples/5_CPU_RAM_requirements_evaluation/run
+examples/6_placement_likelihood/run
+
