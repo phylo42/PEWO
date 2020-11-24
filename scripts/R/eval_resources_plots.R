@@ -29,6 +29,8 @@ rappasplacement<-c("k","o","red","ar")
 apples<-c("meth","crit")
 hmmbuild<-NULL
 ansrec<-c("red","ar")
+appspam<-c("mode","w","pattern")
+
 
 soft_params<-list(
                     "epa-placement"=epa,
@@ -40,6 +42,7 @@ soft_params<-list(
                     "rappas-dbbuild"=rappasdbbuild,
                     "rappas-placement"=rappasplacement,
                     "apples-placement"=apples,
+                    "appspam-placement"=appspam,
                     "hmm-align"=hmmbuild,
                     "ansrec"=ansrec
                 )
@@ -284,6 +287,7 @@ analyses["epang_h3"]<-c("hmmer-align", "epang-h3-placement")
 analyses["epang_h4"]<-c("hmmer-align", "epang-h4-placement")
 analyses["pplacer"]<-c("hmmer-align", "pplacer-placement")
 analyses["apples"]<-c("hmmer-align", "apples-placement")
+analyses["appspam"]<-c("appspam-placement")
 analyses["rappas"]<-c("ansrec", "rappas-dbbuild","rappas-placement")
 
 results<-list()

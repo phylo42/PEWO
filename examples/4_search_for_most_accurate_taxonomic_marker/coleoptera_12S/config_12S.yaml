@@ -198,6 +198,32 @@ config_apples:
   #!warning, be sure to set criteria VALUES as UPPER CASE
   criteria: [MLSE]
 
+### APP-SPAM
+###############################
+
+config_appspam:
+
+  #appspam calculates phylogenetic distances between all query and reference distances based on 
+  #filtered spaced word matches. The placement position is determined with different heuristics (mode).
+  #(Blanke, Morgenstern, 2020 ; https://doi.org/10.1101/2020.10.19.344986)
+
+  #List of placement heuristics to test.
+  #Possible values are:
+  # MINDIST   : Above reference with smallest phylogenetic distance.
+  # SPAMCOUNT : Above reference with most filtered spaced word matches.
+  # LCADIST   : LCA of two leaves with smallest phylogenetic distances.
+  # LCACOUNT  : LCA of two leaves with most filtered spaced word matches.
+  # APPLES    : Our calculated distances are used as input matrix for APPLES.
+  mode: [LCACOUNT]
+
+  #List of weights for the pattern to be tested (number of match positions).
+  #Largest values tend result in shorter running times. w between [8, 16] recommended, use 12 as default.
+  w: [8, 12]
+
+  #Number of pattern from which spaced words are generated.
+  #At the moment 1 is heavily recommended. 
+  pattern: [1]
+
 
 ########################################################################################################################
 # OPTIONS COMMON TO ALL SOFTWARE
