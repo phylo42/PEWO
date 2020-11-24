@@ -5,6 +5,7 @@ logs
 run
 #snakemake temporary files
 .snakemake
+__pycache__
 #images/results built by workflows
 *.svg
 *.pdf
