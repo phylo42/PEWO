@@ -9,6 +9,7 @@ __license__ = "MIT"
 
 import os
 import pewo.config as cfg
+import pewo.alignment.generate_reads as gr
 from typing import Dict
 
 
@@ -77,6 +78,7 @@ rule operate_pruning:
                 "{params.count} {params.length} 0 1 {params.states} "
                 "&> {log}"
             )
+            gr.change_reads_to_art(config);
         else:
             shell(
                 "mkdir -p {params.wd}/A {params.wd}/T {params.wd}/G {params.wd}/R;"
