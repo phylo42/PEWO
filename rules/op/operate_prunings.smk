@@ -78,7 +78,8 @@ rule operate_pruning:
                 "{params.count} {params.length} 0 1 {params.states} "
                 "&> {log}"
             )
-            gr.change_reads_to_art(config);
+            if config["simulate_ART"]:
+                gr.change_reads_to_art(config);
         else:
             shell(
                 "mkdir -p {params.wd}/A {params.wd}/T {params.wd}/G {params.wd}/R;"
