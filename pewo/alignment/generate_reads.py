@@ -1,17 +1,15 @@
 #!/usr/bin/env python
 """
-Split an alignment into queries-only and reference-only sub-alignments
-Usage: split_hmm_alignments.py queries.fasta alignment.fasta
+Generate reads with ART.
 """
 
-__author__ = "Benjamin Linard, Nikolai Romashchenko"
+__author__ = "Matthias Blanke"
 __license__ = "MIT"
 
 
 import sys
 import os
 import subprocess
-import time
 import random
 from Bio import SeqIO
 from typing import Dict
