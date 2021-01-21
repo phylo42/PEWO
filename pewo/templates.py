@@ -164,15 +164,12 @@ def get_queryname_template(config: Dict, software: PlacementSoftware, **kwargs) 
         return get_common_queryname_template(config) + "_meth{meth}_crit{crit}"
     elif software == PlacementSoftware.RAPPAS:
         return get_common_queryname_template(config) + "_k{k}_o{o}_red{red}_ar{ar}"
-<<<<<<< HEAD
     elif software == PlacementSoftware.RAPPAS2:
         return get_common_queryname_template(config) + "_k{k}_o{o}_red{red}_ar{ar}_mu{mu}_filter{filter}_m{model}_f{f}"
-    else:
-        raise RuntimeError(f"Unsupported software: {software}")
-=======
     elif software == PlacementSoftware.APPSPAM:
         return get_common_queryname_template(config) + "_mode{mode}_w{w}_pattern{pattern}"
->>>>>>> 40531927f9e7ee5d79495e8831e1c800739432c8
+    else:
+        raise RuntimeError(f"Unsupported software: {software}")
 
 
 def get_output_template_args(config: Dict, software: PlacementSoftware, **kwargs) -> Dict[str, Any]:
@@ -221,7 +218,6 @@ def get_output_template_args(config: Dict, software: PlacementSoftware, **kwargs
         template_args["o"] = config["config_rappas"]["omega"]
         template_args["red"] = config["config_rappas"]["reduction"]
         template_args["ar"] = config["config_rappas"]["arsoft"]
-<<<<<<< HEAD
     elif software == PlacementSoftware.RAPPAS2:
         template_args["k"] = config["config_rappas2"]["k"]
         template_args["o"] = config["config_rappas2"]["omega"]
@@ -231,12 +227,10 @@ def get_output_template_args(config: Dict, software: PlacementSoftware, **kwargs
         template_args["filter"] = config["config_rappas2"]["filter"]
         template_args["model"] = config["config_rappas2"]["model"]
         template_args["f"] = config["config_rappas2"]["f"]
-=======
     elif software == PlacementSoftware.APPSPAM:
         template_args["w"] = config["config_appspam"]["w"]
         template_args["mode"] = config["config_appspam"]["mode"]
         template_args["pattern"] = config["config_appspam"]["pattern"]
->>>>>>> 40531927f9e7ee5d79495e8831e1c800739432c8
     else:
         raise RuntimeError(f"Unsupported software: {software}")
     return template_args
