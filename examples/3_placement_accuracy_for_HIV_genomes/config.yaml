@@ -104,10 +104,10 @@ config_epang:
 
   h1:
     #value in ]0,1], value close to 1 recommended by authors
-    g: [0.999, 0.99999]  
+    g: [0.9, 0.999, 0.99999]  
   h2:
     #values in ]0,1], higher values increase accuracy but analysis is slower
-    G: [0.01, 0.1]       
+    G: [0.01, 0.1, 0.5]       
   h3:
     options: none       #reserved if any option appears in future versions
   h4:
@@ -133,7 +133,7 @@ config_rappas:
   #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
   #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids
   #For DNA, values in [1.5,2.0] recommended. For amino acids, values in [5,15] recommended.
-  omega: [2.0]
+  omega: [1.5,2.0]
 
   #reduction setup, e.g. gap/non-gap ratio
   #above which a site of the input alignment
@@ -198,6 +198,31 @@ config_apples:
   #!warning, be sure to set criteria VALUES as UPPER CASE
   criteria: [MLSE]
 
+### APP-SPAM
+###############################
+
+config_appspam:
+
+  #appspam calculates phylogenetic distances between all query and reference distances based on 
+  #filtered spaced word matches. The placement position is determined with different heuristics (mode).
+  #(Blanke, Morgenstern, 2020 ; https://doi.org/10.1101/2020.10.19.344986)
+
+  #List of placement heuristics to test.
+  #Possible values are:
+  # MINDIST   : Above reference with smallest phylogenetic distance.
+  # SPAMCOUNT : Above reference with most filtered spaced word matches.
+  # LCADIST   : LCA of two leaves with smallest phylogenetic distances.
+  # LCACOUNT  : LCA of two leaves with most filtered spaced word matches.
+  # APPLES    : Our calculated distances are used as input matrix for APPLES.
+  mode: [LCACOUNT]
+
+  #List of weights for the pattern to be tested (number of match positions).
+  #Largest values tend result in shorter running times. w between [8, 16] recommended, use 12 as default.
+  w: [8, 12]
+
+  #Number of pattern from which spaced words are generated.
+  #At the moment 1 is heavily recommended. 
+  pattern: [1]
 
 ########################################################################################################################
 # OPTIONS COMMON TO ALL SOFTWARE

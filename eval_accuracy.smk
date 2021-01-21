@@ -51,6 +51,8 @@ include:
 #distance-based placements, e.g.: apples
 include:
     "rules/placement/apples.smk"
+include:
+    "rules/placement/appspam.smk"
 #results evaluation and plots
 include:
     "rules/op/operate_nodedistance.smk"

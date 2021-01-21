@@ -63,33 +63,33 @@ snakemake -np \
 --configfile examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_cob/config_cob.yaml
 ```
 
-Execute workflow for 12S gene, using 2 CPU cores.
+Execute workflow for 12S gene, using 2 CPU cores and 8Gb of RAM.
 ```
-snakemake -p --cores 2 \
+snakemake -p --cores 2 --resources mem_mb=8000 \
 --snakefile eval_accuracy.smk \
 --config workdir=`pwd`/examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_12S/run \
 --configfile examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_12S/config_12S.yaml
 ```
 
-Execute workflow for 16S gene, using 2 CPU cores.
+Execute workflow for 16S gene, using 2 CPU cores and 8Gb of RAM.
 ```
-snakemake -p --cores 2 \
+snakemake -p --cores 2 --resources mem_mb=8000 \
 --snakefile eval_accuracy.smk \
 --config workdir=`pwd`/examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_16S/run  \
 --configfile examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_16S/config_16S.yaml
 ```
 
-Execute workflow for cox1 gene, using 2 CPU cores.
+Execute workflow for cox1 gene, using 2 CPU cores and 8Gb of RAM.
 ```
-snakemake -p --cores 2 \
+snakemake -p --cores 2 --resources mem_mb=8000 \
 --snakefile eval_accuracy.smk \
 --config workdir=`pwd`/examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_cox1/run  \
 --configfile examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_cox1/config_cox1.yaml
 ```
 
-Execute workflow for cytb gene, using 2 CPU cores.
+Execute workflow for cytb gene, using 2 CPU cores and 8Gb of RAM.
 ```
-snakemake -p --cores 2 \
+snakemake -p --cores 2 --resources mem_mb=8000 \
 --snakefile eval_accuracy.smk \
 --config workdir=`pwd`/examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_cob/run  \
 --configfile examples/4_search_for_most_accurate_taxonomic_marker/coleoptera_cob/config_cob.yaml

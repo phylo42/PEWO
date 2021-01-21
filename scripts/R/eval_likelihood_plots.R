@@ -27,8 +27,9 @@ pplacer<-c("ms","sb","mp")
 rappas<-c("k","o","red","ar")
 rappas2<-c("k","o","red","ar","mu")
 apples<-c("meth","crit")
+appspam<-c("mode","w")
 
-soft_params<-list(epa=epa,epang_h1=epang_h1,epang_h2=epang_h2,epang_h3=epang_h3,epang_h4=epang_h4,pplacer=pplacer,rappas=rappas,rappas2=rappas2,apples=apples)
+soft_params<-list(epa=epa,epang_h1=epang_h1,epang_h2=epang_h2,epang_h3=epang_h3,epang_h4=epang_h4,pplacer=pplacer,rappas=rappas,rappas2=rappas2,apples=apples,appspam=appspam)
 
 
 #load data

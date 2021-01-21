@@ -73,6 +73,7 @@ rule db_build_in_ram_rappas:
     log:
         get_log_template(config, PlacementSoftware.RAPPAS)
     version: "1.00"
+    resources: mem_mb = 1000*config["config_rappas"]["memory"]
     params:
         states = ["nucl"] if config["states"]==0 else ["amino"],
 
