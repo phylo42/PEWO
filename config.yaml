@@ -8,22 +8,26 @@
 
 
 # PAC
-# D652
-dataset_align: /home/nikolai/dev/rappas/data/test/D652/bv_refs_aln_stripped_99.5.fasta
-dataset_tree: /home/nikolai/dev/rappas/data/test/D652/RAxML_result.bv_refs_aln
-
-# D500
-#dataset_align: /home/nikolai/dev/rappas/data/DATASETS/EPA_datasets/500.phy.fasta
-#dataset_tree: /home/nikolai/dev/rappas/data/DATASETS/EPA_datasets/RAxML_result.optimization500
-
-# D155 (full virus genome, 9k positions, 2% gap rate
-#dataset_align: /home/nikolai/dev/rappas/data/test/D155/reference.fasta
-#dataset_tree: /home/nikolai/dev/rappas/data/test/D155/tree.newick
 
 # D140 (amino acids)
 #dataset_align: /home/nikolai/dev/rappas/data/test/D140/140.phy.fasta
 #dataset_tree: /home/nikolai/dev/rappas/data/test/D140/RAxML_bipartitions.140.BEST.WITH
 
+# D155 (full virus genome, 9k positions, 2% gap rate
+#dataset_align: /home/nikolai/dev/rappas/data/test/D155/reference.fasta
+#dataset_tree: /home/nikolai/dev/rappas/data/test/D155/tree.newick
+
+# D218
+#dataset_align: /home/nikolai/dev/rappas/data/test/D218/reference.fasta
+#dataset_tree: /home/nikolai/dev/rappas/data/test/D218/tree.newick
+
+# D500
+#dataset_align: /home/nikolai/dev/rappas/data/DATASETS/EPA_datasets/500.phy.fasta
+#dataset_tree: /home/nikolai/dev/rappas/data/DATASETS/EPA_datasets/RAxML_result.optimization500
+
+# D652
+dataset_align: /home/nikolai/dev/rappas/data/test/D652/bv_refs_aln_stripped_99.5.fasta
+dataset_tree: /home/nikolai/dev/rappas/data/test/D652/RAxML_result.bv_refs_aln
 
 # LAC
 #dataset_align: /home/nikolai/dev/pewo/bernoulli_652/
@@ -31,18 +35,23 @@ dataset_tree: /home/nikolai/dev/rappas/data/test/D652/RAxML_result.bv_refs_aln
 
 
 #working directory
-#workdir: /home/nikolai/dev/pewo/bernoulli_652
-#workdir: /home/nikolai/dev/pewo/bernoulli_500
-#workdir: /home/nikolai/dev/pewo/bernoulli_155
 #workdir: /home/nikolai/dev/pewo/D140
+#workdir: /home/nikolai/dev/pewo/D218
+#workdir: /home/nikolai/dev/pewo/D500
 workdir: /home/nikolai/dev/pewo/D652
+#workdir: /home/nikolai/dev/pewo/bernoulli_500
+#workdir: /home/nikolai/dev/pewo/bernoulli_652
+#workdir: /home/nikolai/dev/pewo/bernoulli_155
+
+
+
 
 #states used in analysis, either '0' for nucleotides or '1' for amino acids
 states: 0
 
 #which software to test, at least one of : epa, epang, pplacer, rappas, apples
-#test_soft: [epa, epang, rappas, pplacer]
-test_soft: [rappas]
+test_soft: [epang, rappas, rappas2]
+#test_soft: [rappas]
 #test_soft: [rappas2]
 
 # READ GENERATION
@@ -124,7 +133,7 @@ config_epang:
   # h3: heuristic equivalent to pplacer defaults, fast
   # h4: no heuristic, very very slow but should produce the best accuracy
   #(Barbera et al, 2019 ; doi: 10.1093/sysbio/syy054)
-  heuristics: ["h1", "h2", "h3", "h4"]
+  heuristics: ["h1"]
 
   #heuristic-specific parameters can be setup in following lines
   h1:
@@ -151,7 +160,7 @@ config_rappas:
 
   #panel of k that is tested
   #integer in [2,16] (8~10 recommended, >12 often produces too long computations)
-  k: [3]
+  k: [6, 8]
 
   #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
   #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids
@@ -182,18 +191,20 @@ config_rappas:
   #currently, only raxml-ng can use multiple threads
   #
   #!!! warning, be sure to set arsoft VALUES as UPPER CASE !!!
-  arsoft: [PHYML,RAXMLNG]
+  #arsoft: [PHYML,RAXMLNG]
+  arsoft: [PHYML]
   arthreads: 2
 
   #maximum amount of memory available to rappas process
   #this has no influence on placement accuracy but it will impact "resource" evaluation
   #in particular, testing very large trees will be faster with more memory (due to JVM garbage collector behaviour)
   #set as an integer value, which represents the maximum amount of Gb allocatable to the JVM (memory: 8 => 8 Gb of RAM)
+
   memory: 8
 
 
 config_rappas2:
-  k: [8]
+  k: [6, 8, 10]
   omega: [1.5]
   reduction: [0.99]
   arsoft: [PHYML]
@@ -207,7 +218,8 @@ config_rappas2:
   #model: ["BERNOULLI"]
 
   f: 1.0
-  model: ["DEFAULT", "MULTINOMIAL"]
+  #model: ["DEFAULT", "MULTINOMIAL"]
+  model: ["DEFAULT"]
 
 ### APPLES
 ###############################

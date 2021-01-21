@@ -20,47 +20,6 @@ _rappas_experiment_dir = get_experiment_dir_template(config, PlacementSoftware.R
 _rappas_experiment_parent = Path(_rappas_experiment_dir).parent
 
 
-rule db_build_rappas_ar:
-    input:
-        a = os.path.join(_working_dir, "A", "{pruning}.align"),
-        t = os.path.join(_working_dir, "T", "{pruning}.tree")
-        #ar_seq_txt = os.path.join(_rappas_experiment_parent, "AR", "extended_align.phylip_phyml_ancestral_seq.txt")
-    output:
-        os.path.join(Path(_rappas_experiment_dir).parent, "AR", "extended_align.phylip_phyml_ancestral_seq.txt"),
-        os.path.join(Path(_rappas_experiment_dir).parent, "AR", "ARtree_id_mapping.tsv"),
-        os.path.join(Path(_rappas_experiment_dir).parent, "extended_trees", "extended_align.fasta"),
-        os.path.join(Path(_rappas_experiment_dir).parent, "extended_trees", "extended_align.phylip"),
-        os.path.join(Path(_rappas_experiment_dir).parent, "extended_trees", "extended_tree_withBL.tree"),
-        os.path.join(Path(_rappas_experiment_dir).parent, "extended_trees", "extended_tree_withBL_withoutInterLabels.tree"),
-        extended_tree_node_mapping = os.path.join(Path(_rappas_experiment_dir).parent, "extended_trees", "extended_tree_node_mapping.tsv")
-        
-    log:
-        os.path.join(_rappas_experiment_parent, "db_build_aronly.log")
-    version: "1.00"
-    params:
-        model = select_model_phymlstyle(),
-        ardir = os.path.join(_rappas_experiment_parent, "AR"),
-
-        # run os.path.join to force snakemake substituing the wildcards
-        workdir = os.path.join(_rappas_experiment_parent, ""),
-        arthreads = config["config_rappas2"]["arthreads"]
-    run:
-        shell(
-            "rappas2.py build " +
-            "-b $(which phyml) " +
-            "-m {params.model} "
-            "-t {input.t} " +
-            "-r {input.a} " +
-            "-w {params.workdir} " +
-            "--threads {params.arthreads} " +
-            "--ratio-reduction {wildcards.red} " +
-            "--aronly " + 
-            "--use-unrooted  &> {log} "
-        )
-
-ruleorder: db_build_rappas_ar > compute_ar_inputs
-ruleorder: db_build_rappas_ar > ar_phyml
-
 rule db_build_rappas2:
     """
     Build a RAPPAS database in RAM.
@@ -69,11 +28,7 @@ rule db_build_rappas2:
     input:
         a = os.path.join(_working_dir, "A", "{pruning}.align"),
         t = os.path.join(_working_dir, "T", "{pruning}.tree"),
-        ar = lambda wildcards: get_ar_output_templates(config, wildcards.ar),
-        extended_tree = os.path.join(Path(_rappas_experiment_dir).parent,"extended_trees", "extended_tree_withBL.tree"),
-        extended_tree_node_mapping = os.path.join(Path(_rappas_experiment_dir).parent, "extended_trees", "extended_tree_node_mapping.tsv"),
-        ar_seq_txt = os.path.join(Path(_rappas_experiment_dir).parent, "AR", "extended_align.phylip_phyml_ancestral_seq.txt"),
-        artree_id_mapping = os.path.join(Path(_rappas_experiment_dir).parent, "AR", "ARtree_id_mapping.tsv")
+        ar = lambda wildcards: get_ar_output_templates(config, wildcards.ar)
     output:
         database = os.path.join(_rappas2_experiment_dir, "DB_k{k}_o{o}.rps")
     log:
@@ -88,7 +43,7 @@ rule db_build_rappas2:
     run:
         rappas_model = "--multinomial " if wildcards.model == "MULTINOMIAL" else ""
         shell(
-            "rappas2.py build " +
+            "xpas.py build " +
             "-b $(which {params.arbin}) " +
             "-k {wildcards.k} " +
             "--omega {wildcards.o} " +
@@ -124,7 +79,6 @@ rule placement_rappas2:
             "-i {input.database} " + \
             "-o {params.workdir} " + \
             "--threads 1 " + \
-            "-m {wildcards.model} " + \
             "{input.r} " + \
             "&> {log} "
         query_wildcard = "{wildcards.query}" if cfg.get_mode(config) == cfg.Mode.LIKELIHOOD else "{wildcards.pruning}"
