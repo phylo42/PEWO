@@ -38,10 +38,12 @@ dataset_tree: /home/nikolai/dev/rappas/data/test/D652/RAxML_result.bv_refs_aln
 #workdir: /home/nikolai/dev/pewo/D140
 #workdir: /home/nikolai/dev/pewo/D218
 #workdir: /home/nikolai/dev/pewo/D500
-workdir: /home/nikolai/dev/pewo/D652
+#workdir: /home/nikolai/dev/pewo/D652
 #workdir: /home/nikolai/dev/pewo/bernoulli_500
 #workdir: /home/nikolai/dev/pewo/bernoulli_652
 #workdir: /home/nikolai/dev/pewo/bernoulli_155
+
+workdir: /home/nikolai/dev/pewo/debug_filters/D652/
 
 
 
@@ -50,13 +52,14 @@ workdir: /home/nikolai/dev/pewo/D652
 states: 0
 
 #which software to test, at least one of : epa, epang, pplacer, rappas, rappas2, apples, appspam
-test_soft: [epa, epang, rappas, rappas2, pplacer, appspam]
+#test_soft: [epa, rappas, rappas2]
+test_soft: [epa, rappas2]
 
 # READ GENERATION
 # Read lengths to generate
 read_length: [300]
 # Number of random prunings to compute
-pruning_count: 10
+pruning_count: 25
 
 
 ## IF "ACCURACY" IS EVALUATED
@@ -158,9 +161,9 @@ config_rappas:
 
   #panel of k that is tested
   #integer in [2,16] (8~10 recommended, >12 often produces too long computations)
-  k: [6, 8]
+  k: [7,8,9]
 
-  #panel of omega that is tested, rappas probability threshold is Thr=(omega/#states)^k
+  #panel of omega that is tested, rappas probability threshold is Thr=(omeIccoydHutgiUda7ga/#states)^k
   #integer in ]0,#states] with #states=4 for nucleotides and 20 for amino acids
   #For DNA, values in [1,2] recommended. For amino acids, values in [5,15] recommended.
   omega: [1.5]
@@ -204,15 +207,17 @@ config_rappas:
 ###############################
 
 config_rappas2:
-  k: [6, 8, 10]
+  k: [7,8,9]
   omega: [1.5]
   reduction: [0.99]
   arsoft: [PHYML]
   arthreads: 1
-  filter: "NO-FILTER"
+  #filter: "NO-FILTER"
+  filter: ["ENTROPY", "RANDOM"]
 
-  #mu: [0.0625, 0.125, 0.25, 0.5]
-  mu: [1.0]
+  mu: [0.0625, 0.125, 0.25, 0.5, 1.0]
+  #mu: [0.1]
+  #mu: [1.0]
 
   #f: [0.01, 0.25, 0.5, 0.75, 0.99]
   #model: ["BERNOULLI"]

@@ -37,8 +37,8 @@ include:
 #include:
 #    "rules/placement/rappas_dbinram.smk"
 include:
-    "rules/placement/rappas2.smk"
-    #"rules/placement/rappas2-old.smk"
+    #"rules/placement/rappas2.smk"
+    "rules/placement/rappas2-old-nobug.smk"
 #alignment (for distance-based and ML approaches)
 include:
     "rules/alignment/hmmer.smk"
