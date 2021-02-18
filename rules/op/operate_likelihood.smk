@@ -178,6 +178,8 @@ rule extend_trees_rappas2:
          tree=config["dataset_tree"],
     output:
           ext_tree=get_output_template(config, PlacementSoftware.RAPPAS2, "tree")
+    log:
+        get_output_template(config, PlacementSoftware.RAPPAS2, "ext_tree.log")
     run:
         make_extended_tree(input.tree, output.ext_tree, input.jplace)
 
