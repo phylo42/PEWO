@@ -326,6 +326,8 @@ rule calculate_likelihood_rappas2:
          tree=get_output_template(config, PlacementSoftware.RAPPAS2, "tree")
     output:
           csv=get_output_template(config, PlacementSoftware.RAPPAS2, "csv")
+    log:
+        get_output_template(config, PlacementSoftware.RAPPAS2, "calc_ll.log")
     params:
           workdir=cfg.get_work_dir(config),
           software=PlacementSoftware.RAPPAS2.value,

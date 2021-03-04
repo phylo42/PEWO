@@ -8,6 +8,11 @@ from typing import List
 
 
 def combine_csv(input_files: List[str], output_file: str) -> None:
-    df = pd.concat([pd.read_csv(f, delimiter=";") for f in input_files])
+    l = []
+    for f in input_files:
+        print(f)
+        l.append(pd.read_csv(f, delimiter=";"))
+
+    df = pd.concat(l)
     df.to_csv(output_file, sep=";", index=False)
 
