@@ -41,19 +41,19 @@ rule db_build_rappas2:
         arbin = lambda wildcards: get_ar_binary(config, wildcards.ar),
         arthreads = config["config_rappas2"]["arthreads"]
     run:
-        rappas_model = "--multinomial " if wildcards.model == "MULTINOMIAL" else ""
+        score_model = wildcards.score_model.lower() if wildcards.score_model else "max"
+        filter = wildcards.filter.lower() if wildcards.filter else "no-filter"
         shell(
             "xpas.py build " +
             "-b $(which {params.arbin}) " +
             "-k {wildcards.k} " +
             "--omega {wildcards.o} " +
-            "--filter " + "{wildcards.filter} ".lower() +
             "-u {wildcards.mu} " +
             "-m {params.model} "
             "-t {input.t} " +
             "-r {input.a} " +
-            "-f {wildcards.f} " +
-            rappas_model +
+            "--filter {filter} " +1
+            "--score-model {score_model} "+
             "-w {params.workdir} " +
             "--threads {params.arthreads} " +
             "--ardir {params.ardir} " +
@@ -85,5 +85,5 @@ rule placement_rappas2:
         move_command = "mv {params.workdir}/placements_" + query_wildcard + "_r{wildcards.length}.fasta.jplace " + \
                        "{params.workdir}/" + \
                        query_wildcard + \
-                       "_r{wildcards.length}_k{wildcards.k}_o{wildcards.o}_red{wildcards.red}_ar{wildcards.ar}_mu{wildcards.mu}_filter{wildcards.filter}_m{wildcards.model}_f{wildcards.f}_rappas2.jplace"
+                       "_r{wildcards.length}_k{wildcards.k}_o{wildcards.o}_red{wildcards.red}_ar{wildcards.ar}_mu{wildcards.mu}_filter{wildcards.filter}_sm{wildcards.score_model}_rappas2.jplace"
         shell(";".join(_ for _ in [rappas_command, move_command]))

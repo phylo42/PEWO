@@ -26,12 +26,12 @@
 #dataset_tree: /home/nikolai/dev/rappas/data/DATASETS/EPA_datasets/RAxML_result.optimization500
 
 # D652
-dataset_align: /home/nikolai/dev/rappas/data/test/D652/bv_refs_aln_stripped_99.5.fasta
-dataset_tree: /home/nikolai/dev/rappas/data/test/D652/RAxML_result.bv_refs_aln
+#dataset_align: /home/nikolai/dev/rappas/data/test/D652/bv_refs_aln_stripped_99.5.fasta
+#dataset_tree: /home/nikolai/dev/rappas/data/test/D652/RAxML_result.bv_refs_aln
 
 # LAC
-#dataset_align: /home/nikolai/dev/pewo/bernoulli_652/
-#dataset_tree: /home/nikolai/dev/rappas/data/test/D652/RAxML_result.bv_refs_aln
+dataset_align: /home/nikolai/dev/test/D652
+dataset_tree: /home/nikolai/dev/rappas/data/test/D652/RAxML_result.bv_refs_aln
 
 
 #working directory
@@ -42,8 +42,7 @@ dataset_tree: /home/nikolai/dev/rappas/data/test/D652/RAxML_result.bv_refs_aln
 #workdir: /home/nikolai/dev/pewo/bernoulli_500
 #workdir: /home/nikolai/dev/pewo/bernoulli_652
 #workdir: /home/nikolai/dev/pewo/bernoulli_155
-
-workdir: /home/nikolai/dev/pewo/debug_filters/D652/
+#workdir: /home/nikolai/dev/pewo/debug_filters/D652/
 
 
 

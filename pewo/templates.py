@@ -69,7 +69,8 @@ def get_experiment_dir_template(config: Dict, software: PlacementSoftware, **kwa
     elif software == PlacementSoftware.RAPPAS:
         return os.path.join(software_dir, input_set_dir_template, "red{red}_ar{ar}", "k{k}_o{o}")
     elif software == PlacementSoftware.RAPPAS2:
-        return os.path.join(software_dir, input_set_dir_template, "red{red}_ar{ar}", "k{k}_o{o}_mu{mu}_filter{filter}_m{model}_f{f}")
+        return os.path.join(software_dir, input_set_dir_template, "red{red}_ar{ar}",
+                            "k{k}_o{o}_mu{mu}_filter{filter}_sm{score_model}")
     elif software == PlacementSoftware.APPSPAM:
         return os.path.join(software_dir, input_set_dir_template, "mode{mode}_w{w}_pattern{pattern}")
     else:
@@ -165,7 +166,8 @@ def get_queryname_template(config: Dict, software: PlacementSoftware, **kwargs) 
     elif software == PlacementSoftware.RAPPAS:
         return get_common_queryname_template(config) + "_k{k}_o{o}_red{red}_ar{ar}"
     elif software == PlacementSoftware.RAPPAS2:
-        return get_common_queryname_template(config) + "_k{k}_o{o}_red{red}_ar{ar}_mu{mu}_filter{filter}_m{model}_f{f}"
+        return get_common_queryname_template(config) + \
+               "_k{k}_o{o}_red{red}_ar{ar}_mu{mu}_filter{filter}_sm{score_model}"
     elif software == PlacementSoftware.APPSPAM:
         return get_common_queryname_template(config) + "_mode{mode}_w{w}_pattern{pattern}"
     else:
@@ -225,8 +227,7 @@ def get_output_template_args(config: Dict, software: PlacementSoftware, **kwargs
         template_args["ar"] = config["config_rappas2"]["arsoft"]
         template_args["mu"] = config["config_rappas2"]["mu"]
         template_args["filter"] = config["config_rappas2"]["filter"]
-        template_args["model"] = config["config_rappas2"]["model"]
-        template_args["f"] = config["config_rappas2"]["f"]
+        template_args["score_model"] = config["config_rappas2"]["score_model"]
     elif software == PlacementSoftware.APPSPAM:
         template_args["w"] = config["config_appspam"]["w"]
         template_args["mode"] = config["config_appspam"]["mode"]

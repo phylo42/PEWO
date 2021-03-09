@@ -25,7 +25,7 @@ epang_h3<-c()
 epang_h4<-c()
 pplacer<-c("ms","sb","mp")
 rappas<-c("k","o","red","ar")
-rappas2<-c("k","o","red","ar", "m", "f")
+rappas2<-c("k","o","red","ar", "filter", "sm")
 apples<-c("meth","crit")
 appspam<-c("mode","w","pattern")
 
