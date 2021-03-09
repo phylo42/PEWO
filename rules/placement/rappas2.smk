@@ -52,7 +52,7 @@ rule db_build_rappas2:
             "-m {params.model} "
             "-t {input.t} " +
             "-r {input.a} " +
-            "--filter {filter} " +1
+            "--filter {filter} " +
             "--score-model {score_model} "+
             "-w {params.workdir} " +
             "--threads {params.arthreads} " +
