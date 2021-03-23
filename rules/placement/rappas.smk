@@ -59,6 +59,14 @@ def get_rappas_input_reads(pruning):
                 for l in config["read_length"]]
 
 
+def join_query_files(input_reads):
+    """
+    RAPPAS takes input reads as a comma-separated list: -q file1,file2,...,fileN
+    This function takes a list of input queries and joins them
+    """
+    return ",".join(read for read in input_reads)
+
+
 # model parameters do not need to be passed, as they are useful only at AR
 rule db_build_rappas:
     """
@@ -108,6 +116,7 @@ rule placement_rappas:
         minlwr = config["minlwr"]
     run:
         memory = config['config_rappas']['memory']
+        input_reads_joined = join_query_files(input.r)
         rappas_command = "java -Xms2G " + \
                          f"-Xmx{memory}G " + \
                          "-jar $(which RAPPAS.jar) " + \
@@ -116,7 +125,7 @@ rule placement_rappas:
                          "-v 1 " + \
                          "-p p " + \
                          "-d {input.database} " + \
-                         "-q {input.r} " + \
+                         "-q " + input_reads_joined + " " \
                          "-w {params.workdir} " + \
                          "&> {log}"
         query_wildcard = "{wildcards.query}" if cfg.get_mode(config) == cfg.Mode.LIKELIHOOD else "{wildcards.pruning}"
