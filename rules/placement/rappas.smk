@@ -117,8 +117,7 @@ rule placement_rappas:
     run:
         memory = config['config_rappas']['memory']
         input_reads_joined = join_query_files(input.r)
-        rappas_command = "java -Xms2G " + \
-                         f"-Xmx{memory}G " + \
+        rappas_command = "java " + \
                          "-jar $(which RAPPAS.jar) " + \
                          "--keep-at-most {params.maxp} " + \
                          "--keep-factor {params.minlwr} " + \
