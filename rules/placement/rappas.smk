@@ -92,7 +92,7 @@ rule db_build_rappas:
         arbin=lambda wildcards: get_ar_binary(config, wildcards.ar)
     run:
          shell(
-            "java -Xms2G -Xmx"+str(config["config_rappas"]["memory"])+"G -jar $(which RAPPAS.jar) -v 0 -p b -b $(which {params.arbin}) "
+            "java -jar $(which RAPPAS.jar) -v 0 -p b -b $(which {params.arbin}) "
             "-k {wildcards.k} --omega {wildcards.o} -t {input.t} -r {input.a} "                                                          
             "--gap-jump-thresh 1.0 "
             "-w {params.workdir} --ardir {params.ardir} -s {params.states} --ratio-reduction {wildcards.red} "
