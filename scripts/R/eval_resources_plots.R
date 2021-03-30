@@ -4,7 +4,7 @@ args = commandArgs(trailingOnly=TRUE)
 
 # test if there is at least one argument
 if (length(args)<1) {
-    stop("The directory containing benchmark results must be supplies as 1st argument.\n", call.=FALSE)
+    stop("The directory containing benchmark results must be supplied as 1st argument.\n", call.=FALSE)
 }
 
 library(RColorBrewer)
@@ -43,7 +43,7 @@ soft_params<-list(
                     "rappas-placement"=rappasplacement,
                     "apples-placement"=apples,
                     "appspam-placement"=appspam,
-                    "hmm-align"=hmmbuild,
+                    "hmmer-align"=hmmbuild,
                     "ansrec"=ansrec
                 )
 
@@ -277,6 +277,7 @@ for (i in 1:length(stats_to_plot)) {
 #       ansrec + dbbuild + placement*sample for alignment-free approches
 
 #this section NEEDS improvements, it is not dynamic as previous plots
+#TODO: rework section below to be dynamic
 
 #associate operations to analyses
 analyses<-list()
@@ -291,63 +292,76 @@ analyses["appspam"]<-c("appspam-placement")
 analyses["rappas"]<-c("ansrec", "rappas-dbbuild","rappas-placement")
 
 results<-list()
+op_merged<-c()
+i<-1
 
-#rappas times in seconds: AR + dbbuild + placement
-ansrec_and_dbbuild<-merge(results_per_op["ansrec"][[1]],results_per_op["rappas-dbbuild"][[1]],by=c("red","ar"))
-all_op<-merge(ansrec_and_dbbuild,results_per_op["rappas-placement"][[1]],by=c("red","ar","o","k"))
+#### RAPPAS case
 
-#time for 1 analysis: AR + dbbuild + placement
-all_op["sample_x1"]<-all_op["s.x"]+all_op["s.y"]+all_op["s"]
+if ( ("rappas-dbbuild" %in% op_analyzed) & ("rappas-placement" %in% op_analyzed) & ("ansrec" %in% op_analyzed) ) {
 
-#time for 1000 analyses : AR + dbbuild + 100 placements
-all_op["sample_x1000"]<-all_op["s.x"]+all_op["s.y"]+all_op["s"]*1000
-all_op["operation"]<-"rappas"
+    #rappas times in seconds: AR + dbbuild + placement
+    ansrec_and_dbbuild<-merge(results_per_op["ansrec"][[1]],results_per_op["rappas-dbbuild"][[1]],by=c("red","ar"))
+    all_op<-merge(ansrec_and_dbbuild,results_per_op["rappas-placement"][[1]],by=c("red","ar","o","k"))
 
-#results= simplier table
-results[[1]]<-all_op[,c("operation","labels","k","o","red","ar","sample_x1","sample_x1000")]
-op_analyzed<-c("rappas")
-#create label from parameter combination as last column
-results[[1]]["labels_short"]<-rep("",dim(results[[1]])[1])
-for (line in 1:dim(results[[1]])[1]) {
-    label<-""
-    elts<-strsplit(results[[1]][line,"labels"],"_")[[1]]
-    for ( idx in 2:length(elts)) {
-        label<-paste0(label,elts[idx],"_")
-    }
-    results[[1]][line,"labels_short"]<-label
-}
+    #time for 1 analysis: AR + dbbuild + placement
+    all_op["sample_x1"]<-all_op["s.x"]+all_op["s.y"]+all_op["s"]
 
-#alignment-based times in seconds: align + placement
-i<-2
-for ( op in names(results_per_op)) {
-    if ( op=="ansrec" || op=="rappas-dbbuild" || op=="rappas-placement" || op=="hmmer-align") {
-        next
-    }
-    results_per_op[op][[1]]["sample_x1"]<-results_per_op[op][[1]]["s"]
-    for (line in 1:dim(results_per_op[op][[1]])[1]) {
-        results_per_op[op][[1]]["sample_x1"][line,]<-results_per_op[op][[1]]["s"][line,]+results_per_op[op][[1]]["s"][1,]
-    }
-    results_per_op[op][[1]]["sample_x1000"]<-results_per_op[op][[1]]["s"]
-    for (line in 1:dim(results_per_op[op][[1]])[1]) {
-        results_per_op[op][[1]]["sample_x1000"][line,]<-results_per_op[op][[1]]["s"][line,]*1000+results_per_op["hmmer-align"][[1]]["s"][1,]*1000
-    }
+    #time for 1000 analyses : AR + dbbuild + 100 placements
+    all_op["sample_x1000"]<-all_op["s.x"]+all_op["s.y"]+all_op["s"]*1000
+    all_op["operation"]<-"rappas"
+
     #results= simplier table
-    op_analyzed<-c(op_analyzed,op)
-    results[[i]]<-results_per_op[op][[1]][,c("operation","labels",soft_params[op][[1]],"sample_x1","sample_x1000")]
+    results[[i]]<-all_op[,c("operation","labels","k","o","red","ar","sample_x1","sample_x1000")]
+    op_merged<-c("rappas")
     #create label from parameter combination as last column
-    results[[i]]["labels_short"]<-rep("",dim(results[[i]])[1])
-    for (line in 1:dim(results[[i]])[1]) {
+    results[[i]]["labels_short"]<-rep("",dim(results[[1]])[1])
+    for (line in 1:dim(results[[1]])[1]) {
         label<-""
-        elts<-strsplit(results[[i]][line,"labels"],"_")[[1]]
+        elts<-strsplit(results[[1]][line,"labels"],"_")[[1]]
         for ( idx in 2:length(elts)) {
             label<-paste0(label,elts[idx],"_")
         }
         results[[i]][line,"labels_short"]<-label
     }
-
     i<-i+1
 }
-names(results)<-op_analyzed
+
+#### ALIGNMENT-based
+
+if ( "hmmer-align" %in% op_analyzed ) {
+
+    #alignment-based times in seconds: align + placement
+    for ( op in names(results_per_op)) {
+        if ( op=="ansrec" || op=="rappas-dbbuild" || op=="rappas-placement" || op=="hmmer-align" ) {
+            next
+        }
+        results_per_op[op][[1]]["sample_x1"]<-results_per_op[op][[1]]["s"]
+        for (line in 1:dim(results_per_op[op][[1]])[1]) {
+            results_per_op[op][[1]]["sample_x1"][line,]<-results_per_op[op][[1]]["s"][line,]+results_per_op["hmmer-align"][[1]]["s"][1,]
+        }
+        results_per_op[op][[1]]["sample_x1000"]<-results_per_op[op][[1]]["s"]
+        for (line in 1:dim(results_per_op[op][[1]])[1]) {
+            results_per_op[op][[1]]["sample_x1000"][line,]<-results_per_op[op][[1]]["s"][line,]*1000+results_per_op["hmmer-align"][[1]]["s"][1,]*1000
+        }
+        #results= simplier table
+        op_merged<-c(op_merged,op)
+        results[[i]]<-results_per_op[op][[1]][,c("operation","labels",soft_params[op][[1]],"sample_x1","sample_x1000")]
+        #create label from parameter combination as last column
+        results[[i]]["labels_short"]<-rep("",dim(results[[i]])[1])
+        for (line in 1:dim(results[[i]])[1]) {
+            label<-""
+            elts<-strsplit(results[[i]][line,"labels"],"_")[[1]]
+            for ( idx in 2:length(elts)) {
+                label<-paste0(label,elts[idx],"_")
+            }
+            results[[i]][line,"labels_short"]<-label
+        }
+
+        i<-i+1
+    }
+}
+
+names(results)<-op_merged
 
 ###########################################
 ## PLOTS 1 : summary plot per operation
