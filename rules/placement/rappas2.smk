@@ -36,7 +36,7 @@ rule db_build_rappas2:
     version: "1.00"
     params:
         model = select_model_phymlstyle(),
-        states = ["nucl"] if config["states"] == 0 else["amino"],
+        states = "nucl" if config["states"] == 0 else "amino",
         ardir = os.path.join(Path(_rappas_experiment_dir).parent, "AR"),
         workdir = _rappas2_experiment_dir,
         arbin = lambda wildcards: get_ar_binary(config, wildcards.ar),
@@ -45,13 +45,13 @@ rule db_build_rappas2:
         rappas_model = "--multinomial " if wildcards.model == "MULTINOMIAL" else ""
         shell(
             "xpas.py build " +
-            "-s {params.states}" +
+            "-s {params.states} " +
             "-b $(which {params.arbin}) " +
             "-k {wildcards.k} " +
             "--omega {wildcards.o} " +
             "--filter " + "{wildcards.filter} ".lower() +
             "-u {wildcards.mu} " +
-            "-m {params.model} "
+            "-m {params.model} " +
             "-t {input.t} " +
             "-r {input.a} " +
             "-f {wildcards.f} " +
@@ -74,10 +74,12 @@ rule placement_rappas2:
     version: "1.00"
     params:
         workdir = _rappas2_experiment_dir,
+        states= "nucl" if config["states"] == 0 else "amino",
         maxp = config["maxplacements"],
         minlwr = config["minlwr"]
     run:
         rappas_command = "rappas2.py place " + \
+            "-s {params.states} " + \
             "-i {input.database} " + \
             "-o {params.workdir} " + \
             "--threads 1 " + \
