@@ -39,9 +39,23 @@ else
   fi
 fi
 
-
 cd $install_dir
 basedir=$(pwd)
+
+#test if code was clone using recursive option
+#check if ant build files are present
+java_dep="$basedir/scripts/java/PEWO_java/build-cli.xml"
+rap_dep="$basedir/scripts/java/PEWO_java/lib/RAPPAS/build-cli.xml"
+if [ ! -f "$java_dep" ] ; then
+        echo "Dependancy not found : $java_dep "
+        echo "Did you clone PEWO repository using --recursive option ? (Damn, read the instructions!)"
+        exit 1
+fi
+if [ ! -f "$rap_dep" ] ; then
+        echo "Dependancy not found : $rap_dep "
+        echo "Did you clone PEWO repository using --recursive option ? (Damn, read the instructions!)"
+        exit 1
+fi
 
 #test if base commands are available
 echo "PEWO installer: Testing if installation requirements are met..."
@@ -118,8 +132,8 @@ fi
 
 ## rapid test that the snakemake workflow can be launched
 echo "PEWO installer: Testing PEWO workflow via a dry run using demo 1 ..."
-demo_dir=$basedir/demos/16SrRNA_resource_test
-snakemake -np --snakefile $basedir/eval_resources.smk --config workdir=$demo_dir/run query_user=$demo_dir/EMP_92_studies_100000.fas --configfile $demo_dir/config.yaml
+demo_dir=$basedir/examples/1_fast_test_of_accuracy_procedure
+snakemake -np --snakefile $basedir/eval_accuracy.smk --config workdir=$demo_dir/run --configfile $demo_dir/config.yaml
 if  [ $? -ne 0 ] ; then
         echo "PEWO installer: The snakemake dry run was not successful."
 	echo "PEWO installer: Please, copy/paste installation log and send it to PEWO developers."

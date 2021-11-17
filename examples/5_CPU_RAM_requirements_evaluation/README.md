@@ -1,4 +1,4 @@
-# PEWO demo n°2 : Resource evaluation
+# PEWO demo n°5
 
 ## Overview
 
@@ -6,18 +6,18 @@ This demo measures CPU/RAM/TIME resources consumed by the different
 placement softwares, using a reference dataset of 16S-rRNA barcodes.
 
 EPA-ng, PPlacer, RAPPAS are tested.
-Each measure is repeated 3 times.
-This analysis will require around 4 hours of computation.
+Each measure is repeated 2 times.
+This analysis will require around 3 hours of computation.
 
 Final measures are reported as the mean of the repeats.
-Consequently, increasing repeats should improve the evaluation.
+Consequently, increasing repeats would produce better evaluations.
 
 ## How to launch
 
 Download pipeline.
 ```
-git clone --recursive https://github.com/blinard-BIOINFO/PEWO_workflow.git 
-cd PEWO_workflow
+git clone --recursive https://github.com/phylo42/PEWO.git
+cd PEWO
 ```
 
 Execute installation script.
@@ -35,18 +35,18 @@ Test workflow before launch.
 ```
 snakemake -np \
 --snakefile eval_resources.smk \
---config workdir=$(pwd)/demos/16SrRNA_resource_test/run \
-query_user=`pwd`/demos/16SrRNA_resource_test/EMP_92_studies_100000.fas \
---configfile demos/16SrRNA_resource_test/config.yaml
+--config workdir=$(pwd)/examples/5_CPU_RAM_requirements_evaluation/run \
+query_user=`pwd`/examples/5_CPU_RAM_requirements_evaluation/EMP_92_studies_100000.fas \
+--configfile examples/5_CPU_RAM_requirements_evaluation/config.yaml
 ```
 
-Execute workflow, using 4 CPU cores.
+Execute workflow, using 2 CPU cores and 16Gb of RAM.
 ```
-snakemake -p --cores 4 \
+snakemake -p --cores 2 --resources mem_mb=16000 \
 --snakefile eval_resources.smk \
---config workdir=$(pwd)/demos/16SrRNA_resource_test/run \
-query_user=`pwd`/demos/16SrRNA_resource_test/EMP_92_studies_100000.fas \
---configfile demos/16SrRNA_resource_test/config.yaml
+--config workdir=$(pwd)/examples/5_CPU_RAM_requirements_evaluation/run \
+query_user=`pwd`/examples/5_CPU_RAM_requirements_evaluation/EMP_92_studies_100000.fas \
+--configfile examples/5_CPU_RAM_requirements_evaluation/config.yaml
 ```
 
 ## Comments
@@ -57,10 +57,10 @@ You could also set them manually by editing the config.yaml file
 before launch.
 
 Raw results will be written in
-'demos/16SrRNA_resource_test/run/benchmark'.
+'examples/5_CPU_RAM_requirements_evaluation/run/benchmark'.
 
 Results summaries and plots will be written in
-'demos/16SrRNA_resource_test/run'.
+'examples/5_CPU_RAM_requirements_evaluation/run'.
 
 See PEWO wiki for a more detailed explanation of the results:
-github.com/blinard-BIOINFO/PEWO_workflow/wiki
+https://github.com/phylo42/PEWO/wiki/IV.-Tutorials-and-results-interpretation

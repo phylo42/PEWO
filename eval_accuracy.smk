@@ -33,7 +33,7 @@ include:
 include:
     "rules/op/ar.smk"
 include:
-    "rules/placement/rappas.smk"
+    "rules/placement/rappas_dbinram.smk"
 #alignment (for distance-based and ML approaches)
 include:
     "rules/alignment/hmmer.smk"
@@ -47,6 +47,8 @@ include:
 #distance-based placements, e.g.: apples
 include:
     "rules/placement/apples.smk"
+include:
+    "rules/placement/appspam.smk"
 #results evaluation and plots
 include:
     "rules/op/operate_nodedistance.smk"

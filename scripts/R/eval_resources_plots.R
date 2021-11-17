@@ -4,7 +4,7 @@ args = commandArgs(trailingOnly=TRUE)
 
 # test if there is at least one argument
 if (length(args)<1) {
-    stop("The directory containing benchmark results must be supplies as 1st argument.n", call.=FALSE)
+    stop("The directory containing benchmark results must be supplied as 1st argument.\n", call.=FALSE)
 }
 
 library(RColorBrewer)
@@ -19,30 +19,31 @@ workdir=args[1]
 #definition of software paramters
 
 epa<-c("g")
-epang_h1<-c("h","g")
-epang_h2<-c("h","bigg")
-epang_h3<-c("h")
-epang_h4<-c("h")
+epang_h1<-c("g")
+epang_h2<-c("bigg")
+epang_h3<-NULL
+epang_h4<-NULL
 pplacer<-c("ms","sb","mp")
-rappas<-c("k","o","red","ar")
 rappasdbbuild<-c("k","o","red","ar")
 rappasplacement<-c("k","o","red","ar")
 apples<-c("meth","crit")
 hmmbuild<-NULL
 ansrec<-c("red","ar")
+appspam<-c("mode","w","pattern")
+
 
 soft_params<-list(
-                    "epa"=epa,
-                    "epang_h1"=epang_h1,
-                    "epang_h2"=epang_h2,
-                    "epang_h3"=epang_h3,
-                    "epang_h4"=epang_h4,
-                    "pplacer"=pplacer,
-                    "rappas"=rappas,
+                    "epa-placement"=epa,
+                    "epang-h1-placement"=epang_h1,
+                    "epang-h2-placement"=epang_h2,
+                    "epang-h3-placement"=epang_h3,
+                    "epang-h4-placement"=epang_h4,
+                    "pplacer-placement"=pplacer,
                     "rappas-dbbuild"=rappasdbbuild,
                     "rappas-placement"=rappasplacement,
-                    "apples"=apples,
-                    "hmmbuild"=hmmbuild,
+                    "apples-placement"=apples,
+                    "appspam-placement"=appspam,
+                    "hmmer-align"=hmmbuild,
                     "ansrec"=ansrec
                 )
 
@@ -180,12 +181,7 @@ for (opname in op_analyzed) {
         }
         #aggregate as mean per pruning
         data<-NULL
-        if (length(grep("epang",opname))>0) {
-            data<-df[df$operation=="epang" & df$h==substr(opname,nchar(opname),nchar(opname)),]
-        } else {
-            data<-df[df$operation==opname,]
-        }
-
+        data<-df[df$operation==opname,]
         data_mean<-aggregate(as.formula(formula_mean), data, mean)
         data_sd<-aggregate(as.formula(formula_mean), data, sd)  # not used for now, but could add error bars to barplots
 
@@ -281,76 +277,91 @@ for (i in 1:length(stats_to_plot)) {
 #       ansrec + dbbuild + placement*sample for alignment-free approches
 
 #this section NEEDS improvements, it is not dynamic as previous plots
+#TODO: rework section below to be dynamic
 
 #associate operations to analyses
 analyses<-list()
 analyses["epa"]<-c("hmmer-align", "epa-placement")
-analyses["epang_h1"]<-c("hmmer-align", "epang_h1")
-analyses["epang_h2"]<-c("hmmer-align", "epang_h2")
-analyses["epang_h3"]<-c("hmmer-align", "epang_h3")
-analyses["epang_h4"]<-c("hmmer-align", "epang_h4")
+analyses["epang_h1"]<-c("hmmer-align", "epang-h1-placement")
+analyses["epang_h2"]<-c("hmmer-align", "epang-h2-placement")
+analyses["epang_h3"]<-c("hmmer-align", "epang-h3-placement")
+analyses["epang_h4"]<-c("hmmer-align", "epang-h4-placement")
 analyses["pplacer"]<-c("hmmer-align", "pplacer-placement")
 analyses["apples"]<-c("hmmer-align", "apples-placement")
+analyses["appspam"]<-c("appspam-placement")
 analyses["rappas"]<-c("ansrec", "rappas-dbbuild","rappas-placement")
 
 results<-list()
+op_merged<-c()
+i<-1
 
-#rappas times in seconds: AR + dbbuild + placement
-ansrec_and_dbbuild<-merge(results_per_op["ansrec"][[1]],results_per_op["rappas-dbbuild"][[1]],by=c("red","ar"))
-all_op<-merge(ansrec_and_dbbuild,results_per_op["rappas-placement"][[1]],by=c("red","ar","o","k"))
+#### RAPPAS case
 
-#time for 1 analysis: AR + dbbuild + placement
-all_op["sample_x1"]<-all_op["s.x"]+all_op["s.y"]+all_op["s"]
+if ( ("rappas-dbbuild" %in% op_analyzed) & ("rappas-placement" %in% op_analyzed) & ("ansrec" %in% op_analyzed) ) {
 
-#time for 1000 analyses : AR + dbbuild + 100 placements
-all_op["sample_x1000"]<-all_op["s.x"]+all_op["s.y"]+all_op["s"]*1000
-all_op["operation"]<-"rappas"
+    #rappas times in seconds: AR + dbbuild + placement
+    ansrec_and_dbbuild<-merge(results_per_op["ansrec"][[1]],results_per_op["rappas-dbbuild"][[1]],by=c("red","ar"))
+    all_op<-merge(ansrec_and_dbbuild,results_per_op["rappas-placement"][[1]],by=c("red","ar","o","k"))
 
-#results= simplier table
-results[[1]]<-all_op[,c("operation","labels","k","o","red","ar","sample_x1","sample_x1000")]
-op_analyzed<-c("rappas")
-#create label from parameter combination as last column
-results[[1]]["labels_short"]<-rep("",dim(results[[1]])[1])
-for (line in 1:dim(results[[1]])[1]) {
-    label<-""
-    elts<-strsplit(results[[1]][line,"labels"],"_")[[1]]
-    for ( idx in 2:length(elts)) {
-        label<-paste0(label,elts[idx],"_")
-    }
-    results[[1]][line,"labels_short"]<-label
-}
+    #time for 1 analysis: AR + dbbuild + placement
+    all_op["sample_x1"]<-all_op["s.x"]+all_op["s.y"]+all_op["s"]
 
-#alignment-based times in seconds: align + placement
-i<-2
-for ( op in names(results_per_op)) {
-    if ( op=="ansrec" || op=="rappas-dbbuild" || op=="rappas-placement" || op=="hmmer-align") {
-        next
-    }
-    results_per_op[op][[1]]["sample_x1"]<-results_per_op[op][[1]]["s"]
-    for (line in 1:dim(results_per_op[op][[1]])[1]) {
-        results_per_op[op][[1]]["sample_x1"][line,]<-results_per_op[op][[1]]["s"][line,]+results_per_op[op][[1]]["s"][1,]
-    }
-    results_per_op[op][[1]]["sample_x1000"]<-results_per_op[op][[1]]["s"]
-    for (line in 1:dim(results_per_op[op][[1]])[1]) {
-        results_per_op[op][[1]]["sample_x1000"][line,]<-results_per_op[op][[1]]["s"][line,]*1000+results_per_op["hmmer-align"][[1]]["s"][1,]*1000
-    }
+    #time for 1000 analyses : AR + dbbuild + 100 placements
+    all_op["sample_x1000"]<-all_op["s.x"]+all_op["s.y"]+all_op["s"]*1000
+    all_op["operation"]<-"rappas"
+
     #results= simplier table
-    op_analyzed<-c(op_analyzed,op)
-    results[[i]]<-results_per_op[op][[1]][,c("operation","labels",soft_params[op][[1]],"sample_x1","sample_x1000")]
+    results[[i]]<-all_op[,c("operation","labels","k","o","red","ar","sample_x1","sample_x1000")]
+    op_merged<-c("rappas")
     #create label from parameter combination as last column
-    results[[i]]["labels_short"]<-rep("",dim(results[[i]])[1])
-    for (line in 1:dim(results[[i]])[1]) {
+    results[[i]]["labels_short"]<-rep("",dim(results[[1]])[1])
+    for (line in 1:dim(results[[1]])[1]) {
         label<-""
-        elts<-strsplit(results[[i]][line,"labels"],"_")[[1]]
+        elts<-strsplit(results[[1]][line,"labels"],"_")[[1]]
         for ( idx in 2:length(elts)) {
             label<-paste0(label,elts[idx],"_")
         }
         results[[i]][line,"labels_short"]<-label
     }
-
     i<-i+1
 }
-names(results)<-op_analyzed
+
+#### ALIGNMENT-based
+
+if ( "hmmer-align" %in% op_analyzed ) {
+
+    #alignment-based times in seconds: align + placement
+    for ( op in names(results_per_op)) {
+        if ( op=="ansrec" || op=="rappas-dbbuild" || op=="rappas-placement" || op=="hmmer-align" ) {
+            next
+        }
+        results_per_op[op][[1]]["sample_x1"]<-results_per_op[op][[1]]["s"]
+        for (line in 1:dim(results_per_op[op][[1]])[1]) {
+            results_per_op[op][[1]]["sample_x1"][line,]<-results_per_op[op][[1]]["s"][line,]+results_per_op["hmmer-align"][[1]]["s"][1,]
+        }
+        results_per_op[op][[1]]["sample_x1000"]<-results_per_op[op][[1]]["s"]
+        for (line in 1:dim(results_per_op[op][[1]])[1]) {
+            results_per_op[op][[1]]["sample_x1000"][line,]<-results_per_op[op][[1]]["s"][line,]*1000+results_per_op["hmmer-align"][[1]]["s"][1,]*1000
+        }
+        #results= simplier table
+        op_merged<-c(op_merged,op)
+        results[[i]]<-results_per_op[op][[1]][,c("operation","labels",soft_params[op][[1]],"sample_x1","sample_x1000")]
+        #create label from parameter combination as last column
+        results[[i]]["labels_short"]<-rep("",dim(results[[i]])[1])
+        for (line in 1:dim(results[[i]])[1]) {
+            label<-""
+            elts<-strsplit(results[[i]][line,"labels"],"_")[[1]]
+            for ( idx in 2:length(elts)) {
+                label<-paste0(label,elts[idx],"_")
+            }
+            results[[i]][line,"labels_short"]<-label
+        }
+
+        i<-i+1
+    }
+}
+
+names(results)<-op_merged
 
 ###########################################
 ## PLOTS 1 : summary plot per operation

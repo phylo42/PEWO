@@ -14,7 +14,6 @@ from pewo.software import AlignmentSoftware, PlacementSoftware
 from pewo.templates import get_software_dir, get_common_queryname_template, get_common_template_args, \
     get_output_template, get_output_template_args
 
-
 def get_accuracy_nd_plots() -> List[str]:
     """
     Creates a list of plot files that will be computed in the accuracy mode.
@@ -164,7 +163,7 @@ def get_jplace_outputs(config) -> List[str]:
     for software_name in config["test_soft"]:
         software = PlacementSoftware.get_by_value(software_name)
         # FIXME
-        if software == PlacementSoftware.EPA_NG:
+        if software == PlacementSoftware.EPANG:
             for h in config["config_epang"]["heuristics"]:
                 output_files.extend(_get_jplace_outputs(config, software, heuristic=h))
         else:
@@ -206,7 +205,7 @@ def _get_resources_tsv(config: Dict, software: PlacementSoftware, **kwargs) -> L
     elif software == PlacementSoftware.EPA:
         software_templates = epa_benchmark_templates + hmmer_benchmark_templates
         software_template_args = epa_benchmark_template_args + hmmer_benchmark_template_args
-    elif software == PlacementSoftware.EPA_NG:
+    elif software == PlacementSoftware.EPANG:
         heuristics = ["h1", "h2", "h3", "h4"]
 
         software_templates = []
@@ -222,6 +221,9 @@ def _get_resources_tsv(config: Dict, software: PlacementSoftware, **kwargs) -> L
     elif software == PlacementSoftware.APPLES:
         software_templates = apples_benchmark_templates + hmmer_benchmark_templates
         software_template_args = apples_benchmark_template_args + hmmer_benchmark_template_args
+    elif software == PlacementSoftware.APPSPAM:
+        software_templates = appspam_benchmark_templates
+        software_template_args = appspam_benchmark_template_args
     else:
         raise RuntimeError("Unsupported software: " + software.value)
 
@@ -238,9 +240,9 @@ def get_resources_tsv(config) -> List[str]:
     for software_name in config["test_soft"]:
         software = PlacementSoftware.get_by_value(software_name)
         # FIXME
-        if software == PlacementSoftware.EPA_NG:
+        if software == PlacementSoftware.EPANG:
             for h in config["config_epang"]["heuristics"]:
-                output_files.extend(_get_resources_tsv(config, PlacementSoftware.EPA_NG, heuristic=h))
+                output_files.extend(_get_resources_tsv(config, PlacementSoftware.EPANG, heuristic=h))
         else:
             output_files.extend(_get_resources_tsv(config, software))
     return output_files

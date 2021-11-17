@@ -108,10 +108,10 @@ rule extend_trees_epa:
 
 rule extend_trees_epang_h1:
     input:
-         jplace=get_output_template(config, PlacementSoftware.EPA_NG, "jplace", heuristic="h1"),
+         jplace=get_output_template(config, PlacementSoftware.EPANG, "jplace", heuristic="h1"),
          tree=config["dataset_tree"],
     output:
-          ext_tree=get_output_template(config, PlacementSoftware.EPA_NG, "tree", heuristic="h1")
+          ext_tree=get_output_template(config, PlacementSoftware.EPANG, "tree", heuristic="h1")
     version:
            "1.00"
     run:
@@ -119,10 +119,10 @@ rule extend_trees_epang_h1:
 
 rule extend_trees_epang_h2:
     input:
-         jplace=get_output_template(config, PlacementSoftware.EPA_NG, "jplace", heuristic="h2"),
+         jplace=get_output_template(config, PlacementSoftware.EPANG, "jplace", heuristic="h2"),
          tree=config["dataset_tree"],
     output:
-          ext_tree=get_output_template(config, PlacementSoftware.EPA_NG, "tree", heuristic="h2")
+          ext_tree=get_output_template(config, PlacementSoftware.EPANG, "tree", heuristic="h2")
     version:
            "1.00"
     run:
@@ -130,10 +130,10 @@ rule extend_trees_epang_h2:
 
 rule extend_trees_epang_h3:
     input:
-         jplace=get_output_template(config, PlacementSoftware.EPA_NG, "jplace", heuristic="h3"),
+         jplace=get_output_template(config, PlacementSoftware.EPANG, "jplace", heuristic="h3"),
          tree=config["dataset_tree"],
     output:
-          ext_tree=get_output_template(config, PlacementSoftware.EPA_NG, "tree", heuristic="h3")
+          ext_tree=get_output_template(config, PlacementSoftware.EPANG, "tree", heuristic="h3")
     version:
            "1.00"
     run:
@@ -141,10 +141,10 @@ rule extend_trees_epang_h3:
 
 rule extend_trees_epang_h4:
     input:
-         jplace=get_output_template(config, PlacementSoftware.EPA_NG, "jplace", heuristic="h4"),
+         jplace=get_output_template(config, PlacementSoftware.EPANG, "jplace", heuristic="h4"),
          tree=config["dataset_tree"],
     output:
-          ext_tree=get_output_template(config, PlacementSoftware.EPA_NG, "tree", heuristic="h4")
+          ext_tree=get_output_template(config, PlacementSoftware.EPANG, "tree", heuristic="h4")
     version:
            "1.00"
     run:
@@ -179,6 +179,15 @@ rule extend_trees_apples:
     run:
         make_extended_tree(input.tree, output.ext_tree, input.jplace)
 
+rule extend_trees_appspam:
+    input:
+         jplace=get_output_template(config, PlacementSoftware.APPSPAM, "jplace"),
+         tree=config["dataset_tree"],
+    output:
+          ext_tree=get_output_template(config, PlacementSoftware.APPSPAM, "tree")
+    run:
+        make_extended_tree(input.tree, output.ext_tree, input.jplace)
+
 rule calculate_likelihood_epa:
     """
     Calculates likelihood values for the placements produced by EPA.
@@ -201,12 +210,12 @@ rule calculate_likelihood_epang_h1:
     """
     input:
          alignment=_get_aligned_query_template(config),
-         tree=get_output_template(config, PlacementSoftware.EPA_NG, "tree", heuristic="h1")
+         tree=get_output_template(config, PlacementSoftware.EPANG, "tree", heuristic="h1")
     output:
-          csv=get_output_template(config, PlacementSoftware.EPA_NG, "csv", heuristic="h1")
+          csv=get_output_template(config, PlacementSoftware.EPANG, "csv", heuristic="h1")
     params:
           workdir=cfg.get_work_dir(config),
-          software=PlacementSoftware.EPA_NG.value,
+          software=PlacementSoftware.EPANG.value,
           model="GTR+G"
     run:
         _calculate_likelihood(input, output, params, wildcards)
@@ -217,12 +226,12 @@ rule calculate_likelihood_epang_h2:
     """
     input:
          alignment=_get_aligned_query_template(config),
-         tree=get_output_template(config, PlacementSoftware.EPA_NG, "tree", heuristic="h2")
+         tree=get_output_template(config, PlacementSoftware.EPANG, "tree", heuristic="h2")
     output:
-          csv=get_output_template(config, PlacementSoftware.EPA_NG, "csv", heuristic="h2")
+          csv=get_output_template(config, PlacementSoftware.EPANG, "csv", heuristic="h2")
     params:
           workdir=cfg.get_work_dir(config),
-          software=PlacementSoftware.EPA_NG.value,
+          software=PlacementSoftware.EPANG.value,
           model="GTR+G"
     run:
         _calculate_likelihood(input, output, params, wildcards)
@@ -233,12 +242,12 @@ rule calculate_likelihood_epang_h3:
     """
     input:
          alignment=_get_aligned_query_template(config),
-         tree=get_output_template(config, PlacementSoftware.EPA_NG, "tree", heuristic="h3")
+         tree=get_output_template(config, PlacementSoftware.EPANG, "tree", heuristic="h3")
     output:
-          csv=get_output_template(config, PlacementSoftware.EPA_NG, "csv", heuristic="h3")
+          csv=get_output_template(config, PlacementSoftware.EPANG, "csv", heuristic="h3")
     params:
           workdir=cfg.get_work_dir(config),
-          software=PlacementSoftware.EPA_NG.value,
+          software=PlacementSoftware.EPANG.value,
           model="GTR+G"
     run:
         _calculate_likelihood(input, output, params, wildcards)
@@ -249,12 +258,12 @@ rule calculate_likelihood_epang_h4:
     """
     input:
          alignment=_get_aligned_query_template(config),
-         tree=get_output_template(config, PlacementSoftware.EPA_NG, "tree", heuristic="h4")
+         tree=get_output_template(config, PlacementSoftware.EPANG, "tree", heuristic="h4")
     output:
-          csv=get_output_template(config, PlacementSoftware.EPA_NG, "csv", heuristic="h4")
+          csv=get_output_template(config, PlacementSoftware.EPANG, "csv", heuristic="h4")
     params:
           workdir=cfg.get_work_dir(config),
-          software=PlacementSoftware.EPA_NG.value,
+          software=PlacementSoftware.EPANG.value,
           model="GTR+G"
     run:
         _calculate_likelihood(input, output, params, wildcards)
@@ -307,6 +316,21 @@ rule calculate_likelihood_apples:
     run:
         _calculate_likelihood(input, output, params, wildcards)
 
+rule calculate_likelihood_appspam:
+    """
+    Calculates likelihood values for the placements produced by APPSPAM.
+    """
+    input:
+         alignment=_get_aligned_query_template(config),
+         tree=get_output_template(config, PlacementSoftware.APPSPAM, "tree")
+    output:
+          csv=get_output_template(config, PlacementSoftware.APPSPAM, "csv")
+    params:
+          workdir=cfg.get_work_dir(config),
+          software=PlacementSoftware.APPSPAM.value,
+          model="GTR+G"
+    run:
+        _calculate_likelihood(input, output, params, wildcards)
 
 def _get_csv_output(config: Dict) -> List[str]:
     """
@@ -320,7 +344,7 @@ def _get_csv_output(config: Dict) -> List[str]:
             # Writing if statements like this is not a good way of making software.
             # This is actually a guaranteed way to be cursed by the gods of software development.
             # TODO: Find a proper way around this to save our souls
-            if software != PlacementSoftware.EPA_NG:
+            if software != PlacementSoftware.EPANG:
                 outputs.extend(
                     expand(get_output_template(config, software, "csv"),
                            **get_output_template_args(config, software))
