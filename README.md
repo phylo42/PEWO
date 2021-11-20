@@ -14,6 +14,28 @@
 *Bioinformatics, btaa657, 22 July 2020*<br />
 <br />
 
+## Important notices
+
+
+```diff
+
+11/2021
+
+Following a wrong refactoring, bug in the ND computation was introduced and is now fixed.
+It was located in the java code of the PEWO_java subrepository (which is in charge of computaing node distances).
+Every node distance (ND) reported by PEWO was consistenlty shifted by +1, making every reported value ND+1. 
+This +1 shift occured consistently for any query sequence, whatever the selected inputs, software or software parameters.
+
+CONSEQUENTLY, EXPERIMENTS AND SOFTWARE COMPARISONS PRIOR TO THE BUGFIX ARE STILL VALID.
+
+Values reported by PEWO in final tables and plots were just shifted by +1.
+Following the bugfix there is no shift anymore.
+The error was hard to spot as in most experimental setups average NDs are higher than 0 or 1.
+
+Following this bugfix. PEWO has been attributed a 1.0.0 version tag. 
+``` 
+
+
 ## Overview
 
 PEWO compiles a set of workflows dedicated to the evaluation of phylogenetic placement algorithms and their software implementation. It focuses on reporting placement accuracy under different conditions and associated computational costs.
