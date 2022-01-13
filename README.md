@@ -32,16 +32,17 @@ EPA-ng datasets : courtesy of Pierre Barbera.
 
 11/2021
 
-Following a wrong refactoring, bug in the ND computation was introduced and is now fixed.
-It was located in the java code of the PEWO_java subrepository (which is in charge of computaing node distances).
+Following some refactoring error, a bug was introduced in the ND computation.
+This is now fixed.
+It was located in the java code of the PEWO_java subrepository (which is in charge of computing node distances).
 Every node distance (ND) reported by PEWO was consistenlty shifted by +1, making every reported value ND+1. 
-This +1 shift occured consistently for any query sequence, whatever the selected inputs, software or software parameters.
+This +1 shift occured consistently for all query sequences, whatever the selected inputs, software or software parameters.
 
 CONSEQUENTLY, EXPERIMENTS AND SOFTWARE COMPARISONS PRIOR TO THE BUGFIX ARE STILL VALID.
 
-Values reported by PEWO in final tables and plots were just shifted by +1.
-Following the bugfix there is no shift anymore.
-The error was hard to spot as in most experimental setups average NDs are higher than 0 or 1.
+Values reported by PEWO were just shifted by +1.
+Following the bugfix, the shift was removed and ND values are in [0,n] again (and not in [1,n+1] )
+This error was hard to spot, because in most experimental setups, average NDs are much higher than 1.
 
 Following this bugfix. PEWO has been attributed a 1.0.0 version tag. 
 ``` 
