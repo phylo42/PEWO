@@ -14,6 +14,17 @@
 *Bioinformatics, btaa657, 22 July 2020*<br />
 <br />
 
+## Reference datasets
+
+**(updated 13-01-2022)**
+
+Datasets described in the PEWO manuscript and a compilation of datasets from other manuscripts can be retrieved with the following link :
+[https://seafile.lirmm.fr/f/f6e3c6508cde4ce38dbb/](https://seafile.lirmm.fr/f/f6e3c6508cde4ce38dbb/)
+
+Each dataset contains a README describing file(s) and source(s). \
+EPA datasets : courtesy of Alexandros Stamakis. \
+EPA-ng datasets : courtesy of Pierre Barbera. 
+
 ## Important notices
 
 
