@@ -147,7 +147,7 @@ Please read the [dedicated wiki page](https://github.com/phylo42/PEWO/wiki/IV.-T
 * **EPA-ng**  (Barbera et al, 2019)
 * **RAPPAS**  (Linard et al, 2019)
 * **APPLES**  (Balaban et al, 2019)
-* **App-SpaM**  (Blanke et al, [preprint](https://doi.org/10.1101/2020.10.19.344986))
+* **App-SpaM**  (Blanke et al, 2021)
 
 
 <!-- ER changes -->
