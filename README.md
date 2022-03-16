@@ -14,6 +14,40 @@
 *Bioinformatics, btaa657, 22 July 2020*<br />
 <br />
 
+## Reference datasets
+
+**(updated 13-01-2022)**
+
+Datasets described in the PEWO manuscript and a compilation of datasets from other manuscripts can be retrieved with the following link :
+[https://seafile.lirmm.fr/f/f6e3c6508cde4ce38dbb/](https://seafile.lirmm.fr/f/f6e3c6508cde4ce38dbb/)
+
+Each dataset contains a README describing file(s) and source(s). \
+EPA datasets : courtesy of Alexandros Stamakis. \
+EPA-ng datasets : courtesy of Pierre Barbera. 
+
+## Important notices
+
+
+```diff
+
+11/2021
+
+Following some refactoring error, a bug was introduced in the ND computation.
+This is now fixed.
+It was located in the java code of the PEWO_java subrepository (which is in charge of computing node distances).
+Every node distance (ND) reported by PEWO was consistenlty shifted by +1, making every reported value ND+1. 
+This +1 shift occured consistently for all query sequences, whatever the selected inputs, software or software parameters.
+
+CONSEQUENTLY, EXPERIMENTS AND SOFTWARE COMPARISONS PRIOR TO THE BUGFIX ARE STILL VALID.
+
+Values reported by PEWO were just shifted by +1.
+Following the bugfix, the shift was removed and ND values are in [0,n] again (and not in [1,n+1] )
+This error was hard to spot, because in most experimental setups, average NDs are much higher than 1.
+
+Following this bugfix. PEWO has been attributed a 1.0.0 version tag. 
+``` 
+
+
 ## Overview
 
 PEWO compiles a set of workflows dedicated to the evaluation of phylogenetic placement algorithms and their software implementation. It focuses on reporting placement accuracy under different conditions and associated computational costs.
@@ -113,7 +147,7 @@ Please read the [dedicated wiki page](https://github.com/phylo42/PEWO/wiki/IV.-T
 * **EPA-ng**  (Barbera et al, 2019)
 * **RAPPAS**  (Linard et al, 2019)
 * **APPLES**  (Balaban et al, 2019)
-* **App-SpaM**  (Blanke et al, [preprint](https://doi.org/10.1101/2020.10.19.344986))
+* **App-SpaM**  (Blanke et al, 2021)
 
 
 <!-- ER changes -->
