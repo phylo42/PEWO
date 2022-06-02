@@ -14,7 +14,7 @@ dependencies:
   - _r-mutex=1.0.1=anacondar_1
   - aioeasywebdav=2.4.0=py36_1000
   - aiohttp=3.6.2=py36h516909a_0
-  - alsa-lib=1.1.5=h516909a_1002
+  - alsa-pruning=1.1.5=h516909a_1002
   - ant=1.10.0=0
   - appdirs=1.4.3=py_1
   - async-timeout=3.0.1=py_1000
@@ -40,6 +40,7 @@ dependencies:
   - decorator=4.4.1=py_0
   - docutils=0.15.2=py36_0
   - dropbox=9.4.0=py_0
+  - ete3
   - expat=2.2.9=he1b5a44_2
   - fftw=3.3.8=nompi_h7f3a6c3_1110
   - filechunkio=1.8=py_2

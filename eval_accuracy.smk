@@ -7,10 +7,38 @@ based on the setup defined in the config file.
 __author__ = "Benjamin Linard, Nikolai Romashchenko"
 __license__ = "MIT"
 
+import pickle
+
+
 configfile: "config.yaml"
 
-
 config["mode"] = "accuracy"
+
+########################
+# INIT BLOCK
+# first launch, config is validated (reduced # of pruning if too much required...)
+# launched only once at start
+from pewo.pruning.configuration import validate_config
+
+config_valid = os.path.join(config["workdir"], "run.bin")
+if not os.path.exists(config_valid):
+    print('Check of configfile...')
+    res = validate_config(config)
+    if res:
+        with open(config_valid, 'wb') as file:
+            pickle.dump(config, file)
+    else:
+        print("error while validating config...")
+        sys.exit(1)
+else:
+    print("Be aware, configfile have been not revised because run.bin file already exist")
+    if os.path.getsize(config_valid) > 0:
+        with open(config_valid, "rb") as f:
+            unpickler = pickle.Unpickler(f)
+            # if file is not empty scores will be equal
+            # to the value unpickled
+            config = unpickler.load()
+
 
 # Explicitly set config to not repeat binary executions,
 # which is an option that should be considered only in 'resource' evaluation mode.
@@ -25,7 +53,7 @@ include:
     "rules/utils/etc.smk"
 #prunings
 include:
-    "rules/op/operate_prunings.smk"
+    "rules/op/operate_prunings_python.smk"
 #tree optimisation
 include:
     "rules/op/operate_optimisation.smk"

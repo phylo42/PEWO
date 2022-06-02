@@ -10,7 +10,7 @@ dataset_align: examples/1_fast_test_of_accuracy_procedure/alignment_150.fasta
 dataset_tree: examples/1_fast_test_of_accuracy_procedure/RAxML_bipartitions.150.BEST.WITH
 
 #working directory
-workdir: /home/nikolai/dev/pewo/run_accuracy1
+workdir: /home/bpenel/PycharmProjects/PEWO/examples/1_fast_test_of_accuracy_procedure/
 
 
 #states used in analysis, either '0' for nucleotides or '1' for amino acids
@@ -20,10 +20,15 @@ states: 0
 test_soft: [epa, epang, rappas, pplacer,appspam]
 
 # READ GENERATION
+# Seed for random pruning :
+seed : 10
 # Read lengths to generate
 read_length: [150,300]
 # Number of random prunings to compute
 pruning_count: 50
+# Minimal number of leaves to kept in the reference tree during pruning
+minimleaf : 25
+
 
 
 ## IF "ACCURACY" IS EVALUATED
