@@ -31,13 +31,19 @@ def predict_align_name():
         l.append(os.path.join(config["workdir"],"A",str(i)+".align"))
     return l
 
+def predict_request_name():
+    l=list()
+    for i in range(config["pruning_count"]):
+        l.append(os.path.join(config["workdir"],"R",str(i)+"_r150.fasta"))
+    return l
+
 #######################
 #### Rule part
 
 rule all_of_this_rule:
     input:
         expand(
-            "/home/bpenel/PycharmProjects/SNAKEMAKE/G/{pruning}.fasta",
+            os.path.join(config["workdir"],"A","{pruning}.fasta"),
             pruning=range(config["pruning_count"])
         )
 
@@ -52,7 +58,9 @@ rule PRUNING:
         Diff=os.path.join(config["workdir"],"DIFFICULTY","Diff_of_pruning.csv"),
         PrunedTree=predict_tree_name(),
         PrunedGenome=predict_genome_name(),
-        PrunedAlign=predict_align_name()
+        PrunedAlign=predict_align_name(),
+        request=predict_request_name()
+
     params:
         #created by script_pruning.py :
         createND_file = lambda wildcards: os.path.join(config["workdir"],"NodeDistance.csv"),
@@ -64,8 +72,9 @@ rule PRUNING:
         pruning_operations(config)
         shell(
             """
-            mv {params.createND_file} {output.ND} &> {log}
-            mv {params.createBD_file} {output.BD} &> {log}
-            mv {params.createDD_file} {output.Diff} &> {log}
+            mv {params.createND_file} {output.ND} 
+            mv {params.createBD_file} {output.BD} 
+            mv {params.createDD_file} {output.Diff} 
             """
         )
+

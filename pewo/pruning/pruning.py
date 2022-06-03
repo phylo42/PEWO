@@ -101,9 +101,9 @@ def get_child(tree , nodeprune :List, liste : List):  # Get the names of a node 
 
 
 def get_leafchild_name(tree , nodeprune : List, liste : List):  # Get the names of all children nodes
-    NP = tree.search_nodes(nodeId=nodeprune.nodeId)[0]
-    child = NP.children  # Search child
     if not nodeprune.is_leaf():
+        NP = tree.search_nodes(nodeId=nodeprune.nodeId)[0]
+        child = NP.children  # Search child
         for i in range(len(child)):
             get_leafchild_name(tree, child[i], liste)
     else:
@@ -117,7 +117,8 @@ def distance_and_align(workdir, tree: Tree, nodeprune, traverse, align: str):
      - Create 2 distinct distance files (Node distance and Branches distance) in which every distance involve in pruning
      operation are saved
      - Create difficulty file (Difficulty of pruning sequences placement depend of the length of the branch previously pruned)
-     - Create X updated genome and alignement fasta file in whihc pruned sequences are remote of the align file as well as deletion site
+     - Create an alignement fasta file in which pruned sequences are remote of the align file as well as deletion site
+     - Create a genome fasta file in which pruned sequences are save (without gap)
     :param workdir:
     :param tree:
     :param nodeprune:
@@ -140,8 +141,12 @@ def distance_and_align(workdir, tree: Tree, nodeprune, traverse, align: str):
     # Element necessary to save Difficulty of pruning
     Diff = {"ID": [], "Nodeprune": [], "Difficulty": []}  # Create a dict in wich difficulty of pruning is save
 
-    for pruned in range(len(nodeprune)):
+    for pruned in range(len(nodeprune)): # for each pruning
+
+        ##########
         # DISTANCE
+        # Save distance (ND and BD between pruned branch and all other node
+
         dictND["ID"].append(nodeprune[pruned].nodeId)  # save ID of pruned node
         dictBD["ID"].append(nodeprune[pruned].nodeId)
         dictND[" "].append(nodeprune[pruned].newNameNode)  # save Label of pruned node
@@ -162,13 +167,13 @@ def distance_and_align(workdir, tree: Tree, nodeprune, traverse, align: str):
                 if node.nodeId in childliste:  # if tree node is a child of pruned one or the pruned one
                     dictND[node.nodeId].append(-1)
                     dictBD[node.nodeId].append(-1)
-                    sum = sum + node.dist
+                    sum = sum + node.dist # sum of pruned branch length = difficulty of pruning.
                 else:
                     if node.nodeId == parent.nodeId:
                         dictND[node.nodeId].append(0)  # 0 Because are fix on it
                         dictBD[node.nodeId].append(node.dist)  # Save the length of the branch
-                    else:
 
+                    else: # distance to other node save
                         dictND[node.nodeId].append(int(NP.get_distance(node, topology_only=True)))
                         dictBD[node.nodeId].append(NP.get_distance(node, topology_only=False))
 
@@ -194,31 +199,48 @@ def distance_and_align(workdir, tree: Tree, nodeprune, traverse, align: str):
                         dictND[node.nodeId].append(int(NP.get_distance(node, topology_only=True)))
                         dictBD[node.nodeId].append(NP.get_distance(node, topology_only=False))
 
+        ######################
         # For difficulty file :
+        # save difficulty of pruning in a list
         Diff["Difficulty"].append(sum)
 
-        # ALIGNMENT FILE
+        #######################################
+        # ALIGNMENT FILE and GENOME FILE
+        # Update reference alignment file (without pruned leave and site full of gap)
+        # Create a fasta file in which genome of pruned leaves are save (not a alignment)
+
+        #Here we save leaf names and sequences in two different list in fonction of it is pruned or not
         childliste = []
         get_leafchild_name(tree, nodeprune[pruned], childliste)  # identify child of pruned node
-        name = []
-        seq = []
-        file = open(align, 'r')
+        name = [] # store name of node not pruned
+        prunedname=[] # store name of node and leaves pruned
+        seq = [] # store sequence not pruned
+        prunedseq=[] # store sequence pruned
+        file = open(align, 'r') # read align file
         lines = file.readlines()
         itline = -1
-        for line in lines:
+        for line in lines: # for each lines
             itline = itline + 1
-            if line.startswith(">"):
-                if line[1:-1] in childliste:
-                    continue
-                elif line[1:-1] == parent.name:
-                    continue
+            if line.startswith(">"): #if line is a header
+                if line[1:-1] in childliste : # if leave is pruned
+                    prunedname.append(line[1:-1]) # save header of pruned leaves
+                    sous_seq=[]
+                    for c in range(len(lines[itline + 1]) - 1): # save sequences of pruned leaves
+                        if lines[itline + 1][c] != "-" :
+                            sous_seq.append(lines[itline + 1][c])
+                    prunedseq.append(sous_seq)
                 else:
-                    name.append(line[1:-1])
+                    name.append(line[1:-1]) # save header of not pruned leaves
                     sous_seq = []
-                    for c in range(len(lines[itline + 1]) - 1):
+                    for c in range(len(lines[itline + 1]) - 1): # save sequences of not pruned leaves
                         sous_seq.append(lines[itline + 1][c])
                     seq.append(sous_seq)
         assert len(seq) > 0
+        assert len(prunedseq) > 0
+
+        ############
+        # Align File:
+        # Allow to delete site full of gap
         next_align = np.array(seq)  # Create a matrix for the new alignment without pruned leaves
         gap_only = []
         it = 0
@@ -231,24 +253,7 @@ def distance_and_align(workdir, tree: Tree, nodeprune, traverse, align: str):
                 it = 0
             else:
                 gap_only.append(False)
-
-        # Create two typpe of fasta file without pruned sequences
-
-        # Genome one:  gap are not conserved
-        next_genome = next_align.copy()
-        # Delete column site where gap_only=True
-        next_genome = next_genome.compress(np.logical_not(gap_only), axis=1)
-        # Transform into a continue sequence list to save in a fasta file
-        seq = next_genome.tolist()
-        for i in range(len(seq)):
-            seq[i] = ("".join(seq[i]))
-        # Create a fasta file without pruned sequences
-        dictionary = {"Node": name, "Seq": seq}
-        file = open(os.path.join(workdir, "G", str(int(pruned)) + ".fasta"), "w")
-        for i in range(len(dictionary["Node"])):
-            file.write("> " + dictionary["Node"][i] + "\n" + dictionary["Seq"][i] + "\n")
-
-        # Align one : gap are keep
+        next_align = next_align.compress(np.logical_not(gap_only), axis=1)
         seq = next_align.tolist()
         for i in range(len(seq)):
             seq[i] = ("".join(seq[i]))
@@ -257,8 +262,22 @@ def distance_and_align(workdir, tree: Tree, nodeprune, traverse, align: str):
         for i in range(len(dictionary["Node"])):
             file.write("> " + dictionary["Node"][i] + "\n" + dictionary["Seq"][i] + "\n")
 
-    # Create a csv file to save Distance and Difficulty
 
+        # GENOME FILE :
+        for i in range(len(prunedseq)):
+            prunedseq[i] = ("".join(prunedseq[i]))
+        # Create a fasta file with pruned sequences
+        dictionary = {"Node": prunedname, "Seq": prunedseq}
+        file = open(os.path.join(workdir, "G", str(int(pruned)) + ".fasta"), "w")
+        for i in range(len(dictionary["Node"])):
+            file.write("> " + dictionary["Node"][i] + "\n" + dictionary["Seq"][i] + "\n")
+
+        ### CREAT REQUEST :
+        file2 = open(os.path.join(workdir, "R", str(int(pruned)) + "_r150.fasta"), "w")
+        for i in range(len(dictionary["Node"])):
+            file2.write("> " + dictionary["Node"][i] + "\n" + dictionary["Seq"][i] + "\n")
+
+    # Create csv file to save Distance and Difficulty
     dataframe = pd.DataFrame(dictBD)
     dataframe.to_csv(os.path.join(workdir, 'BrancheDistance.csv'), index=False)
 
@@ -300,6 +319,7 @@ def pruning_operations(config: Dict):
     G_dir = os.path.join(config["workdir"], "G")
     A_dir = os.path.join(config["workdir"], "A")
     T_dir = os.path.join(config["workdir"], "T")
+    R_dir = os.path.join(config["workdir"], "R")
     DIST_dir = os.path.join(config["workdir"], "DISTANCE")
     DIF_dir = os.path.join(config["workdir"], "DIFFICULTY")
     if not os.path.exists(G_dir):
@@ -308,6 +328,8 @@ def pruning_operations(config: Dict):
         os.mkdir(A_dir)
     if not os.path.exists(T_dir):
         os.mkdir(T_dir)
+    if not os.path.exists(R_dir):
+        os.mkdir(R_dir)
     if not os.path.exists(DIST_dir):
         os.mkdir(DIST_dir)
     if not os.path.exists(DIF_dir):

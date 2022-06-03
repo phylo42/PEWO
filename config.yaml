@@ -23,11 +23,11 @@ test_soft: [epa, epang, rappas, pplacer,appspam]
 # Seed for random pruning :
 seed : 10
 # Read lengths to generate
-read_length: [150,300]
+read_length: 150 #before interval [150,300]
 # Number of random prunings to compute
 pruning_count: 50
 # Minimal number of leaves to kept in the reference tree during pruning
-minimleaf : 25
+minimleaf : 10
 
 
 

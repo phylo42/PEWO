@@ -31,7 +31,6 @@ if not os.path.exists(config_valid):
         print("error while validating config...")
         sys.exit(1)
 else:
-    print("Be aware, configfile have been not revised because run.bin file already exist")
     if os.path.getsize(config_valid) > 0:
         with open(config_valid, "rb") as f:
             unpickler = pickle.Unpickler(f)
