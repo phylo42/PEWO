@@ -260,7 +260,7 @@ def distance_and_align(workdir, tree: Tree, nodeprune, traverse, align: str):
         dictionary = {"Node": name, "Seq": seq}
         file = open(os.path.join(workdir, "A", str(int(pruned)) + ".align"), "w")
         for i in range(len(dictionary["Node"])):
-            file.write("> " + dictionary["Node"][i] + "\n" + dictionary["Seq"][i] + "\n")
+            file.write(">" + dictionary["Node"][i] + "\n" + dictionary["Seq"][i] + "\n")
 
 
         # GENOME FILE :
@@ -270,12 +270,12 @@ def distance_and_align(workdir, tree: Tree, nodeprune, traverse, align: str):
         dictionary = {"Node": prunedname, "Seq": prunedseq}
         file = open(os.path.join(workdir, "G", str(int(pruned)) + ".fasta"), "w")
         for i in range(len(dictionary["Node"])):
-            file.write("> " + dictionary["Node"][i] + "\n" + dictionary["Seq"][i] + "\n")
+            file.write(">" + dictionary["Node"][i] + "\n" + dictionary["Seq"][i] + "\n")
 
         ### CREAT REQUEST :
         file2 = open(os.path.join(workdir, "R", str(int(pruned)) + "_r150.fasta"), "w")
         for i in range(len(dictionary["Node"])):
-            file2.write("> " + dictionary["Node"][i] + "\n" + dictionary["Seq"][i] + "\n")
+            file2.write(">" + dictionary["Node"][i] + "\n" + dictionary["Seq"][i] + "\n")
 
     # Create csv file to save Distance and Difficulty
     dataframe = pd.DataFrame(dictBD)
