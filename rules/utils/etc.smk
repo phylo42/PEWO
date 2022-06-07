@@ -42,3 +42,15 @@ def select_model_raxmlstyle():
         return "PROTGAMMAWAG"
     if config["phylo_params"]["model"]=="LG+G":
         return "PROTGAMMALG"
+
+def select_model_raxmlngstyle():
+    model=config["phylo_params"]["model"]
+    category=config["phylo_params"]["categories"]
+    if model=="GTR+G":
+        return "GTR+FC+G" + str(category)
+    if model=="JTT+G":
+        return  "JTT+FC+G" + str(category)
+    if model=="WAG+G":
+        return  "WAG+FC+G" + str(category)
+    if model=="LG+G":
+        return "LG+FC+G" + str(category)
