@@ -41,7 +41,6 @@ rule db_build_rappas2:
         arbin = lambda wildcards: get_ar_binary(config, wildcards.ar),
         arthreads = config["config_rappas2"]["arthreads"]
     run:
-        score_model = wildcards.score_model.lower() if wildcards.score_model else "max"
         filter = wildcards.filter.lower() if wildcards.filter else "no-filter"
         shell(
             "xpas.py build " +
@@ -53,7 +52,6 @@ rule db_build_rappas2:
             "-t {input.t} " +
             "-r {input.a} " +
             "--filter {filter} " +
-            "--score-model {score_model} "+
             "-w {params.workdir} " +
             "--threads {params.arthreads} " +
             "--ardir {params.ardir} " +
