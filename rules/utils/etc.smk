@@ -21,6 +21,20 @@ def extract_params(file):
     infofile.close()
     return res
 
+def extract_params_raxmlng(file):
+    """
+    extract phylo parameters from info file to transfer them to phyml
+    """
+    res={}
+    with open(file, 'r') as infofile:
+        lines = infofile.readlines()
+        for l in lines:
+            if l.startswith("   Rate heterogeneity:"):
+                res["alpha"]=l.split(":")[2][0:9].strip()
+    print("coucou",res)
+    return res
+
+
 
 def select_model_phymlstyle():
     if config["phylo_params"]["model"]=="GTR+G":
