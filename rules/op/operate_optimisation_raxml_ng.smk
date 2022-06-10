@@ -14,8 +14,7 @@ rule optimise:
         t=config["workdir"]+"/T/{pruning}.tree"
     output:
         a=config["workdir"]+"/T/{pruning}.raxml.log",
-        b=temp(config["workdir"] + "/T/{pruning}.raxml.bestTreeCollapsed"),
-        c=temp(config["workdir"] + "/T/{pruning}.raxml.startTree"),
+        temp1=temp(config["workdir"]+"/T/{pruning}.raxml.startTree"),
         tree=config["workdir"]+"/T/{pruning}_optimised.tree",
         info=config["workdir"]+"/T/{pruning}_optimised.info"
     log:
