@@ -302,7 +302,9 @@ def multipruning(workdir :str, tree : List , nodeprune : List):
     for pruned in range(len(nodeprune)):  # For all pruned nodes
         treecopy = tree.copy(method="deepcopy")  # copy object before modified
         NP = treecopy.search_nodes(nodeId=nodeprune[pruned].nodeId)[0]
+        parent=NP.up #Identify parent node of the pruned one.
         NP.detach()  # pruning
+        parent.delete()
         treecopy.write(format=1, outfile=os.path.join(workdir,"T", str(it) + ".tree"))  # write pruning tree
         it = it + 1
     return 0
