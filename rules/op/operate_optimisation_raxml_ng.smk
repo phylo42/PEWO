@@ -13,10 +13,11 @@ rule optimise:
         a=config["workdir"]+"/A/{pruning}.align",
         t=config["workdir"]+"/T/{pruning}.tree"
     output:
-        temp(config["workdir"]+"/T/RAxML_binaryModelParameters.{pruning}"),
-        temp(config["workdir"]+"/T/RAxML_log.{pruning}"),
-        config["workdir"]+"/T/{pruning}_optimised.tree",
-        config["workdir"]+"/T/{pruning}_optimised.info"
+        a=config["workdir"]+"/T/{pruning}.raxml.log",
+        b=temp(config["workdir"] + "/T/{pruning}.raxml.bestTreeCollapsed"),
+        c=temp(config["workdir"] + "/T/{pruning}.raxml.startTree"),
+        tree=config["workdir"]+"/T/{pruning}_optimised.tree",
+        info=config["workdir"]+"/T/{pruning}_optimised.info"
     log:
         config["workdir"]+"/logs/optimisation/{pruning}.log"
     version: "1.00"
@@ -24,16 +25,13 @@ rule optimise:
         m=select_model_raxmlngstyle(),
         c=config["phylo_params"]["categories"],
         name="{pruning}",
-        raxmlname=config["workdir"]+"/T/RAxML_result.{pruning}",
-        outname=config["workdir"]+"/T/{pruning}_optimised.tree",
-        raxmlinfoname=config["workdir"]+"/T/RAxML_info.{pruning}",
-        outinfoname=config["workdir"]+"/T/{pruning}_optimised.info",
-        reduction=config["workdir"]+"/A/{pruning}.align.reduced",
+        raxmlname=config["workdir"]+"/T/{pruning}.raxml.bestTree",
+        raxmlmodel=config["workdir"]+"/T/{pruning}.raxml.bestModel",
         outdir= os.path.join(config["workdir"],"T","")
+    conda:  "../../envs/raxmlngenv.yaml"
     shell:
         """
         raxml-ng --evaluate --threads 1 --model {params.m}  --msa {input.a} --tree {input.t} --prefix {params.outdir}{params.name} &> {log}
-        mv {params.raxmlname} {params.outname}
-        mv {params.raxmlinfoname} {params.outinfoname}
-        rm -f {params.reduction}
+        mv {params.raxmlname} {output.tree}
+        mv {params.raxmlmodel} {output.info}
         """
