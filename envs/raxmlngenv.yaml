@@ -1,0 +1,7 @@
+name: raxmlng
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - raxml-ng=1.1.0
