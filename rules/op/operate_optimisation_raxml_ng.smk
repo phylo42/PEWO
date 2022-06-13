@@ -15,8 +15,7 @@ rule optimise:
     output:
         a=config["workdir"]+"/T/{pruning}.raxml.log",
         temp1=temp(config["workdir"]+"/T/{pruning}.raxml.startTree"),
-        tree=config["workdir"]+"/T/{pruning}_optimised.tree",
-        info=config["workdir"]+"/T/{pruning}_optimised.info"
+        tree=config["workdir"]+"/T/{pruning}_optimised.tree"
     log:
         config["workdir"]+"/logs/optimisation/{pruning}.log"
     version: "1.00"
@@ -25,12 +24,10 @@ rule optimise:
         c=config["phylo_params"]["categories"],
         name="{pruning}",
         raxmlname=config["workdir"]+"/T/{pruning}.raxml.bestTree",
-        raxmlmodel=config["workdir"]+"/T/{pruning}.raxml.bestModel",
         outdir= os.path.join(config["workdir"],"T","")
     conda:  "../../envs/raxmlngenv.yaml"
     shell:
         """
         raxml-ng --evaluate --threads 1 --model {params.m}  --msa {input.a} --tree {input.t} --prefix {params.outdir}{params.name} &> {log}
         mv {params.raxmlname} {output.tree}
-        mv {params.raxmlmodel} {output.info}
         """
