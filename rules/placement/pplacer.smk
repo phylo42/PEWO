@@ -45,7 +45,7 @@ rule build_pplacer:
     input:
         a = os.path.join(_working_dir, "A", "{pruning}.align"),
         t = os.path.join(_working_dir, "T", "{pruning}.tree"),
-        s = os.path.join(_working_dir, "T", "{pruning}_optimised.info")
+        s = os.path.join(_working_dir, "T", "taxtastic", "{pruning}_optimised.info")
     output:
         directory(_get_pplacer_refpkg_template(config))
     log:
