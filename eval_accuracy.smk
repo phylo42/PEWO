@@ -9,10 +9,13 @@ __license__ = "MIT"
 
 import pickle
 
+import snakemake
+
 
 configfile: "config.yaml"
 
 config["mode"] = "accuracy"
+
 
 ########################
 # INIT BLOCK
@@ -54,6 +57,8 @@ include:
 include:
     "rules/op/operate_prunings_python.smk"
 #tree optimisation
+include:
+    "rules/op/operate_optimisation_raxml_ng.smk"
 include:
     "rules/op/operate_optimisation.smk"
 #phylo-kmer placement, e.g.: rappas
