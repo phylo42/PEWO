@@ -53,9 +53,9 @@ rule PRUNING:
         t=get_tree_input,
         a=get_align_input
     output:
-        ND=os.path.join(config["workdir"],"DISTANCE","NODE","ND.csv"),
-        BD=os.path.join(config["workdir"],"DISTANCE","BRANCHE","BD.csv"),
-        Diff=os.path.join(config["workdir"],"DIFFICULTY","Diff_of_pruning.csv"),
+        ND=os.path.join(config["workdir"],"Dtx.csv"),
+        BD=os.path.join(config["workdir"],"D2tx.csv"),
+        Diff=os.path.join(config["workdir"],"Diff_of_pruning.csv"),
         PrunedTree=predict_tree_name(),
         PrunedGenome=predict_genome_name(),
         PrunedAlign=predict_align_name(),
