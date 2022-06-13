@@ -110,7 +110,7 @@ def _get_epang_input_tree() -> str:
 
 
 def _get_epang_input_info() -> str:
-    return os.path.join(_working_dir, "T", "{pruning}_optimised.info")
+    return os.path.join(_working_dir, "T","taxtastic","{pruning}_optimised.info")
 
 
 rule placement_epang_h1:
