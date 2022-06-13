@@ -75,7 +75,7 @@ rule ar_raxmlng:
     input:
         a=config["workdir"]+"/RAPPAS/{pruning}/red{red}_arRAXMLNG/extended_trees/extended_align.phylip",
         t=config["workdir"]+"/RAPPAS/{pruning}/red{red}_arRAXMLNG/extended_trees/extended_tree_withBL_withoutInterLabels.tree",
-        s=config["workdir"]+"/T/{pruning}_optimised.info"
+        s=config["workdir"]+"/T/{pruning}.raxml.log"
     output:
         get_ar_output_templates(config, "RAXMLNG")
     log:
@@ -86,7 +86,7 @@ rule ar_raxmlng:
         outname=config["workdir"]+"/RAPPAS/{pruning}/red{red}_arRAXMLNG",
         c=config["phylo_params"]["categories"],
     run:
-        phylo_params=extract_params(input.s)  #launch 1 extract per pruning
+        phylo_params=extract_params_raxmlng(input.s)  #launch 1 extract per pruning
         states="DNA" if config["states"]==0 else "AA"
         arbin=get_ar_binary(config, "RAXMLNG")
         model=select_model_phymlstyle()+"+G"+str(config["phylo_params"]["categories"])+"{{"+str(phylo_params['alpha'])+"}}+IU{{0}}+FC"
