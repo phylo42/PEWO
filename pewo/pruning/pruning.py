@@ -322,8 +322,6 @@ def pruning_operations(config: Dict):
     A_dir = os.path.join(config["workdir"], "A")
     T_dir = os.path.join(config["workdir"], "T")
     R_dir = os.path.join(config["workdir"], "R")
-    DIST_dir = os.path.join(config["workdir"], "DISTANCE")
-    DIF_dir = os.path.join(config["workdir"], "DIFFICULTY")
     if not os.path.exists(G_dir):
         os.mkdir(G_dir)
     if not os.path.exists(A_dir):
@@ -332,10 +330,6 @@ def pruning_operations(config: Dict):
         os.mkdir(T_dir)
     if not os.path.exists(R_dir):
         os.mkdir(R_dir)
-    if not os.path.exists(DIST_dir):
-        os.mkdir(DIST_dir)
-    if not os.path.exists(DIF_dir):
-        os.mkdir(DIF_dir)
 
     #Use functions previously created
     id_and_labels_features(config["config_general"].traverse)
