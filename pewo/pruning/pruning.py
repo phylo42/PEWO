@@ -240,7 +240,7 @@ def distance_and_align(workdir, tree: Tree, nodeprune, traverse, align: str):
 
         ############
         # Align File:
-        # Allow to delete site full of gap
+        # Allow to delete non informative sites (i.e : full of gap)
         next_align = np.array(seq)  # Create a matrix for the new alignment without pruned leaves
         gap_only = []
         it = 0

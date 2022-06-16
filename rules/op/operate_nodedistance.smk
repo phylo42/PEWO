@@ -24,4 +24,6 @@ rule compute_nodedistance:
           software_dir_list=','.join(PlacementSoftware.get_by_value(soft_str).value.upper() for soft_str in config["test_soft"]),
           jar=config["pewo_jar"]
     shell:
-         "java -cp {params.jar} DistanceGenerator_LITE2 {params.workdir} {params.software_dir_list} &> {log}"
+         """
+         java -cp {params.jar} DistanceGenerator_LITE2 {params.workdir} {params.software_dir_list} &> {log}
+         """
