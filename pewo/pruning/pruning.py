@@ -30,41 +30,16 @@ def tree_root(traverse : List) -> bool:  # Boolean function. True = tree is root
 
 def id_and_labels_features(traverse : List):  # create new features
     inter = 0
-    nod = 0
-    leaf = 0
-    if tree_root(traverse):  # Use tree_root function to test if tree is rooted or not
-        for node in traverse:
-            if node.is_leaf():
-                leaf = leaf + 1
-                # create a new features newNameNode for leave and we keep the old name inside
-                node.add_features(newNameNode="Leaf_" + str(leaf) + "__" + node.name)
-            else:
-                # create a new features newNameNode for root and we keep the old name inside
-                if node.is_root():
-                    node.add_features(newNameNode="Root___" + node.name)
-                # create a new features newNameNode for node and we keep the old name inside
-                else:
-                    nod = nod + 1
-                    node.add_features(newNameNode="Node_" + str(nod) + "__" + node.name)
-            # create a new features nodeId for old the node and keep the old name inside
-            node.add_features(nodeId=inter)
+    for node in traverse:
+        if node.is_leaf():
+        # create a new features newNameNode for leave and we keep the old name inside
+            node.add_features(newNameNode="Leaf_" + str(inter) + "__" + node.name)
+        else:
+            node.add_features(newNameNode="Node_" + str(inter) + "__" + node.name)
+        # create a new features nodeId for old the node and keep the old name inside
+        node.add_features(nodeId=inter)
 
-            inter = inter + 1
-    else:  # Exactly the same than previously view but for unroot tree
-        for node in traverse:
-            if node.is_leaf():
-                leaf = leaf + 1
-                node.add_features(newNameNode="Leaf_" + str(leaf) + "__" + node.name)
-            else:
-                if node.is_root():
-                    node.add_features(newNameNode="FAKEROOT___" + node.name)
-                else:
-                    nod = nod + 1
-                    node.add_features(newNameNode="Node_" + str(nod) + "__" + node.name)
-            node.add_features(nodeId=inter)
-
-            inter = inter + 1
-
+        inter = inter + 1
     return 0
 
 
@@ -154,6 +129,7 @@ def distance_and_align(workdir, tree: Tree, nodeprune, traverse, align: str):
 
         NP = tree.search_nodes(nodeId=nodeprune[pruned].nodeId)[0]  # identifie pruned node in tree
         parent = NP.up  # identifie parent node
+        secondchild= parent.children
         childliste = []
         get_child(tree, nodeprune[pruned], childliste)  # identify child of pruned node
 
@@ -170,12 +146,21 @@ def distance_and_align(workdir, tree: Tree, nodeprune, traverse, align: str):
                     sum = sum + node.dist # sum of pruned branch length = difficulty of pruning.
                 else:
                     if node.nodeId == parent.nodeId:
-                        dictND[node.nodeId].append(0)  # 0 Because are fix on it
-                        dictBD[node.nodeId].append(node.dist)  # Save the length of the branch
+                        dictND[node.nodeId].append(-1)  # 0 Because are fix on it
+                        dictBD[node.nodeId].append(-1)  # Save the length of the branch
 
-                    else: # distance to other node save
-                        dictND[node.nodeId].append(int(NP.get_distance(node, topology_only=True)))
-                        dictBD[node.nodeId].append(NP.get_distance(node, topology_only=False))
+                    else:  # distance to other node save
+                        dictND[node.nodeId].append(int(NP.get_distance(node, topology_only=True)) - 1)
+                        inside = 0
+                        for i in range(len(secondchild)):
+                            if node.nodeId == secondchild[i].nodeId:
+                                inside = 1
+                            else:
+                                inside = inside
+                        if inside == 1:
+                            dictBD[node.nodeId].append(0)
+                        else:
+                            dictBD[node.nodeId].append(NP.get_distance(node, topology_only=False))
 
             else:  # Same as previously, but initialisation of node list to save value
                 dictND[node.nodeId] = []
@@ -187,17 +172,26 @@ def distance_and_align(workdir, tree: Tree, nodeprune, traverse, align: str):
                     dictND[node.nodeId].append(-1)
                     dictBD[node.nodeId].append(-1)
                     sum = sum + node.dist
-
                 else:
                     if node.nodeId == parent.nodeId:
                         # Dist
-                        dictND[node.nodeId].append(0)
-                        dictBD[node.nodeId].append(node.dist)
+                        dictND[node.nodeId].append(-1)
+                        dictBD[node.nodeId].append(-1)
 
-                    else:
-                        # Distance
-                        dictND[node.nodeId].append(int(NP.get_distance(node, topology_only=True)))
-                        dictBD[node.nodeId].append(NP.get_distance(node, topology_only=False))
+                    else:  # distance to other node save
+                        dictND[node.nodeId].append(int(NP.get_distance(node, topology_only=True)) - 1)
+                        inside = 0
+                        for i in range(len(secondchild)):
+                            if node.nodeId == secondchild[i].nodeId:
+                                inside=1
+                            else:
+                                inside=inside
+                        if inside==1 :
+                            dictBD[node.nodeId].append(0)
+                        else:
+                            dictBD[node.nodeId].append(NP.get_distance(node, topology_only=False))
+
+
 
         ######################
         # For difficulty file :
