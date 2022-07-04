@@ -9,13 +9,25 @@ import numpy as np
 import pandas as pd
 from ete3 import Tree
 
+traverse = list()
 
-def postorder_explo(tree) -> List:  # Exploring path (postorder) of the studied tree
+
+def postorder_explo(tree) -> None:
+    """
+    Exploring path (postorder) of the studied tree. Done once, order reused in many functions
+    :param tree:
+    :return:
+    """
+    global traverse
     traverse = list(tree.traverse("postorder"))
-    return traverse
 
 
-def tree_root(traverse : List) -> bool:  # Boolean function. True = tree is root, False = tree is unroot
+def tree_root() -> bool:
+    """
+    Test tree rooting.
+    :return: true if rooted false otherwise
+    """
+    global traverse
     j = 0
     n = 0
     for node in traverse:  # use tree path
@@ -28,11 +40,16 @@ def tree_root(traverse : List) -> bool:  # Boolean function. True = tree is root
         return False
 
 
-def id_and_labels_features(traverse : List):  # create new features
+def id_and_labels_features(traverse: List):
+    """
+    create new features
+    :param traverse:
+    :return:
+    """
     inter = 0
     nod = 0
     leaf = 0
-    if tree_root(traverse):  # Use tree_root function to test if tree is rooted or not
+    if tree_root():  # Use tree_root function to test if tree is rooted or not
         for node in traverse:
             if node.is_leaf():
                 leaf = leaf + 1
@@ -68,29 +85,37 @@ def id_and_labels_features(traverse : List):  # create new features
     return 0
 
 
-def list_pruned_node(traverse : List, tree , minimumleaf : int, Nbrpruning: int):  # Choose a node to prune
+def list_pruned_node(tree, minimumleaf: int, Nbrpruning: int):
+    """
+    Choose a node to prune
+    :param tree:
+    :param minimumleaf:
+    :param Nbrpruning:
+    :return:
+    """
+    global traverse
     matches: List = []
     nbrleaves = int(len(tree))
     shuffle_traverse = traverse[:]
     random.shuffle(shuffle_traverse)
-    it=-1
+    it = -1
     for node in shuffle_traverse:
-        it=it+1
+        it = it + 1
         count = 0
         NP = tree.search_nodes(name=node.name)[0]
         for i in NP.iter_leaves():
-            count+=1
-        if count <= int(nbrleaves)-int(minimumleaf):
+            count += 1
+        if count <= int(nbrleaves) - int(minimumleaf):
             matches.append(node)
         if len(matches) == int(Nbrpruning):
             print(str(Nbrpruning), "distinct pruning available for that tree")
             return matches
-        if it == len(shuffle_traverse)-1:
+        if it == len(shuffle_traverse) - 1:
             print("Only", len(matches), "pruning are possible on this tree. Config will be update to avoid error ...")
             return matches
 
 
-def get_child(tree , nodeprune :List, liste : List):  # Get the names of a node and of all children
+def get_child(tree: Tree, nodeprune: List, liste: List):  # Get the names of a node and of all children
     liste.append(nodeprune.nodeId)  # Add nodename to a list
     NP = tree.search_nodes(nodeId=nodeprune.nodeId)[0]
     child = NP.children  # Search child
@@ -100,7 +125,7 @@ def get_child(tree , nodeprune :List, liste : List):  # Get the names of a node 
     return
 
 
-def get_leafchild_name(tree , nodeprune : List, liste : List):  # Get the names of all children nodes
+def get_leafchild_name(tree, nodeprune: List, liste: List):  # Get the names of all children nodes
     if not nodeprune.is_leaf():
         NP = tree.search_nodes(nodeId=nodeprune.nodeId)[0]
         child = NP.children  # Search child
@@ -111,7 +136,7 @@ def get_leafchild_name(tree , nodeprune : List, liste : List):  # Get the names 
     return
 
 
-def distance_and_align(workdir, tree: Tree, nodeprune, traverse, align: str):
+def distance_and_align(workdir, tree: Tree, nodeprune, align: str, traverse: List):
     """
     in a single loop over nodes to  prune:
      - Create 2 distinct distance files (Node distance and Branches distance) in which every distance involve in pruning
@@ -122,8 +147,8 @@ def distance_and_align(workdir, tree: Tree, nodeprune, traverse, align: str):
     :param workdir:
     :param tree:
     :param nodeprune:
-    :param traverse:
     :param align:
+    :param traverse:
     :return:
     """
     # Element necessary to save distance
@@ -141,7 +166,7 @@ def distance_and_align(workdir, tree: Tree, nodeprune, traverse, align: str):
     # Element necessary to save Difficulty of pruning
     Diff = {"ID": [], "Nodeprune": [], "Difficulty": []}  # Create a dict in wich difficulty of pruning is save
 
-    for pruned in range(len(nodeprune)): # for each pruning
+    for pruned in range(len(nodeprune)):  # for each pruning
 
         ##########
         # DISTANCE
@@ -167,13 +192,13 @@ def distance_and_align(workdir, tree: Tree, nodeprune, traverse, align: str):
                 if node.nodeId in childliste:  # if tree node is a child of pruned one or the pruned one
                     dictND[node.nodeId].append(-1)
                     dictBD[node.nodeId].append(-1)
-                    sum = sum + node.dist # sum of pruned branch length = difficulty of pruning.
+                    sum = sum + node.dist  # sum of pruned branch length = difficulty of pruning.
                 else:
                     if node.nodeId == parent.nodeId:
                         dictND[node.nodeId].append(0)  # 0 Because are fix on it
                         dictBD[node.nodeId].append(node.dist)  # Save the length of the branch
 
-                    else: # distance to other node save
+                    else:  # distance to other node save
                         dictND[node.nodeId].append(int(NP.get_distance(node, topology_only=True)))
                         dictBD[node.nodeId].append(NP.get_distance(node, topology_only=False))
 
@@ -209,30 +234,30 @@ def distance_and_align(workdir, tree: Tree, nodeprune, traverse, align: str):
         # Update reference alignment file (without pruned leave and site full of gap)
         # Create a fasta file in which genome of pruned leaves are save (not a alignment)
 
-        #Here we save leaf names and sequences in two different list in fonction of it is pruned or not
+        # Here we save leaf names and sequences in two different list in fonction of it is pruned or not
         childliste = []
         get_leafchild_name(tree, nodeprune[pruned], childliste)  # identify child of pruned node
-        name = [] # store name of node not pruned
-        prunedname=[] # store name of node and leaves pruned
-        seq = [] # store sequence not pruned
-        prunedseq=[] # store sequence pruned
-        file = open(align, 'r') # read align file
+        name = []  # store name of node not pruned
+        prunedname = []  # store name of node and leaves pruned
+        seq = []  # store sequence not pruned
+        prunedseq = []  # store sequence pruned
+        file = open(align, 'r')  # read align file
         lines = file.readlines()
         itline = -1
-        for line in lines: # for each lines
+        for line in lines:  # for each lines
             itline = itline + 1
-            if line.startswith(">"): #if line is a header
-                if line[1:-1] in childliste : # if leave is pruned
-                    prunedname.append(line[1:-1]) # save header of pruned leaves
-                    sous_seq=[]
-                    for c in range(len(lines[itline + 1]) - 1): # save sequences of pruned leaves
-                        if lines[itline + 1][c] != "-" :
+            if line.startswith(">"):  # if line is a header
+                if line[1:-1] in childliste:  # if leave is pruned
+                    prunedname.append(line[1:-1])  # save header of pruned leaves
+                    sous_seq = []
+                    for c in range(len(lines[itline + 1]) - 1):  # save sequences of pruned leaves
+                        if lines[itline + 1][c] != "-":
                             sous_seq.append(lines[itline + 1][c])
                     prunedseq.append(sous_seq)
                 else:
-                    name.append(line[1:-1]) # save header of not pruned leaves
+                    name.append(line[1:-1])  # save header of not pruned leaves
                     sous_seq = []
-                    for c in range(len(lines[itline + 1]) - 1): # save sequences of not pruned leaves
+                    for c in range(len(lines[itline + 1]) - 1):  # save sequences of not pruned leaves
                         sous_seq.append(lines[itline + 1][c])
                     seq.append(sous_seq)
         assert len(seq) > 0
@@ -262,7 +287,6 @@ def distance_and_align(workdir, tree: Tree, nodeprune, traverse, align: str):
         for i in range(len(dictionary["Node"])):
             file.write(">" + dictionary["Node"][i] + "\n" + dictionary["Seq"][i] + "\n")
 
-
         # GENOME FILE :
         for i in range(len(prunedseq)):
             prunedseq[i] = ("".join(prunedseq[i]))
@@ -290,7 +314,7 @@ def distance_and_align(workdir, tree: Tree, nodeprune, traverse, align: str):
     return 0
 
 
-def multipruning(workdir :str, tree : List , nodeprune : List):
+def multipruning(workdir: str, tree: Tree, nodeprune: List):
     """
     Create newick files in which pruned branched have been remote of reference tree.
     :param workdir:
@@ -302,10 +326,10 @@ def multipruning(workdir :str, tree : List , nodeprune : List):
     for pruned in range(len(nodeprune)):  # For all pruned nodes
         treecopy = tree.copy(method="deepcopy")  # copy object before modified
         NP = treecopy.search_nodes(nodeId=nodeprune[pruned].nodeId)[0]
-        parent=NP.up #Identify parent node of the pruned one.
+        parent = NP.up  # Identify parent node of the pruned one.
         NP.detach()  # pruning
         parent.delete()
-        treecopy.write(format=1, outfile=os.path.join(workdir,"T", str(it) + ".tree"))  # write pruning tree
+        treecopy.write(format=1, outfile=os.path.join(workdir, "T", str(it) + ".tree"))  # write pruning tree
         it = it + 1
     return 0
 
@@ -331,11 +355,11 @@ def pruning_operations(config: Dict):
     if not os.path.exists(R_dir):
         os.mkdir(R_dir)
 
-    #Use functions previously created
+    # Use functions previously created
     id_and_labels_features(config["config_general"].traverse)
     random.seed(config["seed"])
 
-    res = distance_and_align(config["workdir"], config["config_general"].tree,config["config_general"].nodeprune,
+    res = distance_and_align(config["workdir"], config["config_general"].tree, config["config_general"].nodeprune,
                              config["config_general"].traverse, config["dataset_align"])
     assert res == 0
     multipruning(config["workdir"], config["config_general"].tree, config["config_general"].nodeprune)

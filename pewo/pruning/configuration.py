@@ -16,11 +16,14 @@ def validate_config(config: Dict):
     """
     conf = RunConfig()
     conf.tree = Tree(config["dataset_tree"], format=1)
+    # must be done 1st to set global variable 'traverse'
     conf.traverse = postorder_explo(conf.tree)
-    conf.nodeprune = list_pruned_node(conf.traverse, conf.tree,
+    # following functions rely on local variable 'traverse'
+    conf.nodeprune = list_pruned_node(conf.tree,
                                    config["minimleaf"],
                                    config["pruning_count"])
-
+    # tree, traversal order, node to prune ids ... all those are saved in
+    # snakemake config dict for future uses in the pipeline
     config["config_general"] = conf
     if int(len(conf.nodeprune)) != config["pruning_count"]:
         config["pruning_count"] = int(len(conf.nodeprune))
