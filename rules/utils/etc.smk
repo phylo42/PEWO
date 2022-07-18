@@ -31,7 +31,6 @@ def extract_params_raxmlng(file):
         for l in lines:
             if l.startswith("   Rate heterogeneity:"):
                 res["alpha"]=l.split(":")[2][0:9].strip()
-    print("coucou",res)
     return res
 
 

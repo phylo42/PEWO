@@ -37,13 +37,14 @@ def predict_request_name():
         l.append(os.path.join(config["workdir"],"R",str(i)+"_r150.fasta"))
     return l
 
+
 #######################
 #### Rule part
 
 rule all_of_this_rule:
     input:
         expand(
-            os.path.join(config["workdir"],"A","{pruning}.fasta"),
+            os.path.join(config["workdir"],"Generator","{pruning}.fasta"),
             pruning=range(config["pruning_count"])
         )
 
@@ -78,3 +79,19 @@ rule PRUNING:
             """
         )
 
+rule Generator:
+    input:
+        genome=os.path.join(config["workdir"],"G","{pruning}.fasta")
+    output:
+        generator=os.path.join(config["workdir"],"Generator","{pruning}generator.fasta")
+    params:
+        dir = lambda wildcards: os.path.join(config["workdir"],"Generator"),
+        techno= lambda wildcards: os.path.join(config["read_technologies"]),
+        script= lambda wildcards: os.path.join(config["fastqsim"])
+    run:
+       shell (
+           """
+           mkdir {params.dir}
+           sh {params.script} -nobackground -platform {params.techno} -source 20 {input.genome} True -plothistogram -o {output.generator} -threads 1
+           """
+       )
