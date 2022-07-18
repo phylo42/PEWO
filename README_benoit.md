@@ -272,9 +272,8 @@ MAB team (Methods and Algorithms in Bioinformatics), LIRMM, Montpellier, France.
 PEWO is available under the MIT license.
 
 
-#####################################################################################
-################################ PEWO VERSION2 ######################################
-#####################################################################################
+## UPDATE OF PEWO (by PENEL BENOIT - penelbenoit@gmail.com)
+
 
 ### 1- JAVA, branch distance and difficulty features :
 
