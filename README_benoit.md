@@ -279,10 +279,10 @@ PEWO is available under the MIT license.
 ### 1- JAVA, branch distance and difficulty features :
 
 Previously, PEWO was depend of JAVA to do pruning operations. The new version of PEWO
-is exempt form this dependency. For this purpose, ETE TOOLKIT version 3 (ETE3 - http://etetoolkit.org/), a python environnement for tree exploration, have been charged on PEWO conda environment.
+is exempt form this dependency. For this purpose, ETE TOOLKIT version 3 (ETE3 - http://etetoolkit.org/), a python environnement for tree exploration, has been charged on PEWO conda environment.
 To install it : http://etetoolkit.org/download/.
 
-Operate_pruning.smk workflow, which was depend of JAVA environment is no longer used in evalaccuracy.smk workflow. Operate_pruning_python.smk have been developed. It is the analogue workflow of operate_pruning.smk. It is the new one use in evalaccuracy.smk.
+Operate_pruning.smk workflow, which was depend of JAVA environment is no longer used in evalaccuracy.smk workflow. Operate_pruning_python.smk has been developed. It is the analogue workflow of operate_pruning.smk. It is the new one use in evalaccuracy.smk.
 Rule PRUNING from operate_pruning_python.smk produce the same output as the previous version of PEWO:
 - Pruned trees,
 - Pruned alignment files,
@@ -324,23 +324,34 @@ minimleaf corresponds to the minimum of leaves that a phylogenetic tree must con
 
 ### 4- Read simulation rule
 
-Read simultation rules have been strated in operate_pruning_python.smk (rule named generator). In this new rules, input, output and run have been configured. Currently not used when eval_accuracy.smk workflow is run because the generator rule output are still not used.
+Read simultation rules has been started in operate_pruning_python.smk (rule named generator). In this new rules, input (Genome of pruned sequences), output (generated reads) and run have been configured. Currently not used when eval_accuracy.smk workflow is run because the generator rule output are still not used.
+
 
 Fastqsim tools (https://github.com/annashcherbina/FASTQSim) is used to generate reads from three different technologies :
 -Illumina
 -Pacbio
 -Sanger
 
+The rule run :
+```
+  sh {params.script} -nobackground -platform {params.techno} -source 20 {input.genome} True -plothistogram -o {output.generator} -threads 1
+ ``` 
+This code line allow user to generated reads from an already existing script ({params.script}) and a fasta file of sequences ({input.genome}).
+-nobackground flag is used to not incorporate the sequences from the fasta file in the generated read file ; in accordance with the chosen technologies (-platform {params.techno}).
+-plothistogram flag is used to generated summary plot characterising the generated reads (length of generated reads, mutation rate, error rate, etc..).
+-o flag is used to give a specific name to the generated read file.
+-threads flag is use to chose a number of cpu  
+
+
 To finish that part, it is necessary : 
 
 - to charge new package in the env.yaml file  of PEWO  (BE CAREFULL, some part use PYTHON2 !): 
-
--numpy
--scipy
--matplotlib
--python_tk
--tk
--tkinter
+    - numpy,
+    - scipy,
+    - matplotlib,
+    - python_tk,
+    - tk,
+    - tkinter
 
 - Use the genered sequences in workflows performiong the placement operation : 
 
