@@ -275,13 +275,13 @@ PEWO is available under the MIT license.
 ## UPDATE OF PEWO (by PENEL BENOIT - penelbenoit@gmail.com)
 
 
-### 1- JAVA, branch distance and difficulty features :
+### 1- JAVA, branch distance and difficulty features:
 
-Previously, PEWO was depend of JAVA to do pruning operations. The new version of PEWO
-is exempt form this dependency. For this purpose, ETE TOOLKIT version 3 (ETE3 - http://etetoolkit.org/), a python environnement for tree exploration, has been charged on PEWO conda environment.
-To install it : http://etetoolkit.org/download/.
+Previously, PEWO was dependent of JAVA to do pruning operations. The new version of PEWO
+is exempt form this dependency. For this purpose, ETE TOOLKIT version 3 (ETE3 - http://etetoolkit.org/), a python environment for tree exploration, has been charged on PEWO conda environment.
+To install it: http://etetoolkit.org/download/.
 
-Operate_pruning.smk workflow, which was depend of JAVA environment is no longer used in evalaccuracy.smk workflow. Operate_pruning_python.smk has been developed. It is the analogue workflow of operate_pruning.smk. It is the new one use in evalaccuracy.smk.
+Operate_pruning.smk workflow, which was dependent of JAVA environment is no longer used in evalaccuracy.smk workflow. Operate_pruning_python.smk has been developed. It is the analogue workflow of operate_pruning.smk. It is the new one use in evalaccuracy.smk.
 Rule PRUNING from operate_pruning_python.smk produce the same output as the previous version of PEWO:
 - Pruned trees,
 - Pruned alignment files,
@@ -289,61 +289,61 @@ Rule PRUNING from operate_pruning_python.smk produce the same output as the prev
 - Request sequences (derivated from genome of pruned sequences),
 - Dtx.csv file
 
-and produce two new one :
+and produce two new one:
 
-- D2tx.csv : analogue file to Dtx.csv, but save branch distance rather node distance. It is a new non-redundante features of PEWO to asses phylogenetic placement tools.
+- D2tx.csv : analogue file to Dtx.csv, but save branch distance rather node distance. It is a new non-redundant feature of PEWO to asses phylogenetic placement tools.
 - Diff.csv : Save difficulty associated to each pruning operation as the sum of the branch length of pruned sequences.
 
-To produce those outputs, the pruning_operation function is used. That functions developed by PENEL BENOIT (penelbenoit@gmail.com), relies on ETE3 packages and other functions, is from a python script (pruning.py). That python script is store on the pruning library of PEWO library. pruning_operation do :
+To produce those outputs, the pruning_operation function is used. That function, which relies on ETE3 packages, comes from a python script (pruning.py). That python script is store on the pruning library of PEWO library. pruning_operation do :
 - the reading of a phylogenetic tree (TREE function),
 - a unique postorder exploration (postorder_explo function),
-- Creates new features associated to TreeNode object of the phhylogenetic tree (id_and_labels_features function),
-- Creates a list of TreeNode object which will be pruned (list_pruned_node function),
-- Creates a list of child TreeNode object associated to the pruned object (get_child or get_leafchil_name function),
-- Creates pruned alignement files, genome of pruned sequences files, request sequences files, D(2)tx.csv file and difficulty file (distance_and_align function),
+- create new features associated to TreeNode object of the phhylogenetic tree (id_and_labels_features function),
+- create a list of TreeNode object which will be pruned (list_pruned_node function),
+- create a list of child TreeNode object associated to the pruned object (get_child or get_leafchil_name function),
+- create pruned alignement files, genome of pruned sequences files, request sequences files, D(2)tx.csv file and difficulty file (distance_and_align function),
 -Creates pruned trees (multipruning function).
 
 TODO: 
 
-JAVA dependences is still existing for nodedistance calcul operation on operate_nodedistance.smk workflow. 
-In the near future, that dependence should to be fixed, to allow PEWO to calculate nodedistance and branchedistance, and  to link those mesures to the level of difficulty associated to each pruning operations.
+JAVA dependences exist still for nodedistance calcul operation on operate_nodedistance.smk workflow. 
+In the near future, that dependence should to be fixed, to allow PEWO to calculate nodedistance and branchedistance, and  to link those measures to the level of difficulty associated to each pruning operations.
 
 ### 2- RAXML UPDATE
 
-The current version of PEWO is using raxml-ng version of the software RAXML (https://github.com/amkozlov/raxml-ng), through operate_optimisation_raxml_ng.smk workflow, to produce reoptimized phylogenetic tree after pruning operation. It is the lastest version available (July 2022). That version is faster and needs less memory space. The operate_optimisation.smk workflow however, is still used for tje taxtastic operation.
+The current version of PEWO is using raxml-ng version of the software RAXML (https://github.com/amkozlov/raxml-ng), through operate_optimisation_raxml_ng.smk workflow, to produce reoptimized phylogenetic tree after pruning operation. It is the latest version available (July 2022). That version is faster and needs less memory space. The operate_optimisation.smk workflow however, is still used for the taxtastic operation.
 
 TODO: 
-The dependencies to operate_optimisation.smk workflow need to be deleted. Taxtastic operation need to be done with operate_optimisation_raxml_ng.smk workflow.
+The dependencies to operate_optimisation.smk workflow needs to be deleted. Taxtastic operation need to be done with operate_optimisation_raxml_ng.smk workflow.
 
 ### 3- Controle of pruning_count and use of minimleaf on config.yaml file
 
-Before to lauch PEWO, a control of the values associated to pruning_count is done. If the number of pruned requested by the user is to important, in accordance with the phylogenetic tree used and the minimleaf argument choose, an update of the configuration file is generated. The values associated to pruning_count is change by the maximum of pruned possible  in accordance with the phylogenetic tree used and the minimleaf. The updated configuration file is finaly save as a binary file and subsequently use as the new configuration file associated to PEWO. 
+Before to lauch PEWO, a control of the values associated to pruning_count is done. If the number of pruned requested by the user is too important, in accordance with the phylogenetic tree used and the minimleaf argument choose, an update of the configuration file is generated. The values associated to pruning_count is change by the maximum of pruned possible  in accordance with the phylogenetic tree used and the minimleaf. The updated configuration file is save as a binary file and subsequently use as the new configuration file associated to PEWO. 
 
 minimleaf corresponds to the minimum of leaves that a phylogenetic tree must contain after pruning steps.
 
 ### 4- Read simulation rule
 
-Read simultation rules has been started in operate_pruning_python.smk (rule named generator). In this new rules, input (Genome of pruned sequences), output (generated reads) and run have been configured. Currently not used when eval_accuracy.smk workflow is run because the generator rule output are still not used.
+Read simulation rule has been started in operate_pruning_python.smk (rule named generator). In this new rule, input (Genome of pruned sequences), output (generated reads) and run have been configured. It is currently not used when eval_accuracy.smk workflow is run. It is because the generator rule output are still not used.
 
 
-Fastqsim tools (https://github.com/annashcherbina/FASTQSim) is used to generate reads from three different technologies :
+Fastqsim tool (https://github.com/annashcherbina/FASTQSim) is used to generate reads from three different technologies :
 -Illumina
 -Pacbio
 -Sanger
 
-The rule run :
+The rule run:
 ```
   sh {params.script} -nobackground -platform {params.techno} -source 20 {input.genome} True -plothistogram -o {output.generator} -threads 1
  ``` 
-This code line allow user to generated reads from an already existing script ({params.script}) and a fasta file of sequences ({input.genome}).
+This code line allows user to generated reads from an already existing script ({params.script}) and a fasta file of sequences ({input.genome}).
 -nobackground flag is used to not incorporate the sequences from the fasta file in the generated read file ; in accordance with the chosen technologies (-platform {params.techno}).
 -plothistogram flag is used to generated summary plot characterising the generated reads (length of generated reads, mutation rate, error rate, etc..).
 -o flag is used to give a specific name to the generated read file.
--threads flag is use to chose a number of cpu  
+-threads flag is uses to chose a number of cpu  
 
-TODO : 
+TODO: 
 
-Tofinish that part, it is necessary : 
+To finish that part, it is necessary: 
 
 - to charge new package in the env.yaml file  of PEWO  (BE CAREFULL, some part of fastqsim use PYTHON2 !): 
     - numpy,
@@ -353,7 +353,7 @@ Tofinish that part, it is necessary :
     - tk,
     - tkinter
 
-- Use the genered sequences in workflows performiong the placement operation : 
+- Use the generated sequences in workflows performing the placement operation
 
 
  
