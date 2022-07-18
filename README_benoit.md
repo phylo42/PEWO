@@ -341,10 +341,11 @@ This code line allow user to generated reads from an already existing script ({p
 -o flag is used to give a specific name to the generated read file.
 -threads flag is use to chose a number of cpu  
 
+TODO : 
 
-To finish that part, it is necessary : 
+Tofinish that part, it is necessary : 
 
-- to charge new package in the env.yaml file  of PEWO  (BE CAREFULL, some part use PYTHON2 !): 
+- to charge new package in the env.yaml file  of PEWO  (BE CAREFULL, some part of fastqsim use PYTHON2 !): 
     - numpy,
     - scipy,
     - matplotlib,
