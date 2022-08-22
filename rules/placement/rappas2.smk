@@ -56,8 +56,8 @@ rule db_build_rappas2:
             "--filter {filter} " +
             "-w {params.workdir} " +
             "--threads {params.arthreads} " +
-            "--ardir {params.ardir} " +
-            "--ratio-reduction {wildcards.red} " +
+            "--ar-dir {params.ardir} " +
+            "--reduction-ratio {wildcards.red} " +
             "--use-unrooted  &> {log} "
         )
 
@@ -71,11 +71,13 @@ rule placement_rappas2:
         get_log_template(config, PlacementSoftware.RAPPAS2)
     version: "1.00"
     params:
+        states=["nucl"] if config["states"]==0 else ["amino"],
         workdir = _rappas2_experiment_dir,
         maxp = config["maxplacements"],
         minlwr = config["minlwr"]
     run:
         rappas_command = "rappas2.py place " + \
+            "--states {params.states} " + \
             "-i {input.database} " + \
             "-o {params.workdir} " + \
             "--threads 1 " + \
@@ -85,5 +87,5 @@ rule placement_rappas2:
         move_command = "mv {params.workdir}/placements_" + query_wildcard + "_r{wildcards.length}.fasta.jplace " + \
                        "{params.workdir}/" + \
                        query_wildcard + \
-                       "_r{wildcards.length}_k{wildcards.k}_o{wildcards.o}_red{wildcards.red}_ar{wildcards.ar}_mu{wildcards.mu}_filter{wildcards.filter}_sm{wildcards.score_model}_rappas2.jplace"
+                       "_r{wildcards.length}_k{wildcards.k}_o{wildcards.o}_red{wildcards.red}_ar{wildcards.ar}_mu{wildcards.mu}_filter{wildcards.filter}_rappas2.jplace"
         shell(";".join(_ for _ in [rappas_command, move_command]))
