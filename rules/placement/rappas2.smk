@@ -35,6 +35,7 @@ rule db_build_rappas2:
         os.path.join(_rappas2_experiment_dir, "db_build.log")
     version: "1.00"
     params:
+        states=["nucl"] if config["states"]==0 else ["amino"],
         model = select_model_phymlstyle(),
         ardir = os.path.join(Path(_rappas_experiment_dir).parent, "AR"),
         workdir = _rappas2_experiment_dir,
@@ -44,6 +45,7 @@ rule db_build_rappas2:
         filter = wildcards.filter.lower() if wildcards.filter else "no-filter"
         shell(
             "xpas.py build " +
+            "--states {params.states} " +
             "-b $(which {params.arbin}) " +
             "-k {wildcards.k} " +
             "--omega {wildcards.o} " +
