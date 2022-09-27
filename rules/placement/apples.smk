@@ -44,15 +44,14 @@ rule placement_apples:
     output:
         jplace=get_output_template(config, PlacementSoftware.APPLES, "jplace")
     params:
-        is_protein = config["states"] == 0
+        is_protein = config["states"] == 1
     log:
         get_log_template(config, PlacementSoftware.APPLES)
     benchmark:
         repeat(_apples_place_benchmark_template, config["repeats"])
     version: "1.0"
     run:
-        #
         command = "run_apples.py -s {input.r} -q {input.q} -t {input.t} -T 1 -m {wildcards.meth} -c {wildcards.crit} -o {output.jplace} "
-        if {params.is_protein}:
+        if params.is_protein:
             command += "-p "
         shell(command)
