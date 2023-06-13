@@ -69,6 +69,7 @@ rule db_build_rappas2:
         arthreads = config["config_rappas2"]["arthreads"]
     run:
         filter = wildcards.filter.lower() if wildcards.filter else "no-filter"
+        ghosts = wildcards.ghosts.lower() if wildcards.ghosts else "both"
         shell(
             "xpas.py build " +
             "--states {params.states} " +
@@ -80,6 +81,7 @@ rule db_build_rappas2:
             "-t {input.t} " +
             "-r {input.a} " +
             "--filter {filter} " +
+            "--ghosts {ghosts} " +
             "-w {params.workdir} " +
             "--threads {params.arthreads} " +
             "--ar-dir {params.ardir} " +
@@ -104,7 +106,8 @@ rule placement_rappas2:
         maxp = config["maxplacements"],
         minlwr = config["minlwr"]
     run:
-        rappas_command = "rappas2.py place " + \
+        ghosts = wildcards.ghosts.lower() if wildcards.ghosts else "both"
+        rappas_command = "epik.py place " + \
             "--states {params.states} " + \
             "-i {input.database} " + \
             "-o {params.workdir} " + \
@@ -115,5 +118,5 @@ rule placement_rappas2:
         move_command = "mv {params.workdir}/placements_" + query_wildcard + "_r{wildcards.length}.fasta.jplace " + \
                        "{params.workdir}/" + \
                        query_wildcard + \
-                       "_r{wildcards.length}_k{wildcards.k}_o{wildcards.o}_red{wildcards.red}_ar{wildcards.ar}_mu{wildcards.mu}_filter{wildcards.filter}_rappas2.jplace"
+                       "_r{wildcards.length}_k{wildcards.k}_o{wildcards.o}_red{wildcards.red}_ar{wildcards.ar}_mu{wildcards.mu}_filter{wildcards.filter}_ghosts{wildcards.ghosts}_rappas2.jplace"
         shell(";".join(_ for _ in [rappas_command, move_command]))
