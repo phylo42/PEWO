@@ -25,6 +25,14 @@ read_length: [150,300]
 # Number of random prunings to compute
 pruning_count: 50
 
+# simulate read with ART instead: 1=on, 0=off
+simulate_ART: 1
+
+# ART simulation platform, one of: illumina, 454
+ART_platform: '454'
+
+# number of reads per pruned sequence to generate with ART
+num_reads: 50
 
 ## IF "ACCURACY" IS EVALUATED
 #############################
