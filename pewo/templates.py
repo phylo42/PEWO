@@ -7,6 +7,7 @@ __license__ = "MIT"
 
 
 import os
+import numpy as np
 from typing import Union, Any, Dict, List
 import pewo.config as cfg
 from pewo.software import Software, PlacementSoftware, AlignmentSoftware
@@ -68,7 +69,10 @@ def get_experiment_dir_template(config: Dict, software: PlacementSoftware, **kwa
         return os.path.join(software_dir, input_set_dir_template, "meth{meth}_crit{crit}")
     elif software == PlacementSoftware.RAPPAS:
         return os.path.join(software_dir, input_set_dir_template, "red{red}_ar{ar}", "k{k}_o{o}")
-    elif software == PlacementSoftware.RAPPAS2:
+    elif software == PlacementSoftware.IPK:
+        return os.path.join(software_dir, input_set_dir_template, "red{red}_ar{ar}",
+                            "k{k}_filter{filter}_ghosts{ghosts}")
+    elif software == PlacementSoftware.EPIK:
         return os.path.join(software_dir, input_set_dir_template, "red{red}_ar{ar}",
                             "k{k}_o{o}_mu{mu}_filter{filter}_ghosts{ghosts}")
     elif software == PlacementSoftware.APPSPAM:
@@ -138,7 +142,7 @@ def get_queryname_template(config: Dict, software: PlacementSoftware, **kwargs) 
     2) specific arguments: model params etc. -- depends on software used
 
     This method creates a full placement output filename template, based on the
-    both types of inputs. Thus it extends the name given by
+    both types of inputs. Thus, it extends the name given by
     get_common_queryname_template(), specifying it by the software given.
     It is used to produce .jplace files, .log files etc.s
     """
@@ -165,7 +169,7 @@ def get_queryname_template(config: Dict, software: PlacementSoftware, **kwargs) 
         return get_common_queryname_template(config) + "_meth{meth}_crit{crit}"
     elif software == PlacementSoftware.RAPPAS:
         return get_common_queryname_template(config) + "_k{k}_o{o}_red{red}_ar{ar}"
-    elif software == PlacementSoftware.RAPPAS2:
+    elif software == PlacementSoftware.EPIK:
         return get_common_queryname_template(config) + \
                "_k{k}_o{o}_red{red}_ar{ar}_mu{mu}_filter{filter}_ghosts{ghosts}"
     elif software == PlacementSoftware.APPSPAM:
@@ -220,14 +224,21 @@ def get_output_template_args(config: Dict, software: PlacementSoftware, **kwargs
         template_args["o"] = config["config_rappas"]["omega"]
         template_args["red"] = config["config_rappas"]["reduction"]
         template_args["ar"] = config["config_rappas"]["arsoft"]
-    elif software == PlacementSoftware.RAPPAS2:
-        template_args["k"] = config["config_rappas2"]["k"]
-        template_args["o"] = config["config_rappas2"]["omega"]
-        template_args["red"] = config["config_rappas2"]["reduction"]
-        template_args["ar"] = config["config_rappas2"]["arsoft"]
-        template_args["mu"] = config["config_rappas2"]["mu"]
-        template_args["filter"] = config["config_rappas2"]["filter"]
-        template_args["ghosts"] = config["config_rappas2"]["ghosts"]
+    elif software == PlacementSoftware.IPK:
+        template_args["k"] = config["config_epik"]["k"]
+        template_args["o"] = np.min(config["config_epik"]["omega"])
+        template_args["red"] = config["config_epik"]["reduction"]
+        template_args["ar"] = config["config_epik"]["arsoft"]
+        template_args["filter"] = config["config_epik"]["filter"]
+        template_args["ghosts"] = config["config_epik"]["ghosts"]
+    elif software == PlacementSoftware.EPIK:
+        template_args["k"] = config["config_epik"]["k"]
+        template_args["o"] = config["config_epik"]["omega"]
+        template_args["red"] = config["config_epik"]["reduction"]
+        template_args["ar"] = config["config_epik"]["arsoft"]
+        template_args["mu"] = config["config_epik"]["mu"]
+        template_args["filter"] = config["config_epik"]["filter"]
+        template_args["ghosts"] = config["config_epik"]["ghosts"]
     elif software == PlacementSoftware.APPSPAM:
         template_args["w"] = config["config_appspam"]["w"]
         template_args["mode"] = config["config_appspam"]["mode"]

@@ -16,7 +16,8 @@ class PlacementSoftware(Enum):
     PPLACER = "pplacer"
     APPLES = "apples"
     RAPPAS = "rappas"
-    RAPPAS2 = "rappas2"
+    IPK = "ipk"
+    EPIK = "epik"
     APPSPAM = "appspam"
 
     @staticmethod

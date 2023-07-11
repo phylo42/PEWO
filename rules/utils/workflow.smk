@@ -202,9 +202,9 @@ def _get_resources_tsv(config: Dict, software: PlacementSoftware, **kwargs) -> L
     if software == PlacementSoftware.RAPPAS:
         software_templates = rappas_benchmark_templates
         software_template_args = rappas_benchmark_template_args
-    elif software == PlacementSoftware.RAPPAS2:
-        software_templates = rappas2_benchmark_templates
-        software_template_args = rappas2_benchmark_template_args
+    elif software == PlacementSoftware.EPIK:
+        software_templates = epik_benchmark_templates
+        software_template_args = epik_benchmark_template_args
     elif software == PlacementSoftware.EPA:
         software_templates = epa_benchmark_templates + hmmer_benchmark_templates
         software_template_args = epa_benchmark_template_args + hmmer_benchmark_template_args
