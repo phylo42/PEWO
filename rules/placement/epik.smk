@@ -53,14 +53,13 @@ def get_minimal_value(values):
         raise RuntimeError(f"Internal PEWO error: could not parse values {values}")
 
 def get_epik_input_templates(config, wildcards):
-    minimal_omega = get_minimal_value(config["config_epik"]["omega"])
-    return  os.path.join(_ipk_experiment_dir, "DB_k{k}_o" + str(minimal_omega) + ".ipk")
+    return  os.path.join(_ipk_experiment_dir, "DB_k{k}.ipk")
 
 def get_ipk_output_templates(config):
-    minimal_omega = get_minimal_value(config["config_epik"]["omega"])
+    #minimal_omega = get_minimal_value(config["config_epik"]["omega"])
     return os.path.join(
         get_experiment_dir_template(config, PlacementSoftware.IPK),
-        "DB_k{k}_o" + str(minimal_omega) + ".ipk"
+        "DB_k{k}.ipk"
     )
 
 rule ipk:
@@ -110,6 +109,7 @@ rule ipk:
             "--reduction-ratio {wildcards.red} " +
             "--use-unrooted  &> {log} "
         )
+        shell("mv {params.workdir}/DB.ipk {params.workdir}/DB_k{wildcards.k}.ipk")
 
 rule placement_epik:
     input:
@@ -129,10 +129,12 @@ rule placement_epik:
         minlwr = config["minlwr"]
     run:
         ghosts = wildcards.ghosts.lower() if wildcards.ghosts else "both"
-        rappas_command = "epik.py place " + \
+        epik_command = "epik.py place " + \
             "--states {params.states} " + \
             "-i {input.database} " + \
             "-o {params.workdir} " + \
+            "--mu {wildcards.mu} " + \
+            "--omega {wildcards.o} " + \
             "--threads 1 " + \
             "{input.r} " + \
             "&> {log} "
@@ -141,4 +143,4 @@ rule placement_epik:
                        "{params.workdir}/" + \
                        query_wildcard + \
                        "_r{wildcards.length}_k{wildcards.k}_o{wildcards.o}_red{wildcards.red}_ar{wildcards.ar}_mu{wildcards.mu}_filter{wildcards.filter}_ghosts{wildcards.ghosts}_epik.jplace"
-        shell(";".join(_ for _ in [rappas_command, move_command]))
+        shell(";".join(_ for _ in [epik_command, move_command]))
