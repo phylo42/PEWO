@@ -34,7 +34,7 @@ include:
 include:
     "rules/placement/rappas.smk"
 include:
-    "rules/placement/rappas2.smk"
+    "rules/placement/epik.smk"
 #alignment (for distance-based and ML approaches)
 include:
     "rules/alignment/hmmer.smk"

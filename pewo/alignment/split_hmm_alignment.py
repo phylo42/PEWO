@@ -33,5 +33,6 @@ if __name__ == "__main__":
                     output_queries.write('>%s\n' % record.id)
                     output_queries.write('%s\n' % record.seq)
                 else:
+                    print("REF:", record.id, len(record.seq))
                     output_refs.write('>%s\n' % record.id)
                     output_refs.write('%s\n' % record.seq)

@@ -25,25 +25,37 @@ _rappas_experiment_dir = get_experiment_dir_template(config, PlacementSoftware.R
 _rappas_experiment_parent = Path(_rappas_experiment_dir).parent
 
 
+def has_epik():
+    return "config_epik" in config
+
 # Benchmark templates
 _ipk_benchmark_template = get_benchmark_template(config, PlacementSoftware.EPIK,
-    p="pruning", k="k", o="o", red="red", ar="ar", filter="filter", mu="mu",
+    p="pruning", k="k", red="red", ar="ar", filter="filter", ghosts="ghosts",
     rule_name="build") if cfg.get_mode(config) == cfg.Mode.RESOURCES else ""
 _epik_benchmark_template = get_benchmark_template(config, PlacementSoftware.EPIK,
-    p="pruning", length="length", k="k", o="o", red="red", ar="ar", filter="filter", mu="mu",
+    p="pruning", length="length", k="k", o="o", red="red", ar="ar", filter="filter", 
+    mu="mu", ghosts="ghosts",
     rule_name="placement")  if cfg.get_mode(config) == cfg.Mode.RESOURCES else ""
 
-epik_benchmark_templates = [_ipk_benchmark_template, _epik_benchmark_template]
+if has_epik():
+    epik_benchmark_templates = [_ipk_benchmark_template, _epik_benchmark_template]
 
-# Benchmark template args
-_ipk_benchmark_template_args = get_output_template_args(config, PlacementSoftware.EPIK)
-_ipk_benchmark_template_args.pop("length")
-_epik_benchmark_template_args = get_output_template_args(config, PlacementSoftware.EPIK)
+    # Benchmark template args
+    _ipk_benchmark_template_args = get_output_template_args(config, PlacementSoftware.EPIK) if cfg.get_mode(config) == cfg.Mode.RESOURCES else ""
+    _ipk_benchmark_template_args.pop("length")
+    _epik_benchmark_template_args = get_output_template_args(config, PlacementSoftware.EPIK)
 
-epik_benchmark_template_args = [
-    _ipk_benchmark_template_args,
-    _epik_benchmark_template_args
-]
+    epik_benchmark_template_args = [
+        _ipk_benchmark_template_args,
+        _epik_benchmark_template_args
+    ]
+else:
+    epik_benchmark_templates = []
+    epik_benchmark_template_args = []
+
+
+
+
 def get_minimal_value(values):
     if isinstance(values, float):
         return values
@@ -84,11 +96,11 @@ rule ipk:
         ardir = os.path.join(Path(_rappas_experiment_dir).parent, "AR"),
         workdir = _ipk_experiment_dir,
         arbin = lambda wildcards: get_ar_binary(config, wildcards.ar),
-        arthreads = config["config_epik"]["arthreads"],
+        #arthreads = config["config_epik"]["arthreads"],
 
         # Build a database with the minimal omega value.
         # Higher omega values will be dealt with by EPIK via dynamic load
-        minimal_omega = get_minimal_value(config["config_epik"]["omega"])
+        minimal_omega = get_minimal_value(config["config_epik"]["omega"]) if has_epik() else 0.0
     run:
         filter = wildcards.filter.lower() if wildcards.filter else "no-filter"
         ghosts = wildcards.ghosts.lower() if wildcards.ghosts else "both"
@@ -104,7 +116,7 @@ rule ipk:
             "--filter {filter} " +
             "--ghosts {ghosts} " +
             "-w {params.workdir} " +
-            "--threads {params.arthreads} " +
+            #"--threads {params.arthreads} " +
             "--ar-dir {params.ardir} " +
             "--reduction-ratio {wildcards.red} " +
             "--use-unrooted  &> {log} "
