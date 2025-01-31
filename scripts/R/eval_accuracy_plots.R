@@ -25,11 +25,11 @@ epang_h3<-c()
 epang_h4<-c()
 pplacer<-c("ms","sb","mp")
 rappas<-c("k","o","red","ar")
-rappas2<-c("k","o","red","ar", "filter", "sm", "ghosts")
+epik<-c("k","o","red","ar","mu")
 apples<-c("meth","crit")
 appspam<-c("mode","w","pattern")
 
-soft_params<-list(epa=epa,epang_h1=epang_h1,epang_h2=epang_h2,epang_h3=epang_h3,epang_h4=epang_h4,pplacer=pplacer,rappas=rappas,rappas2=rappas2,apples=apples,appspam=appspam)
+soft_params<-list(epa=epa,epang_h1=epang_h1,epang_h2=epang_h2,epang_h3=epang_h3,epang_h4=epang_h4,pplacer=pplacer,rappas=rappas,epik=epik,apples=apples,appspam=appspam)
 
 
 #load data

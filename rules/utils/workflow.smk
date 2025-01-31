@@ -196,6 +196,9 @@ def _get_resources_tsv(config: Dict, software: PlacementSoftware, **kwargs) -> L
     """
     Creates a list of .tsv output files containing benchmark results of given software.
     """
+    if cfg.get_mode(config) != cfg.Mode.RESOURCES:
+        return []
+
     result = []
     software_templates = []
     software_template_args = []

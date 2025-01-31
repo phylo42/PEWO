@@ -71,10 +71,10 @@ def get_experiment_dir_template(config: Dict, software: PlacementSoftware, **kwa
         return os.path.join(software_dir, input_set_dir_template, "red{red}_ar{ar}", "k{k}_o{o}")
     elif software == PlacementSoftware.IPK:
         return os.path.join(software_dir, input_set_dir_template, "red{red}_ar{ar}",
-                            "k{k}_filter{filter}_ghosts{ghosts}")
+                            "k{k}")
     elif software == PlacementSoftware.EPIK:
         return os.path.join(software_dir, input_set_dir_template, "red{red}_ar{ar}",
-                            "k{k}_o{o}_mu{mu}_filter{filter}_ghosts{ghosts}")
+                            "k{k}_o{o}_mu{mu}")
     elif software == PlacementSoftware.APPSPAM:
         return os.path.join(software_dir, input_set_dir_template, "mode{mode}_w{w}_pattern{pattern}")
     else:
@@ -171,7 +171,7 @@ def get_queryname_template(config: Dict, software: PlacementSoftware, **kwargs) 
         return get_common_queryname_template(config) + "_k{k}_o{o}_red{red}_ar{ar}"
     elif software == PlacementSoftware.EPIK:
         return get_common_queryname_template(config) + \
-               "_k{k}_o{o}_red{red}_ar{ar}_mu{mu}_filter{filter}_ghosts{ghosts}"
+               "_k{k}_o{o}_red{red}_ar{ar}_mu{mu}"
     elif software == PlacementSoftware.APPSPAM:
         return get_common_queryname_template(config) + "_mode{mode}_w{w}_pattern{pattern}"
     else:
@@ -229,16 +229,12 @@ def get_output_template_args(config: Dict, software: PlacementSoftware, **kwargs
         template_args["o"] = np.min(config["config_epik"]["omega"])
         template_args["red"] = config["config_epik"]["reduction"]
         template_args["ar"] = config["config_epik"]["arsoft"]
-        template_args["filter"] = config["config_epik"]["filter"]
-        template_args["ghosts"] = config["config_epik"]["ghosts"]
     elif software == PlacementSoftware.EPIK:
         template_args["k"] = config["config_epik"]["k"]
         template_args["o"] = config["config_epik"]["omega"]
         template_args["red"] = config["config_epik"]["reduction"]
         template_args["ar"] = config["config_epik"]["arsoft"]
         template_args["mu"] = config["config_epik"]["mu"]
-        template_args["filter"] = config["config_epik"]["filter"]
-        template_args["ghosts"] = config["config_epik"]["ghosts"]
     elif software == PlacementSoftware.APPSPAM:
         template_args["w"] = config["config_appspam"]["w"]
         template_args["mode"] = config["config_appspam"]["mode"]

@@ -14,6 +14,8 @@ dependencies:
   - raxml
   - raxml-ng
   - hmmer
+  - phyml
+  - paml
 
   # build tools
   - python

@@ -26,15 +26,15 @@ _rappas_experiment_parent = Path(_rappas_experiment_dir).parent
 
 
 def has_epik():
-    return "config_epik" in config
+    return "epik" in config["test_soft"]
 
 # Benchmark templates
 _ipk_benchmark_template = get_benchmark_template(config, PlacementSoftware.EPIK,
-    p="pruning", k="k", red="red", ar="ar", filter="filter", ghosts="ghosts",
+    p="pruning", k="k", red="red", ar="ar",
     rule_name="build") if cfg.get_mode(config) == cfg.Mode.RESOURCES else ""
 _epik_benchmark_template = get_benchmark_template(config, PlacementSoftware.EPIK,
-    p="pruning", length="length", k="k", o="o", red="red", ar="ar", filter="filter", 
-    mu="mu", ghosts="ghosts",
+    p="pruning", length="length", k="k", o="o", red="red", ar="ar",
+    mu="mu",
     rule_name="placement")  if cfg.get_mode(config) == cfg.Mode.RESOURCES else ""
 
 if has_epik():
@@ -42,7 +42,9 @@ if has_epik():
 
     # Benchmark template args
     _ipk_benchmark_template_args = get_output_template_args(config, PlacementSoftware.EPIK) if cfg.get_mode(config) == cfg.Mode.RESOURCES else ""
-    _ipk_benchmark_template_args.pop("length")
+    if _ipk_benchmark_template_args:
+        _ipk_benchmark_template_args.pop("length")
+        
     _epik_benchmark_template_args = get_output_template_args(config, PlacementSoftware.EPIK)
 
     epik_benchmark_template_args = [
@@ -100,8 +102,6 @@ rule ipk:
         # Higher omega values will be dealt with by EPIK via dynamic load
         minimal_omega = get_minimal_value(config["config_epik"]["omega"]) if has_epik() else 0.0
     run:
-        filter = wildcards.filter.lower() if wildcards.filter else "no-filter"
-        ghosts = wildcards.ghosts.lower() if wildcards.ghosts else "both"
         shell(
             "ipk.py build " +
             "--states {params.states} " +
@@ -111,8 +111,6 @@ rule ipk:
             "-m {params.model} "
             "-t {input.t} " +
             "-r {input.a} " +
-            "--filter {filter} " +
-            "--ghosts {ghosts} " +
             "-w {params.workdir} " +
             #"--threads {params.arthreads} " +
             "--ar-dir {params.ardir} " +
@@ -141,7 +139,6 @@ rule placement_epik:
         maxp = config["maxplacements"],
         minlwr = config["minlwr"]
     run:
-        ghosts = wildcards.ghosts.lower() if wildcards.ghosts else "both"
         epik_command = "epik.py place " + \
             "--states {params.states} " + \
             "-i {input.database} " + \
@@ -155,7 +152,7 @@ rule placement_epik:
         move_command = "mv {params.workdir}/placements_" + query_wildcard + "_r{wildcards.length}.fasta.jplace " + \
                        "{params.workdir}/" + \
                        query_wildcard + \
-                       "_r{wildcards.length}_k{wildcards.k}_o{wildcards.o}_red{wildcards.red}_ar{wildcards.ar}_mu{wildcards.mu}_filter{wildcards.filter}_ghosts{wildcards.ghosts}_epik.jplace"
+                       "_r{wildcards.length}_k{wildcards.k}_o{wildcards.o}_red{wildcards.red}_ar{wildcards.ar}_mu{wildcards.mu}_epik.jplace"
         shell(";".join(_ for _ in [epik_command, move_command]))
 
 if cfg.get_mode(config) == cfg.Mode.RESOURCES:

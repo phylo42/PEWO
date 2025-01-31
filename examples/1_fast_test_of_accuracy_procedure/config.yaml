@@ -16,7 +16,7 @@ workdir: /path/to/examples/1_fast_test_of_accuracy_procedure/run
 states: 0
 
 # which software to test, at least one of : epa, epang, pplacer, rappas, apples
-test_soft: [rappas,epang,pplacer]
+test_soft: [epik,rappas,epang,pplacer]
 
 # read lengths to test
 read_length: [150]
@@ -168,6 +168,44 @@ config_rappas:
   #(this is due to JVM garbage collector behaviour)
   #set as an integer value, which represents the maximum amount of Gb allocatable to the JVM (memory: 8 => 8 Gb of RAM)
   memory: 8
+
+
+### EPIK
+###############################
+
+config_epik:
+    # Values of k that are tested
+    # Integer in [3,16] (~8-10 recommended, >12 often produces too long computations)
+    # Larger values make larger databases and longer precomputation,
+    # but more accurate placements
+    k: [7]
+
+    # Values of omega that are tested, the same as in RAPPAS.
+    # For DNA, values in [1.5, 2.0] are recommended. 
+    # For amino acids, values in [5, 15] are recommended.
+    # Lower values make larger database and longer precomputation,
+    # but more accurate placements
+    omega: [2.0]
+
+    # As in RAPPAS.
+    # Possible values:
+    # - PAML
+    # - PHYML
+    # - RAXMLNG
+    arsoft: RAXMLNG
+
+    # Reduction ratio, i.e. gap/non-gap ratio above which a site 
+    # of the input alignment is ignored during phylo-k-mer computation.
+    # Integer in (0,1], a value close to 1.00 is recommended 
+    # (with 1.00, only gap-only columns are filtered).
+    reduction: [0.99]
+
+    # The proportion of the database to use for placement
+    # Float value in (0, 1.0]. Take values less than 1.0
+    # if there is not enough RAM to keep the whole database
+    # in RAM. Only the most informative part of the DB is kept 
+    mu: [1.0]
+
 
 ### APPLES
 ###############################
