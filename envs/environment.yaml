@@ -23,7 +23,6 @@ dependencies:
   - snakemake
   - biopython
   - ant
-  - java
 
   # python packages
   - dendropy
