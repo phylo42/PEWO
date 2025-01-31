@@ -83,8 +83,7 @@ rule placement_epa:
         _get_epa_placement_output()
     log:
         get_log_template(config, PlacementSoftware.EPA)
-    benchmark:
-        repeat(_epa_place_benchmark_template, config["repeats"])
+
     params:
         m = select_model_raxmlstyle(),
         c = config["phylo_params"]["categories"],
@@ -107,3 +106,9 @@ rule placement_epa:
         mv {params.raxmlname} {params.outname}
         rm -f {params.reduction}
         """
+
+        
+if cfg.get_mode(config) == cfg.Mode.RESOURCES:
+    rule placement_epa:
+        benchmark:
+            repeat(_epa_place_benchmark_template, config["repeats"])

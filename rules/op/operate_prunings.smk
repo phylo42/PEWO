@@ -61,7 +61,7 @@ rule operate_pruning:
         config["workdir"] + "/logs/operate_pruning.log"
     params:
         wd = config["workdir"],
-        count = config["pruning_count"],
+        pruning_count = config["pruning_count"],
         states = config["states"],
         jar = config["pewo_jar"],
         length = get_params_length()
@@ -72,7 +72,7 @@ rule operate_pruning:
             shell(
                 "java -cp {params.jar} PrunedTreeGenerator_LITE "
                 "{params.wd} {input.a} {input.t} "
-                "{params.count} {params.length} 0 1 {params.states} "
+                "{params.pruning_count} {params.length} 0 1 {params.states} "
                 "&> {log}"
             )
         else:

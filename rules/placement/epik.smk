@@ -87,8 +87,7 @@ rule ipk:
         get_ipk_output_templates(config)
     log:
         os.path.join(_ipk_experiment_dir, "db_build.log")
-    benchmark:
-        repeat(_ipk_benchmark_template, config["repeats"])
+
     params:
         states=["nucl"] if config["states"]==0 else ["amino"],
         model = select_model_phymlstyle(),
@@ -122,6 +121,11 @@ rule ipk:
         )
         shell("mv {params.workdir}/DB.ipk {params.workdir}/DB_k{wildcards.k}.ipk")
 
+if cfg.get_mode(config) == cfg.Mode.RESOURCES:
+    rule ipk:
+        benchmark:
+            repeat(_ipk_benchmark_template, config["repeats"])
+
 rule placement_epik:
     input:
         database = lambda wildcards: get_epik_input_templates(config, wildcards),
@@ -130,8 +134,7 @@ rule placement_epik:
         jplace = get_output_template(config, PlacementSoftware.EPIK, "jplace")
     log:
         get_log_template(config, PlacementSoftware.EPIK)
-    benchmark:
-        repeat(_epik_benchmark_template, config["repeats"])
+
     params:
         states=["nucl"] if config["states"]==0 else ["amino"],
         workdir = _epik_experiment_dir,
@@ -154,3 +157,8 @@ rule placement_epik:
                        query_wildcard + \
                        "_r{wildcards.length}_k{wildcards.k}_o{wildcards.o}_red{wildcards.red}_ar{wildcards.ar}_mu{wildcards.mu}_filter{wildcards.filter}_ghosts{wildcards.ghosts}_epik.jplace"
         shell(";".join(_ for _ in [epik_command, move_command]))
+
+if cfg.get_mode(config) == cfg.Mode.RESOURCES:
+    rule placement_epik:
+        benchmark:
+            repeat(_epik_benchmark_template, config["repeats"])

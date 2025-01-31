@@ -47,10 +47,15 @@ rule placement_apples:
         is_protein = config["states"] == 1
     log:
         get_log_template(config, PlacementSoftware.APPLES)
-    benchmark:
-        repeat(_apples_place_benchmark_template, config["repeats"])
+
     run:
         command = "run_apples.py -s {input.r} -q {input.q} -t {input.t} -T 1 -m {wildcards.meth} -c {wildcards.crit} -o {output.jplace} "
         if params.is_protein:
             command += "-p "
         shell(command)
+
+        
+if cfg.get_mode(config) == cfg.Mode.RESOURCES:
+    rule placement_apples:
+        benchmark:
+            repeat(_apples_place_benchmark_template, config["repeats"])

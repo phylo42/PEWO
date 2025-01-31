@@ -37,9 +37,13 @@ soft_params<-list(epa=epa,epang_h1=epang_h1,epang_h2=epang_h2,epang_h3=epang_h3,
 data<-read.csv(file=args[1], sep=";", header=TRUE)
 workdir=args[2]
 
+
+
 #define list with software that were actually tested and remove them from soft_list and soft_param accordingly
 #soft_list<-list("epa", "epang_h1", "epang_h2", "epang_h3", "epang_h4", "pplacer", "rappas", "apples")
-soft_analyzed<-levels(data$software)
+soft_analyzed <- unique(data$software)
+
+
 #for epang, test which algorithms were tested
 epang_idx<-match("epang",soft_analyzed)
 if (!is.na(epang_idx)) {

@@ -59,6 +59,9 @@ def get_rappas_input_reads(pruning):
                 for l in config["read_length"]]
 
 
+print(_rappas_experiment_dir)
+print(_rappas_build_benchmark_template)
+
 # model parameters do not need to be passed, as they are useful only at AR
 rule db_build_rappas:
     """
@@ -73,8 +76,8 @@ rule db_build_rappas:
     log:
         os.path.join(get_experiment_log_dir_template(config, PlacementSoftware.RAPPAS),
                      "k{k}_o{o}_red{red}_ar{ar}.log")
-    benchmark:
-        repeat(_rappas_build_benchmark_template, config["repeats"])
+    #benchmark:
+    #    repeat(_rappas_build_benchmark_template, config["repeats"])
     params:
         states=["nucl"] if config["states"]==0 else ["amino"],
         ardir=config["workdir"]+"/RAPPAS/{pruning}/red{red}_ar{ar}/AR",
@@ -90,6 +93,12 @@ rule db_build_rappas:
             "--use_unrooted --dbfilename {params.dbfilename} &> {log}"
          )
 
+if cfg.get_mode(config) == cfg.Mode.RESOURCES:
+    rule db_build_rappas:
+        benchmark:
+            repeat(_rappas_build_benchmark_template, config["repeats"])
+
+
 rule placement_rappas:
     input:
         database = os.path.join(_rappas_experiment_dir, "DB.bin"),
@@ -98,8 +107,7 @@ rule placement_rappas:
         jplace = get_output_template(config, PlacementSoftware.RAPPAS, "jplace")
     log:
         get_log_template(config, PlacementSoftware.RAPPAS)
-    benchmark:
-        repeat(_rappas_place_benchmark_template, config["repeats"])
+    
     params:
         workdir = _rappas_experiment_dir,
         maxp = config["maxplacements"],
@@ -124,3 +132,8 @@ rule placement_rappas:
                        "_r{wildcards.length}_k{wildcards.k}_o{wildcards.o}_red{wildcards.red}_ar{wildcards.ar}_rappas.jplace"
         pipeline = ";".join(_ for _ in [rappas_command, move_command])
         shell(pipeline)
+        
+if cfg.get_mode(config) == cfg.Mode.RESOURCES:
+    rule placement_rappas:
+        benchmark:
+                repeat(_rappas_place_benchmark_template, config["repeats"])

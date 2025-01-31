@@ -35,8 +35,6 @@ rule hmm_build:
     log:
         os.path.join(get_experiment_log_dir_template(config, AlignmentSoftware.HMMER),
                      "{pruning}.log")
-    version:
-        "1.0"
     params:
         states = ["dna"] if config["states"] == 0 else ["amino"]
     threads: 1
@@ -58,19 +56,20 @@ rule hmm_align:
         psiblast = os.path.join(_alignment_dir,
                                 "{pruning}",
                                 get_common_queryname_template(config) + ".psiblast")
-    version:
-        "1.0"
     log:
         os.path.join(get_experiment_log_dir_template(config, AlignmentSoftware.HMMER),
                      get_common_queryname_template(config) + ".log")
-    benchmark:
-        repeat(_hmmer_benchmark_align_template, config["repeats"])
+
     params:
         states = ["dna"] if config["states"] == 0 else ["amino"],
     shell:
         "hmmalign --{params.states} --outformat PSIBLAST -o {output.psiblast} " +
         "--mapali {input.alignment} {input.hmm} {input.query} &> {log}"
 
+if cfg.get_mode(config) == cfg.Mode.RESOURCES:
+    rule hmm_align:
+        benchmark:
+            repeat(_hmmer_benchmark_align_template, config["repeats"])
 
 rule psiblast_to_fasta:
     """
@@ -84,8 +83,6 @@ rule psiblast_to_fasta:
         alignment = os.path.join(_alignment_dir,
                                  "{pruning}",
                                  get_common_queryname_template(config) + ".fasta")
-    version:
-        "1.0"
     log:
         os.path.join(get_experiment_log_dir_template(config, CustomScripts.PSIBLAST_2_FASTA),
                      get_common_queryname_template(config) + ".log")
@@ -112,6 +109,5 @@ rule split_alignment:
           os.path.join(_alignment_dir,
                        "{pruning}",
                         get_common_queryname_template(config) + ".fasta_refs"),
-    version: "1.0"
     shell:
         "pewo/alignment/split_hmm_alignment.py {input.reads} {input.align}"

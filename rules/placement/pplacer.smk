@@ -71,8 +71,7 @@ rule placement_pplacer:
         jplace = get_output_template(config, PlacementSoftware.PPLACER, "jplace")
     log:
         get_log_template(config, PlacementSoftware.PPLACER)
-    benchmark:
-        repeat(_pplacer_place_benchmark_template, config["repeats"])
+
     params:
         maxp = config["maxplacements"],
         minlwr = config["minlwr"]
@@ -86,3 +85,8 @@ rule placement_pplacer:
 
         pplacer_command += " -c {input.pkg} {input.alignment} &> {log}"
         shell(pplacer_command)
+
+if cfg.get_mode(config) == cfg.Mode.RESOURCES:
+    rule placement_pplacer:
+        benchmark:
+            repeat(_pplacer_place_benchmark_template, config["repeats"])

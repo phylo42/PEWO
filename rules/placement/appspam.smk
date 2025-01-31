@@ -38,9 +38,13 @@ rule placement_appspam:
         jplace=get_output_template(config, PlacementSoftware.APPSPAM, "jplace")
     log:
         get_log_template(config, PlacementSoftware.APPSPAM)
-    benchmark:
-        repeat(_appspam_place_benchmark_template, config["repeats"])
+
     shell:
         """
         appspam -s {input.s} -q {input.q} -t {input.t} -m {wildcards.mode} -w {wildcards.w} -p {wildcards.pattern} -o {output.jplace} >& {log}
         """
+
+if cfg.get_mode(config) == cfg.Mode.RESOURCES:
+    rule placement_appspam:
+        benchmark:
+            repeat(_appspam_place_benchmark_template, config["repeats"])

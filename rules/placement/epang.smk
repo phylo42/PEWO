@@ -130,8 +130,7 @@ rule placement_epang_h1:
         jplace=get_output_template(config, PlacementSoftware.EPANG, "jplace", heuristic="h1")
     log:
         logfile=get_log_template(config, PlacementSoftware.EPANG, heuristic="h1")
-    benchmark:
-        repeat(_epang_h1_place_benchmark_template, config["repeats"])
+
     params:
         tmpdir=get_experiment_dir_template(config, PlacementSoftware.EPANG, heuristic="h1"),
           dir=os.path.join(_epang_soft_dir, "{pruning}", "h1"),
@@ -139,6 +138,12 @@ rule placement_epang_h1:
           minlwr=config["minlwr"]
     run:
         shell(_make_epang_command(heuristic="h1"))
+
+if cfg.get_mode(config) == cfg.Mode.RESOURCES:
+    rule placement_epang_h1:
+        benchmark:
+            repeat(_epang_h1_place_benchmark_template, config["repeats"])
+
 
 rule placement_epang_h2:
     '''
@@ -157,8 +162,6 @@ rule placement_epang_h2:
         jplace=get_output_template(config, PlacementSoftware.EPANG, "jplace", heuristic="h2")
     log:
         logfile=get_log_template(config, PlacementSoftware.EPANG, heuristic="h2")
-    benchmark:
-        repeat(_epang_h2_place_benchmark_template, config["repeats"])
     params:
         tmpdir=get_experiment_dir_template(config, PlacementSoftware.EPANG, heuristic="h2"),
           dir=os.path.join(_epang_soft_dir, "{pruning}", "h2"),
@@ -166,6 +169,11 @@ rule placement_epang_h2:
           minlwr=config["minlwr"]
     run:
         shell(_make_epang_command(heuristic="h2"))
+
+if cfg.get_mode(config) == cfg.Mode.RESOURCES:
+    rule placement_epang_h2:
+        benchmark:
+            repeat(_epang_h2_place_benchmark_template, config["repeats"])
 
 rule placement_epang_h3:
     '''
@@ -184,8 +192,6 @@ rule placement_epang_h3:
         jplace=get_output_template(config, PlacementSoftware.EPANG, "jplace", heuristic="h3")
     log:
         logfile=get_log_template(config, PlacementSoftware.EPANG, heuristic="h3")
-    benchmark:
-        repeat(_epang_h3_place_benchmark_template, config["repeats"])
     params:
         tmpdir=get_experiment_dir_template(config, PlacementSoftware.EPANG, heuristic="h3"),
           dir=os.path.join(_epang_soft_dir, "{pruning}", "h3"),
@@ -193,6 +199,11 @@ rule placement_epang_h3:
           minlwr=config["minlwr"]
     run:
         shell(_make_epang_command(heuristic="h3"))
+
+if cfg.get_mode(config) == cfg.Mode.RESOURCES:
+    rule placement_epang_h3:
+        benchmark:
+            repeat(_epang_h3_place_benchmark_template, config["repeats"])
 
 rule placement_epang_h4:
     '''
@@ -211,8 +222,6 @@ rule placement_epang_h4:
         jplace=get_output_template(config, PlacementSoftware.EPANG, "jplace", heuristic="h4")
     log:
         logfile=get_log_template(config, PlacementSoftware.EPANG, heuristic="h4")
-    benchmark:
-        repeat(_epang_h4_place_benchmark_template, config["repeats"])
     params:
         tmpdir=get_experiment_dir_template(config, PlacementSoftware.EPANG, heuristic="h4"),
           dir=os.path.join(_epang_soft_dir, "{pruning}", "h4"),
@@ -220,3 +229,8 @@ rule placement_epang_h4:
           minlwr=config["minlwr"]
     run:
         shell(_make_epang_command(heuristic="h4"))
+
+if cfg.get_mode(config) == cfg.Mode.RESOURCES:
+    rule placement_epang_h4:
+        benchmark:
+            repeat(_epang_h4_place_benchmark_template, config["repeats"])
