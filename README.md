@@ -2,7 +2,7 @@
 **Benchmark existing placement software and compare placement accuracy on different reference trees.**
 
 
-[![Build Status](https://travis-ci.com/phylo42/PEWO.svg?branch=master)](https://travis-ci.com/phylo42/PEWO) [![license](https://img.shields.io/github/license/shenwei356/seqkit.svg?maxAge=2592000)](https://github.com/phylo42/RAPPAS/LICENSE) [![Cross-platform](https://img.shields.io/badge/platform-any-ec2eb4.svg?style=flat)](https://github.com/phylo42/RAPPAS)
+[![license](https://img.shields.io/github/license/shenwei356/seqkit.svg?maxAge=2592000)](https://github.com/phylo42/RAPPAS/LICENSE) [![Cross-platform](https://img.shields.io/badge/platform-any-ec2eb4.svg?style=flat)](https://github.com/phylo42/RAPPAS)
 
 - **Documents:** [**Usage**](https://github.com/phylo42/PEWO/wiki),
 [**Tutorial**](https://github.com/phylo42/PEWO/wiki)
@@ -140,7 +140,7 @@ Please read the [dedicated wiki page](https://github.com/phylo42/PEWO/wiki/IV.-T
 
 ### PEWO procedures
 
-**Software currently supported by PEWO.**
+**Software currently supported by PEWO:**
 
 * **EPA**(RAxML)  (Berger et al, 2010) 
 * **PPlacer** (Matsen et al, 2011)
@@ -148,6 +148,7 @@ Please read the [dedicated wiki page](https://github.com/phylo42/PEWO/wiki/IV.-T
 * **RAPPAS**  (Linard et al, 2019)
 * **APPLES**  (Balaban et al, 2019)
 * **App-SpaM**  (Blanke et al, 2021)
+* **EPIK** (Romashchenko et al, 2023)
 
 
 <!-- ER changes -->
