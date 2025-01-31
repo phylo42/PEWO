@@ -132,7 +132,6 @@ rule placement_epang_h1:
         logfile=get_log_template(config, PlacementSoftware.EPANG, heuristic="h1")
     benchmark:
         repeat(_epang_h1_place_benchmark_template, config["repeats"])
-    version: "1.0"
     params:
         tmpdir=get_experiment_dir_template(config, PlacementSoftware.EPANG, heuristic="h1"),
           dir=os.path.join(_epang_soft_dir, "{pruning}", "h1"),
@@ -160,7 +159,6 @@ rule placement_epang_h2:
         logfile=get_log_template(config, PlacementSoftware.EPANG, heuristic="h2")
     benchmark:
         repeat(_epang_h2_place_benchmark_template, config["repeats"])
-    version: "1.0"
     params:
         tmpdir=get_experiment_dir_template(config, PlacementSoftware.EPANG, heuristic="h2"),
           dir=os.path.join(_epang_soft_dir, "{pruning}", "h2"),
@@ -188,7 +186,6 @@ rule placement_epang_h3:
         logfile=get_log_template(config, PlacementSoftware.EPANG, heuristic="h3")
     benchmark:
         repeat(_epang_h3_place_benchmark_template, config["repeats"])
-    version: "1.0"
     params:
         tmpdir=get_experiment_dir_template(config, PlacementSoftware.EPANG, heuristic="h3"),
           dir=os.path.join(_epang_soft_dir, "{pruning}", "h3"),
@@ -216,7 +213,6 @@ rule placement_epang_h4:
         logfile=get_log_template(config, PlacementSoftware.EPANG, heuristic="h4")
     benchmark:
         repeat(_epang_h4_place_benchmark_template, config["repeats"])
-    version: "1.0"
     params:
         tmpdir=get_experiment_dir_template(config, PlacementSoftware.EPANG, heuristic="h4"),
           dir=os.path.join(_epang_soft_dir, "{pruning}", "h4"),

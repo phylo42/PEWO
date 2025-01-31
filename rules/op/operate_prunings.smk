@@ -59,8 +59,6 @@ rule operate_pruning:
         r = get_pruning_output_read_files() if _generate_reads(config) else []
     log:
         config["workdir"] + "/logs/operate_pruning.log"
-    version:
-        "1.00"
     params:
         wd = config["workdir"],
         count = config["pruning_count"],

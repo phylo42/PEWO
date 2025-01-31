@@ -75,7 +75,6 @@ rule db_build_rappas:
                      "k{k}_o{o}_red{red}_ar{ar}.log")
     benchmark:
         repeat(_rappas_build_benchmark_template, config["repeats"])
-    version: "1.00"
     params:
         states=["nucl"] if config["states"]==0 else ["amino"],
         ardir=config["workdir"]+"/RAPPAS/{pruning}/red{red}_ar{ar}/AR",
@@ -101,7 +100,6 @@ rule placement_rappas:
         get_log_template(config, PlacementSoftware.RAPPAS)
     benchmark:
         repeat(_rappas_place_benchmark_template, config["repeats"])
-    version: "1.00"
     params:
         workdir = _rappas_experiment_dir,
         maxp = config["maxplacements"],

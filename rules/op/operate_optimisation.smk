@@ -21,7 +21,6 @@ rule optimise:
         config["workdir"]+"/T/{pruning}_optimised.info"
     log:
         config["workdir"]+"/logs/optimisation/{pruning}.log"
-    version: "1.00"
     params:
         m=select_model_raxmlstyle(),
         c=config["phylo_params"]["categories"],

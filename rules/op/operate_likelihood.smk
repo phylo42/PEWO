@@ -80,8 +80,6 @@ rule split_queries:
         )
     log:
         config["workdir"] + "/logs/split_queries.log"
-    version:
-        "1.00"
     run:
         output_directory = os.path.join(_work_dir, "R")
         fasta.split_fasta(config["query_user"], output_directory)
@@ -103,8 +101,6 @@ rule extend_trees_epa:
          tree=config["dataset_tree"],
     output:
           ext_tree=get_output_template(config, PlacementSoftware.EPA, "tree")
-    version:
-           "1.00"
     run:
         make_extended_tree(input.tree, output.ext_tree, input.jplace)
 
@@ -114,8 +110,6 @@ rule extend_trees_epang_h1:
          tree=config["dataset_tree"],
     output:
           ext_tree=get_output_template(config, PlacementSoftware.EPANG, "tree", heuristic="h1")
-    version:
-           "1.00"
     run:
         make_extended_tree(input.tree, output.ext_tree, input.jplace)
 
@@ -125,8 +119,6 @@ rule extend_trees_epang_h2:
          tree=config["dataset_tree"],
     output:
           ext_tree=get_output_template(config, PlacementSoftware.EPANG, "tree", heuristic="h2")
-    version:
-           "1.00"
     run:
         make_extended_tree(input.tree, output.ext_tree, input.jplace)
 
@@ -136,8 +128,6 @@ rule extend_trees_epang_h3:
          tree=config["dataset_tree"],
     output:
           ext_tree=get_output_template(config, PlacementSoftware.EPANG, "tree", heuristic="h3")
-    version:
-           "1.00"
     run:
         make_extended_tree(input.tree, output.ext_tree, input.jplace)
 
@@ -147,8 +137,6 @@ rule extend_trees_epang_h4:
          tree=config["dataset_tree"],
     output:
           ext_tree=get_output_template(config, PlacementSoftware.EPANG, "tree", heuristic="h4")
-    version:
-           "1.00"
     run:
         make_extended_tree(input.tree, output.ext_tree, input.jplace)
 
@@ -158,8 +146,6 @@ rule extend_trees_pplacer:
          tree=config["dataset_tree"],
     output:
           ext_tree=get_output_template(config, PlacementSoftware.PPLACER, "tree")
-    version:
-           "1.00"
     run:
         make_extended_tree(input.tree, output.ext_tree, input.jplace)
 

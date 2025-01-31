@@ -85,7 +85,6 @@ rule placement_epa:
         get_log_template(config, PlacementSoftware.EPA)
     benchmark:
         repeat(_epa_place_benchmark_template, config["repeats"])
-    version: "1.0"
     params:
         m = select_model_raxmlstyle(),
         c = config["phylo_params"]["categories"],

@@ -31,7 +31,6 @@ rule compute_ar_inputs:
         reduc = config["config_rappas"]["reduction"],
         workdir = config["workdir"]+"/RAPPAS/{pruning}/red{reduction}_ar{arsoft}",
         arbin = lambda wildcards: get_ar_binary(config, wildcards.arsoft)
-    version: "1.00"
     shell:
         "java -Xms2G -jar $(which RAPPAS.jar) -p b -b $(which {params.arbin}) "
         "-t {input.t} -r {input.a} "

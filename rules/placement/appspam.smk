@@ -40,7 +40,6 @@ rule placement_appspam:
         get_log_template(config, PlacementSoftware.APPSPAM)
     benchmark:
         repeat(_appspam_place_benchmark_template, config["repeats"])
-    version: "1.0"
     shell:
         """
         appspam -s {input.s} -q {input.q} -t {input.t} -m {wildcards.mode} -w {wildcards.w} -p {wildcards.pattern} -o {output.jplace} >& {log}

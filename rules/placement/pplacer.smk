@@ -50,7 +50,6 @@ rule build_pplacer:
         directory(_get_pplacer_refpkg_template(config))
     log:
         os.path.join(_working_dir, "logs", "taxtastic", "{pruning}.log")
-    version: "1.00"
     params:
         refpkg_dir = _get_pplacer_refpkg_template(config)
     shell:
@@ -74,7 +73,6 @@ rule placement_pplacer:
         get_log_template(config, PlacementSoftware.PPLACER)
     benchmark:
         repeat(_pplacer_place_benchmark_template, config["repeats"])
-    version: "1.00"
     params:
         maxp = config["maxplacements"],
         minlwr = config["minlwr"]

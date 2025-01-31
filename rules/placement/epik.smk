@@ -89,7 +89,6 @@ rule ipk:
         os.path.join(_ipk_experiment_dir, "db_build.log")
     benchmark:
         repeat(_ipk_benchmark_template, config["repeats"])
-    version: "1.00"
     params:
         states=["nucl"] if config["states"]==0 else ["amino"],
         model = select_model_phymlstyle(),
@@ -133,7 +132,6 @@ rule placement_epik:
         get_log_template(config, PlacementSoftware.EPIK)
     benchmark:
         repeat(_epik_benchmark_template, config["repeats"])
-    version: "1.00"
     params:
         states=["nucl"] if config["states"]==0 else ["amino"],
         workdir = _epik_experiment_dir,
